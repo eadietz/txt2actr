@@ -91,26 +91,24 @@
 
 ; (add chunk into retrieval buffer some-item-on-list  =current)
  (p retrieve-item-on-list ;; first time, start retrieval
-     ?imaginal>
-       buffer    empty
+      ?imaginal>
+         state     free
      ?retrieval>
        state     free
-       buffer    empty
      ==>
+      +imaginal>
       +retrieval>
         - next-on-list    nil
    )
  
    (p retrieve-loc-if-next-retrieved
-       ?imaginal>
-         buffer    empty
-         state     free
+       =imaginal>
        =retrieval>
          next-on-list  =next
     ==>
        +retrieval>
          name  =next
-       +imaginal>
+       =imaginal>
          current  =next
    )
  

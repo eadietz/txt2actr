@@ -6,8 +6,8 @@ meta_info_file = 'meta_info.csv'
 class Simulation():
 
     def __init__(self):
-        #c = driving_task()
-        c = flight_task()
+        c = driving_task()
+        #c = flight_task()
         #c = paired_associate_task()
         c.instantiate_default_obj()
         c.construct_cognitive_model()
