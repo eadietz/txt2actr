@@ -60,8 +60,9 @@
 ;; the list of items that are to be attended in a routine loop 
 (item-0 ISA list-info current-on-list item next-on-list item) 
  
+)
 
-)(p scan-if-scene-changed
+(p scan-if-scene-changed
      ?visual-location>
        state     free
      ?visual>
@@ -114,8 +115,8 @@
     successful. Display =name is updated with =val)
   )
  
- ;(spp attend-item-if-loc-scanned :u 10)
- ;(spp update-if-item-retrieved :u 13)
+ (spp attend-item-if-loc-scanned :u 10)
+ (spp update-if-item-retrieved :u 13)
 
 
  (chunk-type goal state)

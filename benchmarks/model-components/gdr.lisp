@@ -1,13 +1,11 @@
 ; (add chunk into retrieval buffer some-item-on-list  =current)
-
 (p retrieve-item-on-list ;; first time, start retrieval
-    ?imaginal>
-      buffer    empty
+     ?imaginal>
+        state     free
     ?retrieval>
       state     free
-      buffer    empty
     ==>
-    +imaginal>
+     +imaginal>
      +retrieval>
        - next-on-list    nil
   )
@@ -15,12 +13,12 @@
   (p retrieve-loc-if-next-retrieved
       =imaginal>
       =retrieval>
-        next-on-list  =current
+        next-on-list  =next
    ==>
-      =imaginal>
-        current  =current
       +retrieval>
-        name  =current
+        name  =next
+      =imaginal>
+        current  =next
   )
 
   (p scan-if-loc-retrieved
@@ -43,7 +41,7 @@
         <= screen-x =maxx
         >= screen-x =minx
         screen-y   =screeny
-      =retrieval>
+      -retrieval>
       =imaginal>
   )
 
@@ -66,9 +64,8 @@
 
 
   (p update-if-item-retrieved
-     =retrieval>
-        name =current
       =imaginal>
+        current  =current
       =visual>
         value     =val
     ==>

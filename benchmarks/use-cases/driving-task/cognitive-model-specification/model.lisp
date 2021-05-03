@@ -90,7 +90,6 @@
  )
 
 ; (add chunk into retrieval buffer some-item-on-list  =current)
- 
  (p retrieve-item-on-list ;; first time, start retrieval
      ?imaginal>
        buffer    empty
@@ -98,20 +97,21 @@
        state     free
        buffer    empty
      ==>
-     +imaginal>
       +retrieval>
         - next-on-list    nil
    )
  
    (p retrieve-loc-if-next-retrieved
-       =imaginal>
+       ?imaginal>
+         buffer    empty
+         state     free
        =retrieval>
-         next-on-list  =current
+         next-on-list  =next
     ==>
-       =imaginal>
-         current  =current
        +retrieval>
-         name  =current
+         name  =next
+       +imaginal>
+         current  =next
    )
  
    (p scan-if-loc-retrieved
@@ -134,8 +134,7 @@
          <= screen-x =maxx
          >= screen-x =minx
          screen-y   =screeny
-       +retrieval>
-         current-on-list  =current
+       -retrieval>
        =imaginal>
    )
  
@@ -158,10 +157,8 @@
  
  
    (p update-if-item-retrieved
-      =retrieval>
-         current-on-list  =current
-         next-on-list      =next
        =imaginal>
+         current  =current
        =visual>
          value     =val
      ==>
@@ -169,7 +166,7 @@
          =current  =val
        ; -imaginal>
        +retrieval>
-         name     =next
+         current-on-list  =current
        !output! (GDR +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Retrieval
        successful. Display =current is updated with =val)
    )
