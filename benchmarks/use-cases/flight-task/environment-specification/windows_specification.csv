@@ -1,0 +1,16 @@
+vision;description;y position;x position;width;length;fontsize;x text position;y text position;header labels
+HUD;Head-up Display displays flight parameters and guidance information in flight crew's field of vision;40;90;320;170;12;50;50;
+FCU;Flight Unit Control with EFIS (Electronic Flight Instrument System) Control Panels (CP), used to select the display on the onside PFD and ND and to change the barometer setting, AFS (Auto Flight System) CP, which is the main interface with the Flight Guidance (FG) system;220;510;760;150;12;50;50;ALTS,VSPS,BAL1,BAL1
+OIS;Onboard Information System (OIS) is a set of electronic documentation and applications for flight, maintainenance and cabin operations (operating manuals, performance computation and mission management information);410;0;250;150;12;50;50;
+PFD;Primary Flight Display for short-term flight information;410;255;250;150;12;50;50;CASS,ALT
+ND;Navigation Display for medium and long term flight information;410;510;250;150;12;50;50;
+Engine;Electronic Centralized Aircraft Monitoring (ECAM)? to monitor and manage a/c systems during ab/normal operations,Mailbox to establish datalink communication with active ATC;410;765;250;150;12;50;50;
+System;also ECAM?;410;1020;250;150;12;50;50;
+Warning;;410;1275;250;150;12;50;50;APUF,MW,SMOK,TOCW,WSHR
+L/G;Landing Gear, PRK BRK panel, GRVTY EXTN panel,Landing Gears Extension and Retraction System?;410;1530;250;150;12;50;50;LGDN,LGUP
+ISIS;Integrated Standby Instrument System (ISIS) provides backup of flight parameters and navigation data in case of loss of EFIS;605;600;250;150;12;50;50;
+MFD;Multi-Function Display (MFD) provides interface with FMS,ATC Datalink System, SURV, ECAM NORM C/L, FCU Backup function for AFS, dsiplays filed flight plan with waypoint details;605;855;250;150;12;50;50;GMT_SEC,GMT_MINUTE,GMT_HOUR,DATE_DAY,DATE_MONTH,DATE_YEAR
+THROTTLE;Throttle Control Levers gives power to engines;800;855;250;130;12;50;50;PLA_1,PLA_2,PLA_3,PLA_4
+FLAPS;Flaps Control Lever displays current flaps position and changes flaps angle;800;600;250;130;12;50;50;FLAP
+Pilot;pilot;805;255;250;150;12;50;50;
+Overhead Panel;contains miscellaneous controls and features not directly involved in flying. E.g. air conditioning, anti-ice controls, cabin pressurization controls, oxygen controls, etc.;20;510;760;150;30;50;50;overhead

@@ -1,0 +1,13 @@
+dictonary of model params (e.g. model trace: set v to t or nil);{'-model-output': ['v','t'], '-auto-attend': ['auto-attend', 't'], '-production-engineering': [':epl', 't']};
+dictonary of default values set for the set-default-values-in-imaginal production rule;{'speed':0, 'altitude':0};
+include chunk types (goal, display-info, sound-info, image-info, button-info, list-info);yes;;;;;
+include entities in environment as chunks (e.g. displays, sounds, images, buttons);yes;;;;;
+instantiate the chunk types wrt existing entities in environment (as declarative memory);yes;;;;;;
+include goal driven recognition (attending, scanning and updating) wrt following items in routine loop;ALTITUDE,SPEED;
+default goal and slots (e.g. state start);state set-default-val;
+use case specific model components file (in cognitive-model-specification directory);uc-specific.lisp;;;;;;
+filnename and path of style of routine loop operation, (visual) goal-driven recognition (setting 'n' will exclude this component);gdr.lisp;
+filnename and path of style of routine loop operation, (visual) data-driven recognition (setting 'n' will exclude this component);n;ddr.lisp;
+filename and relative path of goal;NONE;goal.lisp;;;;;;
+default values in model (%name in model components additional and routine loop operation will be replaced by respective value of name);;
+default goal and slots (e.g.state start);;

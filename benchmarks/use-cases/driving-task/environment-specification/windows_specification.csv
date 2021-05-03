@@ -1,0 +1,4 @@
+vision;description;y position;x position;width;length;fontsize;x text position;y text position;header labels
+leading_car;showing red when leading car brakes;255;410;550;250;12;25;25;car_normal,car_brake,car_hold
+own;showing own behavior;590;410;250;150;12;50;50;clock,brake,react_emg,car_collision
+clock;showing the time;590;710;160;80;12;15;4;time

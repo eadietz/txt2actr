@@ -1,0 +1,7 @@
+key;value;no space allowed, should be indicated with _
+time;
+car_normal;
+car_brake;
+car_hold;
+car_collision;
+react_emg;

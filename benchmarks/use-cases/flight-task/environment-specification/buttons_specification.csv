@@ -1,0 +1,5 @@
+button;y position;x position;height;width;action;window;label;
+button_1;10;400;30;40;"";FCU;FD;
+button_2;60;350;30;40;"";FCU;AP1;
+button_3;60;450;30;40;"";FCU;AP2;
+button_4;110;400;30;40;"";FCU;A_THR;

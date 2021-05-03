@@ -1,0 +1,1 @@
+datasets: this folder contains an example paired-associates task.
