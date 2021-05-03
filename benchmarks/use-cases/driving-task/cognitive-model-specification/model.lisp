@@ -134,7 +134,8 @@
          <= screen-x =maxx
          >= screen-x =minx
          screen-y   =screeny
-       -retrieval>
+       +retrieval>
+         current-on-list  =current
        =imaginal>
    )
  
@@ -151,8 +152,6 @@
      +visual>
        cmd       move-attention
        screen-pos =visual-location
-     +retrieval>
-         current-on-list  =current
      =imaginal>
  
    )

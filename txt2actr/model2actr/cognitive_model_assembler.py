@@ -85,7 +85,7 @@ class Cognitive_Model_Assembler:
         ddr = self.file_as_str(self.ddr_file) if self.ddr_file else ""
         goal = self.goal_as_str(default_goal_slots_and_values) if default_goal_slots_and_values else ""
         uc_specific = self.file_as_str(uc_specific_file) if os.path.exists(uc_specific_file) else ""
-        print("uc", self.path_uc + uc_specific_file)
+
         self.set_cognitive_model_params(model_params_dict)
         production_rule_default_val = self.set_def_values_in_imaginal(default_val_dict) if default_val_dict else ""
 

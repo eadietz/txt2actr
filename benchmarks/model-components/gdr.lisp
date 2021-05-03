@@ -43,7 +43,7 @@
         <= screen-x =maxx
         >= screen-x =minx
         screen-y   =screeny
-      -retrieval>
+      =retrieval>
       =imaginal>
   )
 
@@ -60,8 +60,6 @@
     +visual>
       cmd       move-attention
       screen-pos =visual-location
-    +retrieval>
-        current-on-list  =current
     =imaginal>
 
   )
@@ -69,8 +67,7 @@
 
   (p update-if-item-retrieved
      =retrieval>
-        current-on-list  =current
-        next-on-list      =next
+        name =current
       =imaginal>
       =visual>
         value     =val
@@ -79,7 +76,7 @@
         =current  =val
       ; -imaginal>
       +retrieval>
-        name     =next
+        current-on-list  =current
       !output! (GDR +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Retrieval
       successful. Display =current is updated with =val)
   )
