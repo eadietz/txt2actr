@@ -1,13 +1,12 @@
 
-(chunk-type goal state)
 (chunk-type pair probe answer)
 
 (add-dm
  (start isa chunk) (attending-target isa chunk)
  (attending-probe isa chunk)
  (testing isa chunk) (read-study-item isa chunk)
+ )
 
- (goal isa goal state start))
 
 (p attend-probe
     =goal>
@@ -33,13 +32,12 @@
       value    =val
     ?imaginal>
       state    free
+    =imaginal>
    ==>
     !output! (probe =val)
     +imaginal>
-      isa      pair
       probe    =val
     +retrieval>
-      isa      pair
       probe    =val
     =goal>
       state    testing
@@ -50,7 +48,6 @@
       isa      goal
       state    testing
     =retrieval>
-      isa      pair
       answer   =ans
     ?manual>
       state    free
@@ -106,15 +103,15 @@
     =visual>
       isa      visual-object
       value    =val
+    ?imaginal>
+      state    free
    =imaginal>
-      isa      pair
       probe    =probe
     ?visual>
       state    free
   ==>
-   =imaginal>
+   +imaginal>
       answer   =val
-   -imaginal>
    =goal>
       state    start
    +visual>

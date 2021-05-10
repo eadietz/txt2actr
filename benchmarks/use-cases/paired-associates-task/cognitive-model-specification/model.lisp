@@ -41,10 +41,10 @@
 
 
 ;; Define the chunk types for the chunks 
-(chunk-type goal state next) 
-(chunk-type display-info name screenx screeny) 
-(chunk-type button-info name screenx screeny) 
-(chunk-type image-info name screenx screeny) 
+(chunk-type goal state) 
+(chunk-type display-info name screen-x screen-y) 
+(chunk-type button-info name screen-x screen-y) 
+(chunk-type image-info name screen-x screen-y) 
 (chunk-type sound-info name) 
 (chunk-type sa-level val) 
 (chunk-type SA event aoi eeg action1 action2 action3 time) 
@@ -55,79 +55,141 @@
 (item) 
 )
 
+(add-dm (goal isa goal state set-default-val)) 
+ (goal-focus goal) 
+
+
 (add-dm ;; the location specification for each item (label) value 
- (item-info isa display-info name item screenx 467 screeny 368) 
+ (item-info isa display-info name item screen-x 467 screen-y 368) 
 ;; the list of items that are to be attended in a routine loop 
 (item-0 ISA list-info current-on-list item next-on-list item) 
  
 )
 
-(p scan-if-scene-changed
-     ?visual-location>
-       state     free
-     ?visual>
-       state     free
-       scene-change  t
+(p set-default-values ;; start model, set imaginal chunk
+    =goal>
+      state     set-default-val
+    ?imaginal>
+      buffer    empty
    ==>
-     +visual-location>
-       :attended new
- )
- 
-  (p attend-item-if-loc-scanned
-      =visual-location>
-        isa       visual-location
-        screen-x  =screenx
-        screen-y  =screeny
-      ?visual>
-        state     free
-      ?retrieval>
-        state     free
-    ==>
-      ;; length of value in pixels (1 character is 7 pixels)
-      !bind! =maxx (+ =screenx 35)
-      !bind! =minx (- =screenx 35)
-      ;; height of word in pixels (e.g. fontsize 12 is 16px)
-      !bind! =maxy (+ =screeny 16)
-      !bind! =miny (- =screeny 16)
-      +visual>
-        cmd           move-attention
-        screen-pos    =visual-location
-      +retrieval>
-        <= screenx =maxx
-        >= screenx =minx
-        <= screeny  =maxy
-        >= screeny  =miny
-  )
- 
-  (p update-if-item-retrieved
+    +imaginal>
+	  probe 	 nil 
+	  answer 	 nil 
+	  name 	 nil 
+	=goal>
+      state    start
+)
+
+
+(set-buffer-chunk 'retrieval 'item-info) 
+  (p scan-if-item-retrieved
+       =imaginal>
+        name       nil
+     ?imaginal>
+       state    free
+       =retrieval>
+         name       =name
+         screen-x     =screenx
+         screen-y     =screeny
+       ?visual-location>
+         state     free
+       ?visual>
+         state     free
+     ==>
+      !bind! =maxx (+ =screenx 15)
+      !bind! =minx (- =screenx 15)
+      +visual-location>
+         <= screen-x   =maxx
+         >= screen-x   =minx
+         screen-y   =screeny
+     +visual>
+         clear     t ;; Stop visual buffer from updating without explicit requests
       =retrieval>
-        name      =name
+     =imaginal>
+        name       =name
+   )
+ 
+ (p retrieve-attend-if-location-scanned
+      ?retrieval>
+         state     free
+      =retrieval>
+        name        =current
+         screen-x     =screenx
+         screen-y     =screeny
+      !bind! =maxx (+ =screenx 15)
+      !bind! =minx (- =screenx 15)
+      =visual-location>
+         <= screen-x   =maxx
+         >= screen-x   =minx
+         screen-y   =screeny
+     ?visual>
+        state   free
+     ==>
+     +visual>
+       cmd       move-attention
+       screen-pos =visual-location
+     +retrieval>
+       current-on-list  =current
+   )
+ 
+   (p gd-visual-ip-update-if-next-retrieved
+      ?retrieval>
+         state     free
+      =retrieval>
+       current-on-list  =current
+       next-on-list  =next
+       =imaginal>
       ?imaginal>
-       state     free
+         state     free
+       =visual>
+         value     =val
+     ==>
+       =imaginal>
+         =current  =val
+         name  nil
+       +retrieval>
+         name  =next
+       !output! (goal-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Retrieved and attended
+       successfully. Display =current is updated with =val)
+   )
+ 
+ 
+ ; these production rules might not be necessary
+ #|(p scan-again-if-retrieval-failed
       ?visual-location>
-        state     free
-      =visual>
-        value     =val
-    ==>
-      +imaginal>
-        =name     =val
-    !output! (DDR +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Retrieval
-    successful. Display =name is updated with =val)
+        state     error
+       ?visual>
+         state     free
+     ==>
+      +visual>
+         clear     t ;; Stop visual buffer from updating without explicit requests
   )
  
- (spp attend-item-if-loc-scanned :u 10)
- (spp update-if-item-retrieved :u 13)
+ (p retrieve-again-if-retrieval-failed
+      ?retrieval>
+         state     error
+     ==>
+      +retrieval>
+        - next-on-list    nil
+      +visual>
+         clear     t ;; Stop visual buffer from updating without explicit requests
+ 
+  )|#
+ 
+ ; specify production rule priorities for GDRA
+ ;(spp scan-if-retrieved :u 10)
+ ;(spp retrieve-attend-if-scanned :u 10)
+ ;(spp gdra-update-if-retrieved :u 10)
 
 
- (chunk-type goal state)
  (chunk-type pair probe answer)
  
  (add-dm
   (start isa chunk) (attending-target isa chunk)
   (attending-probe isa chunk)
   (testing isa chunk) (read-study-item isa chunk)
+  )
  
-  (goal isa goal state start))
  
  (p attend-probe
      =goal>
@@ -153,13 +215,12 @@
        value    =val
      ?imaginal>
        state    free
+     =imaginal>
     ==>
      !output! (probe =val)
      +imaginal>
-       isa      pair
        probe    =val
      +retrieval>
-       isa      pair
        probe    =val
      =goal>
        state    testing
@@ -170,7 +231,6 @@
        isa      goal
        state    testing
      =retrieval>
-       isa      pair
        answer   =ans
      ?manual>
        state    free
@@ -226,15 +286,15 @@
      =visual>
        isa      visual-object
        value    =val
+     ?imaginal>
+       state    free
     =imaginal>
-       isa      pair
        probe    =probe
      ?visual>
        state    free
    ==>
-    =imaginal>
+    +imaginal>
        answer   =val
-    -imaginal>
     =goal>
        state    start
     +visual>

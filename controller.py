@@ -88,7 +88,7 @@ class Controller:
 
         if os.path.isfile(self.log_file_folder):
             sim_run_time = self.new_sim_time(self.log_file_folder) if self.sim_run_time == 0 else self.sim_run_time
-            print(f'{self.log_file_folder}', end ="")
+            #print(f'{self.log_file_folder}', end ="")
             self.start_threads(actr_interface, env_simulator, sim_run_time, self.log_file_folder)
         elif os.path.isdir(self.log_file_folder):
             for log_file_name in [f for f in os.listdir(self.log_file_folder) if self.is_adequate_file(f)]:

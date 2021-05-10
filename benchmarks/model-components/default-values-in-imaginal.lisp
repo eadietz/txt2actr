@@ -2,10 +2,10 @@
     =goal>
       state     set-default-val
     ?imaginal>
-      state     free
+      buffer    empty
    ==>
-    @imaginal>
+    +imaginal>
       DICT_OF_TEMP_VAL
-	-goal>
-	-imaginal>
- )
+	=goal>
+      state    start
+)

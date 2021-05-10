@@ -35,10 +35,10 @@
 
 
 ;; Define the chunk types for the chunks 
-(chunk-type goal state next) 
-(chunk-type display-info name screenx screeny) 
-(chunk-type button-info name screenx screeny) 
-(chunk-type image-info name screenx screeny) 
+(chunk-type goal state) 
+(chunk-type display-info name screen-x screen-y) 
+(chunk-type button-info name screen-x screen-y) 
+(chunk-type image-info name screen-x screen-y) 
 (chunk-type sound-info name) 
 (chunk-type sa-level val) 
 (chunk-type SA event aoi eeg action1 action2 action3 time) 
@@ -84,33 +84,33 @@
 
 
 (add-dm ;; the location specification for each item (label) value 
- (SELECTED_ALTITUDE_LSP-info isa display-info name SELECTED_ALTITUDE_LSP screenx 567 screeny 324) 
- (BARO_1_CORRECT_ALTITUDE_LSP-info isa display-info name BARO_1_CORRECT_ALTITUDE_LSP screenx 567 screeny 300) 
- (SELECTED_VERTICAL_SPEED-info isa display-info name SELECTED_VERTICAL_SPEED screenx 567 screeny 276) 
- (button_1-info isa button-info name button_1 screenx 930 screeny 245) 
- (button_2-info isa button-info name button_2 screenx 880 screeny 295) 
- (button_3-info isa button-info name button_3 screenx 980 screeny 295) 
- (button_4-info isa button-info name button_4 screenx 930 screeny 345) 
- (ALTITUDE-info isa display-info name ALTITUDE screenx 312 screeny 514) 
- (SPEED-info isa display-info name SPEED screenx 312 screeny 490) 
- (APU_FIRE_WARNINGMASTER_WARNING-info isa display-info name APU_FIRE_WARNINGMASTER_WARNING screenx 1332 screeny 514) 
- (MASTER_WARNING-info isa display-info name MASTER_WARNING screenx 1332 screeny 490) 
- (SMOK-info isa display-info name SMOK screenx 1332 screeny 466) 
- (TAKEOFF_CONF_WARNING-info isa display-info name TAKEOFF_CONF_WARNING screenx 1332 screeny 442) 
- (WIND-FLAP_POSITION-info isa display-info name WIND-FLAP_POSITION screenx 1332 screeny 418) 
- (GEARS_L-R_DOWN_LOCKED-info isa display-info name GEARS_L-R_DOWN_LOCKED screenx 1587 screeny 514) 
- (GEARS_L-R_UP_LOCKED-info isa display-info name GEARS_L-R_UP_LOCKED screenx 1587 screeny 490) 
- (D-info isa display-info name D screenx 912 screeny 709) 
- (M-info isa display-info name M screenx 912 screeny 685) 
- (Y-info isa display-info name Y screenx 912 screeny 661) 
- (SEC-info isa display-info name SEC screenx 912 screeny 637) 
- (MIN-info isa display-info name MIN screenx 912 screeny 613) 
- (HRS-info isa display-info name HRS screenx 912 screeny 589) 
- (POWER_LEVER_ANGLE_1-info isa display-info name POWER_LEVER_ANGLE_1 screenx 912 screeny 904) 
- (POWER_LEVER_ANGLE_2-info isa display-info name POWER_LEVER_ANGLE_2 screenx 912 screeny 880) 
- (POWER_LEVER_ANGLE_3-info isa display-info name POWER_LEVER_ANGLE_3 screenx 912 screeny 856) 
- (POWER_LEVER_ANGLE_4-info isa display-info name POWER_LEVER_ANGLE_4 screenx 912 screeny 832) 
- (A_LOT_OF_BUTTONS-info isa display-info name A_LOT_OF_BUTTONS screenx 567 screeny 133) 
+ (SELECTED_ALTITUDE_LSP-info isa display-info name SELECTED_ALTITUDE_LSP screen-x 567 screen-y 324) 
+ (BARO_1_CORRECT_ALTITUDE_LSP-info isa display-info name BARO_1_CORRECT_ALTITUDE_LSP screen-x 567 screen-y 300) 
+ (SELECTED_VERTICAL_SPEED-info isa display-info name SELECTED_VERTICAL_SPEED screen-x 567 screen-y 276) 
+ (button_1-info isa button-info name button_1 screen-x 930 screen-y 245) 
+ (button_2-info isa button-info name button_2 screen-x 880 screen-y 295) 
+ (button_3-info isa button-info name button_3 screen-x 980 screen-y 295) 
+ (button_4-info isa button-info name button_4 screen-x 930 screen-y 345) 
+ (ALTITUDE-info isa display-info name ALTITUDE screen-x 312 screen-y 514) 
+ (SPEED-info isa display-info name SPEED screen-x 312 screen-y 490) 
+ (APU_FIRE_WARNINGMASTER_WARNING-info isa display-info name APU_FIRE_WARNINGMASTER_WARNING screen-x 1332 screen-y 514) 
+ (MASTER_WARNING-info isa display-info name MASTER_WARNING screen-x 1332 screen-y 490) 
+ (SMOK-info isa display-info name SMOK screen-x 1332 screen-y 466) 
+ (TAKEOFF_CONF_WARNING-info isa display-info name TAKEOFF_CONF_WARNING screen-x 1332 screen-y 442) 
+ (WIND-FLAP_POSITION-info isa display-info name WIND-FLAP_POSITION screen-x 1332 screen-y 418) 
+ (GEARS_L-R_DOWN_LOCKED-info isa display-info name GEARS_L-R_DOWN_LOCKED screen-x 1587 screen-y 514) 
+ (GEARS_L-R_UP_LOCKED-info isa display-info name GEARS_L-R_UP_LOCKED screen-x 1587 screen-y 490) 
+ (D-info isa display-info name D screen-x 912 screen-y 709) 
+ (M-info isa display-info name M screen-x 912 screen-y 685) 
+ (Y-info isa display-info name Y screen-x 912 screen-y 661) 
+ (SEC-info isa display-info name SEC screen-x 912 screen-y 637) 
+ (MIN-info isa display-info name MIN screen-x 912 screen-y 613) 
+ (HRS-info isa display-info name HRS screen-x 912 screen-y 589) 
+ (POWER_LEVER_ANGLE_1-info isa display-info name POWER_LEVER_ANGLE_1 screen-x 912 screen-y 904) 
+ (POWER_LEVER_ANGLE_2-info isa display-info name POWER_LEVER_ANGLE_2 screen-x 912 screen-y 880) 
+ (POWER_LEVER_ANGLE_3-info isa display-info name POWER_LEVER_ANGLE_3 screen-x 912 screen-y 856) 
+ (POWER_LEVER_ANGLE_4-info isa display-info name POWER_LEVER_ANGLE_4 screen-x 912 screen-y 832) 
+ (A_LOT_OF_BUTTONS-info isa display-info name A_LOT_OF_BUTTONS screen-x 567 screen-y 133) 
 ;; the list of items that are to be attended in a routine loop 
 (ALTITUDE-0 ISA list-info current-on-list ALTITUDE next-on-list SPEED) 
  (SPEED-1 ISA list-info current-on-list SPEED next-on-list ALTITUDE) 
@@ -121,99 +121,89 @@
     =goal>
       state     set-default-val
     ?imaginal>
-      state     free
+      buffer    empty
    ==>
-    @imaginal>
+    +imaginal>
 	  speed 	 0 
 	  altitude 	 0 
-	-goal>
-	-imaginal>
- )
+	  name 	 nil 
+	=goal>
+      state    start
+)
 
-; (add chunk into retrieval buffer some-item-on-list  =current)
- (p retrieve-item-on-list ;; first time, start retrieval
-      ?imaginal>
-         state     free
-     ?retrieval>
+
+(set-buffer-chunk 'retrieval 'ALTITUDE-info) 
+(p scan-if-scene-changed
+     ?imaginal>
+       state    free
+     ?visual-location>
        state     free
-     ==>
-      +imaginal>
-      +retrieval>
-        - next-on-list    nil
-   )
+     ?visual>
+        state     free
+        scene-change t
+   ==>
+     +visual-location>
+       :attended new
+     +imaginal>
+       name       nil
+ )
  
-   (p retrieve-loc-if-next-retrieved
-       =imaginal>
-       =retrieval>
-         next-on-list  =next
-    ==>
-       +retrieval>
-         name  =next
-       =imaginal>
-         current  =next
-   )
- 
-   (p scan-if-loc-retrieved
-       =retrieval>
-         name =current
-         screenx     =screenx
-         screeny     =screeny
-       ?visual>
+  (p attend-retrieve-if-location-scanned
+      ?retrieval>
          state     free
-       ?visual-location>
-         state     free
-       =imaginal>
-     ==>
-      ;; length of value in pixels (1 character is 7 pixels)
-       !bind! =maxx (+ =screenx 35)
-       !bind! =minx (- =screenx 35)
-      +visual>
-         clear     t ;; Stop visual buffer from updating without explicit requests
-       +visual-location>
-         <= screen-x =maxx
-         >= screen-x =minx
-         screen-y   =screeny
-       -retrieval>
-       =imaginal>
-   )
- 
-   (p attend-if-loc-scanned
-       =imaginal>
-         current    =current
-       =visual-location>
-       ?visual>
-         state     free
-       ?retrieval>
-         state     free
-         buffer    empty
-     ==>
-     +visual>
-       cmd       move-attention
-       screen-pos =visual-location
      =imaginal>
+       name      nil
+      =visual-location>
+        isa       visual-location
+        screen-x  =screenx
+        screen-y  =screeny
+        ;color     =name
+     ?visual>
+       state     free
+    ==>
+      ;; length of value in pixels (1 character is 7 pixels)
+      !bind! =maxx (+ =screenx 20)
+      !bind! =minx (- =screenx 20)
+      ; height of word in pixels (e.g. fontsize 12 is 16px)
+      ;!bind! =maxy (+ =screeny 16)
+      ;!bind! =miny (- =screeny 16)
+      +visual>
+        cmd           move-attention
+        screen-pos    =visual-location
+     +visual>
+         clear     t ;; Stop visual buffer from updating without explicit requests
+      +retrieval>
+        ;name   =name
+        isa display-info
+        <= screen-x =maxx
+        >= screen-x =minx
+        = screen-y  =screeny
+        ; >= screen-y  =miny
+     =imaginal>
+  )
  
-   )
- 
- 
-   (p update-if-item-retrieved
+  (p dd-visual-ip-update-if-item-retrieved
+      =retrieval>
+        name      =name
+     =imaginal>
+       name      nil
+     ?imaginal>
+       state    free
+      =visual>
+        value     =val
+    ==>
        =imaginal>
-         current  =current
-       =visual>
-         value     =val
-     ==>
-       =imaginal>
-         =current  =val
-       ; -imaginal>
-       +retrieval>
-         current-on-list  =current
-       !output! (GDR +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Retrieval
-       successful. Display =current is updated with =val)
-   )
+         =name  =val
+    !output! (data-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Attended and retrieved
+       successfully. Display =name is updated with =val)
+  )
  
- ; (spp retrieve-item-on-list :u 3)
- (spp scan-if-loc-retrieved :u 10)
- (spp attend-if-loc-scanned :u 13)
- (spp update-if-item-retrieved :u 15)
+ 
+ ; specify production rule priorities for DDAR
+ ;(spp scan-if-scene-changed :u 10)
+ ;(spp attend-retrieve-if-scanned :u 10)
+ ;(spp ddar-update-if-retrieved :u 7)
+
 
 
 

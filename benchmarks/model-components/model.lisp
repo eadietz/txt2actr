@@ -2,7 +2,7 @@
 (define-model dummy-model
  (sgp
    :ppm 40
-   :auto-attend t
+   :auto-attend nil
    :esc t
    :v t
    :show-focus t

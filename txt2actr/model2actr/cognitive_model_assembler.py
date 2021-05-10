@@ -8,9 +8,9 @@ import math
 import ast
 import os
 
-chunk_type_display = {'chunk-type': 'display-info', 'slots': ['name', 'screenx', 'screeny']}
-chunk_type_button = {'chunk-type': 'button-info', 'slots': ['name', 'screenx', 'screeny']}
-chunk_type_image = {'chunk-type': 'image-info', 'slots': ['name', 'screenx', 'screeny']}
+chunk_type_display = {'chunk-type': 'display-info', 'slots': ['name', 'screen-x', 'screen-y']}
+chunk_type_button = {'chunk-type': 'button-info', 'slots': ['name', 'screen-x', 'screen-y']}
+chunk_type_image = {'chunk-type': 'image-info', 'slots': ['name', 'screen-x', 'screen-y']}
 chunk_type_sound = {'chunk-type': 'sound-info', 'slots': ['name']}
 
 class Cognitive_Model_Assembler:
@@ -33,8 +33,8 @@ class Cognitive_Model_Assembler:
         # set default values
         self.chunk_types_file = self.path_mc + "chunk-types.lisp"
         self.def_val_in_imaginal_file = self.path_mc + "default-values-in-imaginal.lisp"
-        self.gdr_file = self.path_mc + "gdr.lisp"
-        self.ddr_file = self.path_mc + "ddr.lisp"
+        self.gdr_file = self.path_mc + "gd-viusal-ip.lisp"
+        self.ddr_file = self.path_mc + "dd-viusal-ip.lisp"
 
     def set_path(self, path):
         path = path.replace("/", self.mac_vs_ws)
@@ -78,6 +78,9 @@ class Cognitive_Model_Assembler:
             else:
                 ddr_file if os.path.exists(self.path_mc + ddr_file) else self.ddr_file
 
+        first_item_to_be_attend = f'\n(set-buffer-chunk \'retrieval \'{to_be_attended_list[0]}-info) \n' \
+            if (to_be_attended_list and gdr_file) else ""
+
         chunk_types = self.chunk_types_as_str() if include_chunk_types else ""
         chunks = self.chunks_as_str() if include_chunks else ""
         dm = self.instantiated_chunks_as_str(to_be_attended_list) if include_instantiated_chunks else ""
@@ -89,8 +92,10 @@ class Cognitive_Model_Assembler:
         self.set_cognitive_model_params(model_params_dict)
         production_rule_default_val = self.set_def_values_in_imaginal(default_val_dict) if default_val_dict else ""
 
-        self.construct_cognitive_model("\n\n" + chunk_types + chunks + goal + dm + production_rule_default_val
-                                       + gdr + ddr + uc_specific)
+
+
+        self.construct_cognitive_model("\n\n" + chunk_types + chunks + goal + dm + production_rule_default_val +
+                                       first_item_to_be_attend + gdr + ddr + uc_specific)
 
 
     @staticmethod
@@ -98,6 +103,7 @@ class Cognitive_Model_Assembler:
 
         goal_stream = f'(add-dm (goal isa goal ' + default_goal_slots_and_values + ')) \n ' \
                                                                                   '(goal-focus goal) \n'
+
         return goal_stream + "\n\n"
 
     def file_as_str(self, file):
@@ -257,7 +263,6 @@ class Cognitive_Model_Assembler:
     def item_list_to_be_attended_in_gdr(list_of_items):
 
         chunks_list_of_items = ';; the list of items that are to be attended in a routine loop \n'
-
         for item in list_of_items:
             if len(list_of_items) - 1 == list_of_items.index(item):
                 next_item = list_of_items[0]
@@ -265,4 +270,5 @@ class Cognitive_Model_Assembler:
                 next_item = list_of_items[list_of_items.index(item) + 1]
             chunks_list_of_items += f'({item}-{list_of_items.index(item)} ' \
                                      f'ISA list-info current-on-list {item} next-on-list {next_item}) \n '
-        return chunks_list_of_items
+
+        return chunks_list_of_items #+ f'\n(set-buffer-chunk \'retrieval \'{first_item})'
