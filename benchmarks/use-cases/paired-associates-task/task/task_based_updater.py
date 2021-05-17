@@ -49,7 +49,7 @@ class Task_Based_Updater:
             for prompt, associate in self.actr.permute_list(self.pairs[20 - size:]):
 
 
-                self.actr_interface.update_actr_env({'item': str(prompt)}, schedule_time)
+                self.actr_interface.update_actr_env({'probe_associate': str(prompt)}, schedule_time)
                 global response
                 response = ''
 
@@ -63,7 +63,7 @@ class Task_Based_Updater:
                     score += 1
                     time += response_time - start
 
-                self.actr_interface.update_actr_env({'item': str(associate)}, schedule_time)
+                self.actr_interface.update_actr_env({'probe_associate': str(associate)}, schedule_time)
                 schedule_time = int(schedule_time) + int(self.time_interval_in_msec)
 
                 while self.actr.get_time(model) < (int(schedule_time)-int(2)):

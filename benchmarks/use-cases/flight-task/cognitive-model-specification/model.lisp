@@ -43,6 +43,7 @@
 (chunk-type sa-level val) 
 (chunk-type SA event aoi eeg action1 action2 action3 time) 
 (chunk-type list-info current-on-list next-on-list) 
+(chunk-type collector name probe associate) 
 
 
 (define-chunks ;; define the chunk for each item (label) 
@@ -121,9 +122,11 @@
     =goal>
       state     set-default-val
     ?imaginal>
-      buffer    empty
+      state    free
+      buffer   empty
    ==>
     +imaginal>
+      isa collector
 	  speed 	 0 
 	  altitude 	 0 
 	  name 	 nil 
@@ -133,77 +136,104 @@
 
 
 (set-buffer-chunk 'retrieval 'ALTITUDE-info) 
-(p scan-if-scene-changed
+  (p scan-if-item-retrieved
+       =imaginal>
+        name       nil
      ?imaginal>
        state    free
-     ?visual-location>
-       state     free
-     ?visual>
-        state     free
-        scene-change t
-   ==>
-     +visual-location>
-       :attended new
-     +imaginal>
-       name       nil
- )
- 
-  (p attend-retrieve-if-location-scanned
-      ?retrieval>
+       =retrieval>
+         name       =name
+         screen-x     =screenx
+         screen-y     =screeny
+       ?visual-location>
          state     free
-     =imaginal>
-       name      nil
-      =visual-location>
-        isa       visual-location
-        screen-x  =screenx
-        screen-y  =screeny
-        ;color     =name
-     ?visual>
-       state     free
-    ==>
-      ;; length of value in pixels (1 character is 7 pixels)
-      !bind! =maxx (+ =screenx 20)
-      !bind! =minx (- =screenx 20)
-      ; height of word in pixels (e.g. fontsize 12 is 16px)
-      ;!bind! =maxy (+ =screeny 16)
-      ;!bind! =miny (- =screeny 16)
-      +visual>
-        cmd           move-attention
-        screen-pos    =visual-location
+       ?visual>
+         state     free
+     ==>
+      !bind! =maxx (+ =screenx 15)
+      !bind! =minx (- =screenx 15)
+      +visual-location>
+         <= screen-x   =maxx
+         >= screen-x   =minx
+         screen-y   =screeny
      +visual>
          clear     t ;; Stop visual buffer from updating without explicit requests
-      +retrieval>
-        ;name   =name
-        isa display-info
-        <= screen-x =maxx
-        >= screen-x =minx
-        = screen-y  =screeny
-        ; >= screen-y  =miny
-     =imaginal>
-  )
- 
-  (p dd-visual-ip-update-if-item-retrieved
       =retrieval>
-        name      =name
      =imaginal>
-       name      nil
-     ?imaginal>
-       state    free
-      =visual>
-        value     =val
-    ==>
+        name       =name
+   )
+ 
+ (p retrieve-attend-if-location-scanned
+      ?retrieval>
+         state     free
+      =retrieval>
+        name        =current
+         screen-x     =screenx
+         screen-y     =screeny
+      !bind! =maxx (+ =screenx 15)
+      !bind! =minx (- =screenx 15)
+      =visual-location>
+         <= screen-x   =maxx
+         >= screen-x   =minx
+         screen-y   =screeny
+     ?visual>
+        state   free
+     ==>
+     +visual>
+       cmd       move-attention
+       screen-pos =visual-location
+     +retrieval>
+       current-on-list  =current
+   )
+ 
+   (p gd-visual-ip-update-if-next-retrieved
+      ?retrieval>
+         state     free
+      =retrieval>
+       current-on-list  =current
+       next-on-list  =next
        =imaginal>
-         =name  =val
-    !output! (data-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Attended and retrieved
-       successfully. Display =name is updated with =val)
+      ?imaginal>
+         state     free
+       =visual>
+         value     =val
+     ==>
+       =imaginal>
+         =current  =val
+         name  nil
+       +retrieval>
+         name  =next
+       !output! (goal-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Retrieved and attended
+       successfully. Display =current is updated with =val)
+   )
+ 
+ 
+ ; these production rules might not be necessary
+ #|(p scan-again-if-retrieval-failed
+      ?visual-location>
+        state     error
+       ?visual>
+         state     free
+     ==>
+      +visual>
+         clear     t ;; Stop visual buffer from updating without explicit requests
   )
  
+ (p retrieve-again-if-retrieval-failed
+      ?retrieval>
+         state     error
+     ==>
+      +retrieval>
+        - next-on-list    nil
+      +visual>
+         clear     t ;; Stop visual buffer from updating without explicit requests
  
- ; specify production rule priorities for DDAR
- ;(spp scan-if-scene-changed :u 10)
- ;(spp attend-retrieve-if-scanned :u 10)
- ;(spp ddar-update-if-retrieved :u 7)
-
+  )|#
+ 
+ ; specify production rule priorities for GDRA
+ ;(spp scan-if-retrieved :u 10)
+ ;(spp retrieve-attend-if-scanned :u 10)
+ ;(spp gdra-update-if-retrieved :u 10)
 
 
 

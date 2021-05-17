@@ -2,9 +2,11 @@
     =goal>
       state     set-default-val
     ?imaginal>
-      buffer    empty
+      state    free
+      buffer   empty
    ==>
     +imaginal>
+      isa collector
       DICT_OF_TEMP_VAL
 	=goal>
       state    start

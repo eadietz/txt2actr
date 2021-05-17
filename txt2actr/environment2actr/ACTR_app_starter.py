@@ -4,36 +4,65 @@ from sys import platform as _platform
 from txt2actr.environment2actr import actr
 import time
 import sys
+from python_on_whales import docker
 
 
 class ACTR_app_starter:
 
     actr_link = actr_cmd = actr_script_running = None
+    p_flags =  "-p 4000:4000 -p 2650:2650"
+    docker_lnx = "docker run -i -v ~/act-r-tutorial:/home/actr/actr7.x/tutorial db30/act-r-container"
+    docker_lnx_web = f"docker run -i {p_flags} -v ~/act-r-tutorial:/home/actr/actr7.x/tutorial db30/act-r-container"
+    docker_win = "docker run -i -v %homedrive%%homepath%\act-r-tutorial:/home/actr/actr7.x/tutorial db30/act-r-container"
+    docker_win_web = f"docker run -i {p_flags} -v %homedrive%%homepath%\act-r-tutorial:/home/actr/actr7.x/tutorial db30/act-r-container"
 
-    def __init__(self, actr_link="run-act-r.bat.lnk", actr_cmd=None):
+    def __init__(self, how_to_start_actr, actr_lnk="run-act-r.bat.lnk", actr_cmd=None):
 
-        self.actr_link = actr_link
+        self.actr_lnk = actr_lnk
+        self.actr_lnk = 'actr_script.sh'
+
+        self.how_to_start_actr = how_to_start_actr
 
         if actr_cmd:
             self.actr_cmd = actr_cmd
+        elif how_to_start_actr == 'e':
+                print("Make sure that you started the ACT-R connection externally ... ")
         else:
-            if _platform.startswith('darwin'):
-                self.actr_cmd = "open /Applications/ACT-R/run-act-r.command"
-            elif _platform.startswith('linux'):
-                self.actr_cmd = "run-act-r.command"
-            elif _platform.startswith('win'):
-                self.actr_cmd = "runactr.cmd"
-
-        self.execute_actr_app()
+            if how_to_start_actr == 'i':
+                if _platform.startswith('darwin'):
+                    self.actr_cmd = "open /Applications/ACT-R/run-act-r.command"
+                elif _platform.startswith('linux'):
+                    self.actr_cmd = "run-act-r.command"
+                elif _platform.startswith('win'):
+                    self.actr_cmd = "runactr.cmd"
+            elif how_to_start_actr == 'dw':
+                if _platform.startswith('darwin') or _platform.startswith('linux'):
+                    self.actr_cmd = self.docker_lnx_web
+                elif _platform.startswith('win'):
+                    self.actr_cmd = self.docker_win_web
+            elif how_to_start_actr == 'd':
+                if _platform.startswith('darwin') or _platform.startswith('linux'):
+                    self.actr_cmd = self.docker_lnx
+                elif _platform.startswith('win'):
+                    self.actr_cmd = self.docker_win
+            self.execute_actr_app()
 
     def execute_actr_app(self):
         if not actr.current_connection:
             if _platform.startswith('darwin') or _platform.startswith('linux'):
+                with open(f'{self.actr_lnk}', 'w') as actr_script:
+                    actr_script.write(self.actr_cmd)
+                print("run actr", self.actr_cmd)
+                self.actr_script_running = subprocess.Popen(["bash", f'../{self.actr_lnk}'])
+                #subprocess.Popen(f'../{self.actr_lnk}',stdout=subprocess.PIPE,
+                #                                        stderr=subprocess.PIPE)ß
+
+                #print("executes", "docker run -i -p 4000:4000 -p 2650:2650 -v ~/act-r-tutorial:/home/actr/actr7.x/tutorial db30/act-r-container")
                 os.system(self.actr_cmd)
             elif _platform.startswith('win'):
-                with open(f'../{self.actr_cmd}', 'w') as actr_script:
-                    actr_script.write(self.actr_link)
-                self.actr_script_running = subprocess.Popen(self.actr_cmd,
+                with open(f'{self.actr_lnk}', 'w') as actr_script:
+                    actr_script.write(self.actr_cmd)
+                self.actr_script_running = subprocess.Popen(f'../{self.actr_lnk}',
                                                             stdout=subprocess.PIPE,
                                                             stderr=subprocess.PIPE,
                                                             cwd='external_connections')

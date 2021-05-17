@@ -6,3 +6,4 @@
 {'chunk-type': 'sa-level', 'slots': ['val']}
 {'chunk-type': 'SA', 'slots': ['event', 'aoi', 'eeg', 'action1', 'action2', 'action3', 'time']}
 {'chunk-type': 'list-info', 'slots': ['current-on-list', 'next-on-list']}
+{'chunk-type': 'collector', 'slots': ['name', 'probe', 'associate']}

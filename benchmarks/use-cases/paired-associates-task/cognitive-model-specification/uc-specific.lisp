@@ -1,20 +1,22 @@
 
-(chunk-type pair probe answer)
+(sgp :seed (200 4))
 
-(add-dm
- (start isa chunk) (attending-target isa chunk)
- (attending-probe isa chunk)
- (testing isa chunk) (read-study-item isa chunk)
- )
-
+;(add-dm
+; (start isa chunk) (attending-target isa chunk)
+; (attending-probe isa chunk)
+; (testing isa chunk) (read-study-item isa chunk)
+; )
 
 (p attend-probe
     =goal>
       isa      goal
       state    start
+    ?imaginal>
+      state    free
     =visual-location>
     ?visual>
-     state     free
+      scene-change t
+      state        free
    ==>
     +visual>
       cmd      move-attention
@@ -28,16 +30,17 @@
       isa      goal
       state    attending-probe
     =visual>
-      isa      visual-object
       value    =val
     ?imaginal>
       state    free
-    =imaginal>
+    ?retrieval>
+      state    free
    ==>
-    !output! (probe =val)
     +imaginal>
+      isa      collector
       probe    =val
     +retrieval>
+      isa      collector
       probe    =val
     =goal>
       state    testing
@@ -48,13 +51,13 @@
       isa      goal
       state    testing
     =retrieval>
+      isa      collector
       answer   =ans
     ?manual>
       state    free
     ?visual>
       state    free
    ==>
-    !output! (answer =ans)
     +manual>
       cmd      press-key
       key      =ans
@@ -101,17 +104,16 @@
       isa      goal
       state    attending-target
     =visual>
-      isa      visual-object
       value    =val
-    ?imaginal>
-      state    free
    =imaginal>
+      isa      collector
       probe    =probe
     ?visual>
       state    free
   ==>
-   +imaginal>
+   =imaginal>
       answer   =val
+   -imaginal>
    =goal>
       state    start
    +visual>
@@ -119,4 +121,9 @@
 )
 
 
-(goal-focus goal)
+; (goal-focus goal)
+
+;(spp attend-probe :u 0.1)
+;(spp read-probe :u 0)
+;(spp recall :u 0)
+;(spp detect-study-item :u 0)

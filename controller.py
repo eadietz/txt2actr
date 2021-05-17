@@ -58,8 +58,7 @@ class Controller:
 
     def do_run(self):
 
-        ACTR_app_starter() if self.start_actr_internally is True \
-            else print("Make sure that you started the ACT-R connection externally ... ")
+        ACTR_app_starter(self.how_to_start_actr)
 
         cognitive_model_file_transformed = self.cognitive_model_file.replace("/", ";")
         # get rid of any non-alphanumeric characters at the beginning of path to file string
@@ -78,7 +77,8 @@ class Controller:
 
         if self.ACTR_updates == 'log':
             env_simulator = Log_Based_Updater(actr_interface, self.column_separator,
-                            self.sampling_rate, self.skip_rate_in_log, 1, self.col_start_idx_in_dataset)
+                            self.sampling_rate, self.skip_rate_in_log, self.row_start_idx_in_dataset,
+                                              self.col_start_idx_in_dataset, self.start_time_of_first_event)
         elif self.ACTR_updates == 'task':
             spec_file = importlib.util.spec_from_file_location('task_based_updater',self.log_file_folder)
             module = importlib.util.module_from_spec(spec_file)
@@ -141,7 +141,7 @@ class Controller:
     def new_sim_time(self, file):
         with open(file) as f:
             lines = len(f.readlines())
-        return int(lines)/100
+        return int(lines/100)
 
     def set_file_names(self):
 
@@ -149,7 +149,7 @@ class Controller:
         if not (self.ACTR_updates=='log' or self.ACTR_updates=='task'):
             sys.exit("You need to specify whether the simulation is log_based (log) or task_based (task)")
 
-        self.start_actr_internally = self.default_values.start_actr_internally
+        self.how_to_start_actr = self.default_values.how_to_start_actr
 
         self.log_file_folder = self.default_values.log_file_folder
         self.cognitive_model_specifications_file = self.default_values.cognitive_model_specifications_file
@@ -167,6 +167,7 @@ class Controller:
         self.sampling_rate = int(self.default_values.sampling_rate)
         self.skip_rate_in_log = int(self.default_values.skip_rate_in_log)
         self.col_start_idx_in_dataset = int(self.default_values.col_start_idx_in_dataset)
+        self.row_start_idx_in_dataset = int(self.default_values.row_start_idx_in_dataset)
         self.show_env_windows = self.default_values.show_env_windows
         self.show_display_labels = self.default_values.show_display_labels
         self.nr_of_decimals_in_values = int(self.default_values.nr_of_decimals_in_values)
@@ -188,13 +189,14 @@ class Default_Values_Specifier:
 
         # specify default values
 
-        self.start_actr_internally = False
+        self.how_to_start_actr = 'e'
 
         self.column_separator = ";"
         self.start_time_of_first_event = 1
         self.sampling_rate = 100
         self.skip_rate_in_log = 50
         self.col_start_idx_in_dataset = 0
+        self.row_start_idx_in_dataset = 1
         self.show_env_windows = True
         self.show_display_labels = True
         self.nr_of_decimals_in_values = 2
@@ -222,8 +224,7 @@ class Default_Values_Specifier:
             if not (self.ACTR_updates == 'log' or self.ACTR_updates == 'task'):
                 sys.exit("You need to specify whether the simulation is log_based (log) or task_based (task)")
 
-            if file_open.readline().split(";")[1].startswith('y'):
-                self.start_actr_internally = True
+            self.how_to_start_actr = file_open.readline().split(";")[1]
 
             self.log_file_folder = path + file_open.readline().split(";")[1]
             self.cognitive_model_specifications_file = path + file_open.readline().split(";")[1]
@@ -251,6 +252,9 @@ class Default_Values_Specifier:
             identify_col_start_idx_in_dataset =  file_open.readline().split(";")[1]
             if self.check_if_number(identify_col_start_idx_in_dataset):
                 self.col_start_idx_in_dataset = int(identify_col_start_idx_in_dataset)
+            identify_row_start_idx_in_dataset =  file_open.readline().split(";")[1]
+            if self.check_if_number(identify_row_start_idx_in_dataset):
+                self.row_start_idx_in_dataset = int(identify_row_start_idx_in_dataset)
             identify_show_env_windows =  file_open.readline().split(";")[1]
             if identify_show_env_windows.startswith('n'):
                 self.show_env_windows = False

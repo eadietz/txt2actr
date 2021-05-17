@@ -33,8 +33,8 @@ class Cognitive_Model_Assembler:
         # set default values
         self.chunk_types_file = self.path_mc + "chunk-types.lisp"
         self.def_val_in_imaginal_file = self.path_mc + "default-values-in-imaginal.lisp"
-        self.gdr_file = self.path_mc + "gd-viusal-ip.lisp"
-        self.ddr_file = self.path_mc + "dd-viusal-ip.lisp"
+        self.gdr_file = self.path_mc + "goal-driven.lisp"
+        self.ddr_file = self.path_mc + "data-driven-by-goal-slot.lisp"
 
     def set_path(self, path):
         path = path.replace("/", self.mac_vs_ws)

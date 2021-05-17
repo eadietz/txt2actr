@@ -81,8 +81,8 @@ class ACTR_interface:
                 actr.add_image_to_exp_window(actr_window, i.name, i.color, i.x_loc, i.y_loc, i.x_end, i.y_end)
             actr.install_device(actr_window)  # Install window
 
-        actr.install_device(["vision", "cursor"])
-        actr.install_device(["motor", "keyboard"])
+        #actr.install_device(["vision", "cursor"])
+        #actr.install_device(["motor", "keyboard"])
 
     def update_actr_env(self, changes_dict, schedule_time):
 
@@ -101,6 +101,44 @@ class ACTR_interface:
                                                    changes_dict[label]]) for label in relevant_list)
                 actr.schedule_event(schedule_time - self.time_interval_to_new_val_in_msc,
                                     "clear_window", params=[window.actr_window], time_in_ms=True)
+                for index, (_, value) in enumerate(window_labels_dict.items(), start=-2):
+                    new_value = self.convert_val(value[1])
+                    display_label = value[0]
+                    for i in window.images_dict.values():
+                        if i.label == display_label and self.convert_val(f'{i.appearance}') == new_value:
+                            actr.schedule_event(schedule_time, "update_image", params=[window.actr_window, i.name,
+                                                i.color, i.x_loc, i.y_loc, i.x_end, i.y_end], time_in_ms=True)
+                    actr.schedule_event(schedule_time, self.actr_window_updater, params=[window.actr_window,
+                                                display_label, new_value, index, window.x_text,
+                                                window.y_text, window.font_size], time_in_ms=True)
+        # trying to find an efficient way to record changes in sounds
+        new_tone_sounds = filter(lambda new: str(changes_dict.get(new[0])) == str(new[1]), self.sounds_dict)
+        if new_tone_sounds:
+            for key in new_tone_sounds:
+                freq = self.sounds_dict[key].value
+                duration = self.sounds_dict[key].duration
+                sound_type = self.sounds_dict[key].sound_type
+                word = self.sounds_dict[key].word
+                print(schedule_time, freq, duration, sound_type, word)
+                actr.schedule_event(schedule_time, "update_sound",
+                                    params=[float(sound_type), freq, duration, word], time_in_ms=True)
+
+    # update_actr_env excluding clear_window
+    def first_update_actr_env(self, changes_dict, schedule_time):
+
+        for window in self.windows_dict.values():
+            relevant_list = self.intersection(window.labels_dict, changes_dict)
+            if relevant_list:
+                for b in window.buttons_dict.values():
+                    actr.schedule_event(schedule_time, "update_button", params=[window.actr_window, b.label,
+                                        b.x_loc, b.y_loc, b.action, b.height, b.width], time_in_ms=True)
+                for i in window.images_dict.values():
+                    if i.appearance == 'True':
+                        actr.schedule_event(schedule_time, "update_image", params=[window.actr_window, i.name, i.color,
+                                             i.x_loc, i.y_loc, i.x_end, i.y_end], time_in_ms=True)
+                window_labels_dict = window.labels_dict
+                window_labels_dict.update((label, [window_labels_dict[label][0],
+                                                   changes_dict[label]]) for label in relevant_list)
                 for index, (_, value) in enumerate(window_labels_dict.items(), start=-2):
                     new_value = self.convert_val(value[1])
                     display_label = value[0]

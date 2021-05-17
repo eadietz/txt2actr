@@ -35,6 +35,7 @@
 
 
 (add-word-characters ".")
+(add-word-characters "_")
 (set-visloc-default)
 
 ;; ---> insert additional model modules after here
@@ -49,10 +50,11 @@
 (chunk-type sa-level val) 
 (chunk-type SA event aoi eeg action1 action2 action3 time) 
 (chunk-type list-info current-on-list next-on-list) 
+(chunk-type collector name probe associate) 
 
 
 (define-chunks ;; define the chunk for each item (label) 
-(item) 
+(probe_associate) 
 )
 
 (add-dm (goal isa goal state set-default-val)) 
@@ -60,9 +62,9 @@
 
 
 (add-dm ;; the location specification for each item (label) value 
- (item-info isa display-info name item screen-x 467 screen-y 368) 
+ (probe_associate-info isa display-info name probe_associate screen-x 467 screen-y 368) 
 ;; the list of items that are to be attended in a routine loop 
-(item-0 ISA list-info current-on-list item next-on-list item) 
+(probe_associate-0 ISA list-info current-on-list probe_associate next-on-list probe_associate) 
  
 )
 
@@ -70,134 +72,143 @@
     =goal>
       state     set-default-val
     ?imaginal>
-      buffer    empty
+      state    free
+      buffer   empty
    ==>
     +imaginal>
-	  probe 	 nil 
-	  answer 	 nil 
+      isa collector
 	  name 	 nil 
+	  probe 	 nil 
+	  associate 	 nil 
 	=goal>
       state    start
 )
 
 
-(set-buffer-chunk 'retrieval 'item-info) 
-  (p scan-if-item-retrieved
-       =imaginal>
-        name       nil
+(set-buffer-chunk 'retrieval 'probe_associate-info) 
+; (sgp :scene-change-threshold 1.0)
+ 
+ (p scan-if-scene-changed
+     =goal>
+       isa      goal
+       state    start
      ?imaginal>
        state    free
-       =retrieval>
-         name       =name
-         screen-x     =screenx
-         screen-y     =screeny
-       ?visual-location>
-         state     free
-       ?visual>
-         state     free
-     ==>
-      !bind! =maxx (+ =screenx 15)
-      !bind! =minx (- =screenx 15)
-      +visual-location>
-         <= screen-x   =maxx
-         >= screen-x   =minx
-         screen-y   =screeny
-     +visual>
-         clear     t ;; Stop visual buffer from updating without explicit requests
-      =retrieval>
-     =imaginal>
-        name       =name
-   )
- 
- (p retrieve-attend-if-location-scanned
-      ?retrieval>
-         state     free
-      =retrieval>
-        name        =current
-         screen-x     =screenx
-         screen-y     =screeny
-      !bind! =maxx (+ =screenx 15)
-      !bind! =minx (- =screenx 15)
-      =visual-location>
-         <= screen-x   =maxx
-         >= screen-x   =minx
-         screen-y   =screeny
+     =visual-location>
      ?visual>
-        state   free
-     ==>
-     +visual>
-       cmd       move-attention
-       screen-pos =visual-location
-     +retrieval>
-       current-on-list  =current
-   )
+       scene-change t
+       state        free
+   ==>
+     +visual-location>
+       :attended new
+     +imaginal>
+       isa collector
+       name       nil
+     =goal>
+       state    update
+ )
  
-   (p gd-visual-ip-update-if-next-retrieved
+  (p attend-retrieve-if-location-scanned
+     =goal>
+       isa      goal
+       state    update
       ?retrieval>
          state     free
+      =visual-location>
+        isa       visual-location
+        screen-x  =screenx
+        screen-y  =screeny
+        ;color     =name
+     ?visual>
+       state     free
+    ==>
+      ;; length of value in pixels (1 character is 7 pixels), the margin needs to be adapted according to the environment
+      !bind! =maxx (+ =screenx 20)
+      !bind! =minx (- =screenx 20)
+      ; height of word in pixels (e.g. fontsize 12 is 16px)
+      !bind! =maxy (+ =screeny 16)
+      !bind! =miny (- =screeny 16)
+      +visual>
+        cmd           move-attention
+        screen-pos    =visual-location
+      +retrieval>
+        isa display-info
+        <= screen-x =maxx
+        >= screen-x =minx
+        <= screen-y =maxy
+        >= screen-y =miny
+     =goal>
+     =visual-location
+     ;@visual-location>
+  )
+ 
+  (p dd-visual-ip-update-if-item-retrieved
+     =goal>
+       isa      goal
+       state    update
+      =visual>
+        value     =val
       =retrieval>
-       current-on-list  =current
-       next-on-list  =next
-       =imaginal>
-      ?imaginal>
-         state     free
-       =visual>
-         value     =val
-     ==>
-       =imaginal>
-         =current  =val
-         name  nil
-       +retrieval>
-         name  =next
-       !output! (goal-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Retrieved and attended
-       successfully. Display =current is updated with =val)
-   )
+        name      =name
+     ?imaginal>
+       state    free
+    =imaginal>
+       ;isa collector
+       ;name      =name
+     ?visual>
+       state    free
+    ==>
+       @imaginal>
+         isa collector
+         =name  =val
+      +imaginal>
+       isa collector
+       name       nil
+     =goal>
+       state    start
+     +visual>
+       cmd      clear
+       !output! (data-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Attended and retrieved
+       successfully. Display =name is updated with =val)
+  )
  
- 
- ; these production rules might not be necessary
- #|(p scan-again-if-retrieval-failed
+ (p handle-find-loc-failure
       ?visual-location>
         state     error
        ?visual>
          state     free
+     =imaginal>
+         state    free
      ==>
-      +visual>
-         clear     t ;; Stop visual buffer from updating without explicit requests
+     +visual>
+         clear     t
   )
  
- (p retrieve-again-if-retrieval-failed
-      ?retrieval>
-         state     error
-     ==>
-      +retrieval>
-        - next-on-list    nil
-      +visual>
-         clear     t ;; Stop visual buffer from updating without explicit requests
- 
-  )|#
- 
- ; specify production rule priorities for GDRA
- ;(spp scan-if-retrieved :u 10)
- ;(spp retrieve-attend-if-scanned :u 10)
- ;(spp gdra-update-if-retrieved :u 10)
+ ; specify production rule priorities for DDAR
+ ;(spp scan-if-scene-changed :u 0.1)
+ ;(spp attend-retrieve-if-location-scanned :u 1)
+ ;(spp dd-visual-ip-update-if-item-retrieved :u 5)
 
 
- (chunk-type pair probe answer)
+
+ (sgp :seed (200 4))
  
- (add-dm
-  (start isa chunk) (attending-target isa chunk)
-  (attending-probe isa chunk)
-  (testing isa chunk) (read-study-item isa chunk)
-  )
- 
+ ;(add-dm
+ ; (start isa chunk) (attending-target isa chunk)
+ ; (attending-probe isa chunk)
+ ; (testing isa chunk) (read-study-item isa chunk)
+ ; )
  
  (p attend-probe
      =goal>
        isa      goal
        state    start
+     ?imaginal>
+       state    free
      =visual-location>
      ?visual>
-      state     free
+       scene-change t
+       state        free
     ==>
      +visual>
        cmd      move-attention
@@ -211,16 +222,17 @@
        isa      goal
        state    attending-probe
      =visual>
-       isa      visual-object
        value    =val
      ?imaginal>
        state    free
-     =imaginal>
+     ?retrieval>
+       state    free
     ==>
-     !output! (probe =val)
      +imaginal>
+       isa      collector
        probe    =val
      +retrieval>
+       isa      collector
        probe    =val
      =goal>
        state    testing
@@ -231,13 +243,13 @@
        isa      goal
        state    testing
      =retrieval>
+       isa      collector
        answer   =ans
      ?manual>
        state    free
      ?visual>
        state    free
     ==>
-     !output! (answer =ans)
      +manual>
        cmd      press-key
        key      =ans
@@ -284,17 +296,16 @@
        isa      goal
        state    attending-target
      =visual>
-       isa      visual-object
        value    =val
-     ?imaginal>
-       state    free
     =imaginal>
+       isa      collector
        probe    =probe
      ?visual>
        state    free
    ==>
-    +imaginal>
+    =imaginal>
        answer   =val
+    -imaginal>
     =goal>
        state    start
     +visual>
@@ -302,7 +313,12 @@
  )
  
  
- (goal-focus goal)
+ ; (goal-focus goal)
+ 
+ ;(spp attend-probe :u 0.1)
+ ;(spp read-probe :u 0)
+ ;(spp recall :u 0)
+ ;(spp detect-study-item :u 0)
 
 
 

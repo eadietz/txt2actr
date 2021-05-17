@@ -1,12 +1,12 @@
 dictonary of model params (e.g. model trace: set v to t or nil);{'-model-output': ['v','t'], '-auto-attend': ['auto-attend', 't'], '-production-engineering': [':epl', 't']};
-dictonary of default values set for the set-default-values-in-imaginal production rule;{'probe': 'nil', 'answer': 'nil', 'name': 'nil'};
+dictonary of default values set for the set-default-values-in-imaginal production rule;{'name': 'nil', 'probe': 'nil', 'associate' : 'nil'};
 include chunk types (goal, display-info, sound-info, image-info, button-info, list-info);yes;;;;;
 include entities in environment as chunks (e.g. displays, sounds, images, buttons);yes;;;;;
 instantiate the chunk types wrt existing entities in environment (as declarative memory);yes;;;;;;
-include goal driven recognition (attending, scanning and updating) wrt following items in routine loop (only applies in gdr mode);item;
+include goal driven recognition (attending, scanning and updating) wrt following items in routine loop (only applies in gdr mode);probe_associate;
 default goal and slots (e.g. state start);state set-default-val;
 use case specific model components file (in task directory);cognitive-model-specification/uc-specific.lisp;;;;;;
-filnename and path of style of routine loop operation, (visual) goal-driven visual information processiong (setting 'n' will exclude this component from the model);gd-visual-ip.lisp;
-filnename and path of style of routine loop operation, (visual) data-driven visual information processing (setting 'n' will exclude this component from the model);n;dd-visual-ip.lisp;
+filnename and path of style of routine loop operation, (visual) goal-driven visual information processiong (setting 'n' will exclude this component from the model);n;goal-driven.lisp;
+filnename and path of style of routine loop operation, (visual) data-driven visual information processing (setting 'n' will exclude this component from the model);data-driven-by-goal-slot.lisp;
 filename and relative path of goal;;NONE;goal.lisp;;;;;;
 default values in model (%name in model components additional and routine loop operation will be replaced by respective value of name);;
