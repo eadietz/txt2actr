@@ -1,1 +1,0 @@
-run-act-r.bat.lnk

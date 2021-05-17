@@ -11,7 +11,6 @@
    ;:bll 0.5
    ;:declarative-finst-span 1.0
    ;:emt nil ; em? et? em?
-   ;:esc t
    ;:mas 5 ;1.6
    ;:mp 1.0
    ;:retrieval-activation 10
@@ -23,6 +22,8 @@
    ;:time-noise 0.001
    :trace-detail low
    ;:ul t
+   :esc t
+   :egs 0.5 ; noise in utility based  choosing production rules
    ;:unstuff-aural-location t
    :v t ;; -model-output 
    ;:visual-activation 10
@@ -185,7 +186,7 @@
   )
  
  ; specify production rule priorities for DDAR
- ;(spp scan-if-scene-changed :u 0.1)
+ (spp scan-if-scene-changed :u 1)
  ;(spp attend-retrieve-if-location-scanned :u 1)
  ;(spp dd-visual-ip-update-if-item-retrieved :u 5)
 
@@ -315,7 +316,7 @@
  
  ; (goal-focus goal)
  
- ;(spp attend-probe :u 0.1)
+ (spp attend-probe :u 0.99)
  ;(spp read-probe :u 0)
  ;(spp recall :u 0)
  ;(spp detect-study-item :u 0)

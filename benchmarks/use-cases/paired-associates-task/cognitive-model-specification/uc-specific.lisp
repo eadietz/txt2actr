@@ -123,7 +123,7 @@
 
 ; (goal-focus goal)
 
-;(spp attend-probe :u 0.1)
+(spp attend-probe :u 0.99)
 ;(spp read-probe :u 0)
 ;(spp recall :u 0)
 ;(spp detect-study-item :u 0)
