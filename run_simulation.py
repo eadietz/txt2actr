@@ -1,41 +1,47 @@
 from controller import Controller
 import os
-abs_path_of_model_components = f'{os.path.dirname(__file__)}/benchmarks/model-components/'
-meta_info_file = 'meta_info.csv'
+from sys import platform as _platform
+
 
 class Simulation():
 
     def __init__(self):
-        #c = driving_task()
-        c = flight_task()
-        c = paired_associate_task()
+
+        self.path_sep = "\\" if _platform.startswith('win') else "/"
+        self.abs_path = f'{os.path.dirname(__file__)}' if _platform.startswith('win') else f'{os.path.dirname(__file__)}/'
+
+        self.model_components_path = f'{self.abs_path}benchmarks{self.path_sep}model-components{self.path_sep}'
+        self.meta_info_file = 'meta_info.csv'
+
+        #c = self.driving_task()
+        #c = self.flight_task()
+        c = self.paired_associate_task()
         c.instantiate_default_obj()
         c.construct_cognitive_model()
         c.do_run()
 
-def paired_associate_task():
+    def paired_associate_task(self):
 
-    abs_path_of_uc_and_model_specification = f'{os.path.dirname(__file__)}/benchmarks/use-cases/paired-associates-task/'
+        uc_path = f'{self.abs_path}benchmarks{self.path_sep}use-cases{self.path_sep}paired-associates-task{self.path_sep}'
 
-    return Controller(absolute_path_uc=abs_path_of_uc_and_model_specification,
-                   absolute_path_mc=abs_path_of_model_components,
-                      meta_info_file=meta_info_file)
+        return Controller(absolute_path_uc=uc_path,
+                       absolute_path_mc=self.model_components_path,
+                          meta_info_file=self.meta_info_file)
 
-def driving_task():
+    def driving_task(self):
 
-    abs_path_of_uc_and_model_specification = f'{os.path.dirname(__file__)}/benchmarks/use-cases/driving-task/'
+        uc_path = f'{self.abs_path}benchmarks{self.path_sep}use-cases{self.path_sep}driving-task{self.path_sep}'
 
-    return Controller(absolute_path_uc=abs_path_of_uc_and_model_specification,
-                   absolute_path_mc=abs_path_of_model_components,
-                   meta_info_file=meta_info_file)
+        return Controller(absolute_path_uc=uc_path, absolute_path_mc=self.model_components_path,
+                       meta_info_file=self.meta_info_file)
 
 
-def flight_task():
+    def flight_task(self):
 
-    abs_path_of_uc_and_model_specification = f'{os.path.dirname(__file__)}/benchmarks/use-cases/flight-task/'
+        uc_path = f'{self.abs_path}{self.path_sep}benchmarks{self.path_sep}use-cases{self.path_sep}flight-task{self.path_sep}'
 
-    return Controller(absolute_path_uc=abs_path_of_uc_and_model_specification,
-                   absolute_path_mc=abs_path_of_model_components,
-                   meta_info_file=meta_info_file)
+        return Controller(absolute_path_uc=uc_path,
+                       absolute_path_mc=self.model_components_path,
+                       meta_info_file=self.meta_info_file)
 
 Simulation()

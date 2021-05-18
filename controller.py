@@ -60,11 +60,11 @@ class Controller:
 
         ACTR_app_starter(self.how_to_start_actr)
 
-        cognitive_model_file_transformed = self.cognitive_model_file.replace("/", ";")
+        cognitive_model_file_transformed = self.cognitive_model_file
         # get rid of any non-alphanumeric characters at the beginning of path to file string
-        start_idx = re.search("[^\W\d]", cognitive_model_file_transformed).start()
-        cognitive_model_file_transformed = cognitive_model_file_transformed[start_idx:] \
-            if cognitive_model_file_transformed.startswith(";") else cognitive_model_file_transformed
+        #start_idx = re.search("[^\W\d]", cognitive_model_file_transformed).start()
+        #cognitive_model_file_transformed = cognitive_model_file_transformed[start_idx:] \
+        #    if cognitive_model_file_transformed.startswith(";") else cognitive_model_file_transformed
 
         actr_interface = ACTR_interface(cognitive_model_file_transformed, self.obj_instantiation.windows_dict,
                                            self.obj_instantiation.sounds_dict,
@@ -226,19 +226,16 @@ class Default_Values_Specifier:
 
             self.how_to_start_actr = file_open.readline().split(";")[1]
 
-            self.log_file_folder = path + file_open.readline().split(";")[1]
-            self.cognitive_model_specifications_file = path + file_open.readline().split(";")[1]
-            self.cognitive_model_file = path + file_open.readline().split(";")[1]
-
-            self.windows_specification_file = path + file_open.readline().split(";")[1]
-            self.buttons_file = path + file_open.readline().split(";")[1]
-            self.images_file = path + file_open.readline().split(";")[1]
-            self.windows_labels_file = path + file_open.readline().split(";")[1]
-            self.sounds_file = path + file_open.readline().split(";")[1]
-            self.results_file = path + file_open.readline().split(";")[1]
-
-            identify_col_sep = file_open.readline().split(";")[1]
-            self.column_separator = ";" if not identify_col_sep else identify_col_sep
+            self.log_file_folder = self.set_os_path_sep(path + file_open.readline().split(";")[1])
+            self.cognitive_model_specifications_file = self.set_os_path_sep(path + file_open.readline().split(";")[1])
+            self.cognitive_model_file = self.set_os_path_sep(path + file_open.readline().split(";")[1])
+            self.windows_specification_file = self.set_os_path_sep(path + file_open.readline().split(";")[1])
+            self.buttons_file = self.set_os_path_sep(path + file_open.readline().split(";")[1])
+            self.images_file = self.set_os_path_sep(path + file_open.readline().split(";")[1])
+            self.windows_labels_file = self.set_os_path_sep(path + file_open.readline().split(";")[1])
+            self.sounds_file = self.set_os_path_sep(path + file_open.readline().split(";")[1])
+            self.results_file = self.set_os_path_sep(path + file_open.readline().split(";")[1])
+            identify_col_sep = self.set_os_path_sep(file_open.readline().split(";")[1])
 
             identify_start_time_of_first_event = file_open.readline().split(";")[1]
             if self.check_if_number(identify_start_time_of_first_event):
@@ -285,6 +282,10 @@ class Default_Values_Specifier:
             output_file = file_open.readline().split(";")[1]
             if output_file:
                 self.output_file = path + output_file
+
+    @staticmethod
+    def set_os_path_sep(path_to_file):
+        return path_to_file.replace("/", "\\") if _platform.startswith("win") else path_to_file.replace("\\", "/")
 
     @staticmethod
     def check_if_number(val):

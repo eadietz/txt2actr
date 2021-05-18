@@ -97,6 +97,6 @@
  )
 
 ; specify production rule priorities for DDAR
-(spp scan-if-scene-changed :u 1)
+(spp scan-if-scene-changed :u 0.5)
 ;(spp attend-retrieve-if-location-scanned :u 1)
 ;(spp dd-visual-ip-update-if-item-retrieved :u 5)

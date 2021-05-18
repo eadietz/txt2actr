@@ -40,7 +40,9 @@ class ACTR_interface:
     def connect_with_actr(self):
 
         actr.connection() if not actr.current_connection else actr.reset()
-
+        # get rid of any non-alphanumeric characters at the beginning of path to file string
+        start_idx = re.search("[^\W\d]", self.cognitive_model_file).start()
+        self.cognitive_model_file = self.cognitive_model_file[start_idx:].replace("/",";").replace("\\", ";")
         actr.load_act_r_code(self.cognitive_model_file)
         actr.add_word_characters(".")
         actr.add_word_characters("_")
