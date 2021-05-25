@@ -7,8 +7,6 @@ Created on Tue Jul  7 10:24:10 2020
 
 import re
 from txt2actr.environment2actr import actr
-
-
 # =============================================================================
 # This class is all about setting up the ACT-R Environment, including adding
 # goals to the (cognitive) ACT-R Model
@@ -18,10 +16,11 @@ from txt2actr.environment2actr import actr
 class ACTR_interface:
 
     # nr_of_frac is the number of digits after comma
-    def __init__(self, cognitive_model_file, windows_dict, sounds_dict, nr_of_frac,
+    def __init__(self, actr_env, cognitive_model_file, windows_dict, sounds_dict, nr_of_frac,
                  show_display_labels, time_interval_to_new_val_in_msc=1,
                  human_interaction=False, show_env_windows=False):
 
+        self.actr_env = actr_env
         self.cognitive_model_file = cognitive_model_file
         self.windows_dict = windows_dict
 
@@ -40,10 +39,21 @@ class ACTR_interface:
     def connect_with_actr(self):
 
         actr.connection() if not actr.current_connection else actr.reset()
+        #a= actr("act-r.vlab.eu.airbus.corp", 2650)
+        #print(actr)
+        #actr.start("act-r.vlab.eu.airbus.corp", 2650)
         # get rid of any non-alphanumeric characters at the beginning of path to file string
         start_idx = re.search("[^\W\d]", self.cognitive_model_file).start()
-        self.cognitive_model_file = self.cognitive_model_file[start_idx:].replace("/",";").replace("\\", ";")
-        actr.load_act_r_code(self.cognitive_model_file)
+        # if the actr_env started from a docker, we need to load the model from the tutorial path
+        if self.actr_env.startswith('d'):
+            rel_path_to_file = self.cognitive_model_file.partition('use-cases')[2]
+            print("rel_path_to_file", rel_path_to_file)
+            actr.load_act_r_code(f'/home/actr/actr7.x/tutorial{rel_path_to_file}')
+        else:
+            # for local act-r it seems that ';' is necessary as path seperator
+            self.cognitive_model_file = self.cognitive_model_file[start_idx:].replace("/",";").replace("\\", ";")
+            actr.load_act_r_code(self.cognitive_model_file)
+
         actr.add_word_characters(".")
         actr.add_word_characters("_")
 

@@ -1,5 +1,5 @@
 Simulation should be updated through the task_based_updater (task) or log_based_updater (log);task;
-Start ACT-R from txt2actr (i) or start externally (e) (via docker (d) or docker web interface (dw) not implemented yet);i;
+Start ACT-R from txt2actr (i), externally (e) or via docker web interface (dw);dw;
 Filename and relative path of data or task specification (from the folder in which meta_info.csv is);task/task_based_updater.py;;;;;;;
 Filename and relative path of cognitive model specifications;cognitive-model-specification/model-info.csv;;;;;;
 Filename and relative path of cognitive model;cognitive-model-specification/model.lisp;;;;;

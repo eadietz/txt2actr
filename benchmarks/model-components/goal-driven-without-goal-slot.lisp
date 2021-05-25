@@ -1,6 +1,4 @@
   (p scan-if-item-retrieved
-      =goal>
-       state    idle
       =imaginal>
        name       nil
     ?imaginal>
@@ -9,7 +7,8 @@
         name       =name
         screen-x     =screenx
         screen-y     =screeny
-      =visual-location>
+      ?visual-location>
+        state     free
       ?visual>
         state     free
     ==>
@@ -24,13 +23,9 @@
      =retrieval>
     =imaginal>
        name       =name
-    =goal>
-      state    gd-attend
   )
 
 (p retrieve-attend-if-location-scanned
-    =goal>
-      state    gd-attend
      ?retrieval>
         state     free
      =retrieval>
@@ -51,17 +46,17 @@
       screen-pos =visual-location
     +retrieval>
       current-on-list  =current
-    =goal>
-      state    gd-update
   )
 
   (p gd-visual-ip-update-if-next-retrieved
-    =goal>
-      state    gd-update
+     ?retrieval>
+        state     free
      =retrieval>
       current-on-list  =current
       next-on-list  =next
       =imaginal>
+     ?imaginal>
+        state     free
       =visual>
         value     =val
     ==>
@@ -70,26 +65,34 @@
         name  nil
       +retrieval>
         name  =next
-    =goal>
-      state    idle
       !output! (goal-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Retrieved and attended
       successfully. Display =current is updated with =val)
   )
 
-; specify production rule priorities for goal driven component
-(spp scan-if-item-retrieved :u 1)
 
+; these production rules might not be necessary
+#|(p scan-again-if-retrieval-failed
+     ?visual-location>
+       state     error
+      ?visual>
+        state     free
+    ==>
+     +visual>
+        clear     t ;; Stop visual buffer from updating without explicit requests
+ )
 
-; get back to list, when loop was interrupted
-(p retrieve-again-item-from-list
-     =goal>
-       state  idle
+(p retrieve-again-if-retrieval-failed
      ?retrieval>
-       buffer    empty
+        state     error
     ==>
      +retrieval>
        - next-on-list    nil
-     =goal>
- )
+     +visual>
+        clear     t ;; Stop visual buffer from updating without explicit requests
 
-; catch failures, not necessary
+ )|#
+
+; specify production rule priorities for GDRA
+;(spp scan-if-retrieved :u 10)
+;(spp retrieve-attend-if-scanned :u 10)
+;(spp gdra-update-if-retrieved :u 10)

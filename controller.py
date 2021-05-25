@@ -58,7 +58,7 @@ class Controller:
 
     def do_run(self):
 
-        ACTR_app_starter(self.how_to_start_actr)
+        ACTR_app_starter(self.actr_env)
 
         cognitive_model_file_transformed = self.cognitive_model_file
         # get rid of any non-alphanumeric characters at the beginning of path to file string
@@ -66,11 +66,12 @@ class Controller:
         #cognitive_model_file_transformed = cognitive_model_file_transformed[start_idx:] \
         #    if cognitive_model_file_transformed.startswith(";") else cognitive_model_file_transformed
 
-        actr_interface = ACTR_interface(cognitive_model_file_transformed, self.obj_instantiation.windows_dict,
-                                           self.obj_instantiation.sounds_dict,
-                                           self.nr_of_decimals_in_values, self.show_display_labels,
-                                           self.time_interval_to_new_val_in_msc, self.human_interaction,
-                                           self.show_env_windows)
+        actr_interface = ACTR_interface(self.actr_env, cognitive_model_file_transformed,
+                                        self.obj_instantiation.windows_dict,
+                                        self.obj_instantiation.sounds_dict,
+                                        self.nr_of_decimals_in_values, self.show_display_labels,
+                                        self.time_interval_to_new_val_in_msc, self.human_interaction,
+                                        self.show_env_windows)
         actr_interface.connect_with_actr()
 
         env_simulator = None
@@ -149,7 +150,7 @@ class Controller:
         if not (self.ACTR_updates=='log' or self.ACTR_updates=='task'):
             sys.exit("You need to specify whether the simulation is log_based (log) or task_based (task)")
 
-        self.how_to_start_actr = self.default_values.how_to_start_actr
+        self.actr_env = self.default_values.actr_env
 
         self.log_file_folder = self.default_values.log_file_folder
         self.cognitive_model_specifications_file = self.default_values.cognitive_model_specifications_file
@@ -189,7 +190,7 @@ class Default_Values_Specifier:
 
         # specify default values
 
-        self.how_to_start_actr = 'e'
+        self.actr_env = 'e'
 
         self.column_separator = ";"
         self.start_time_of_first_event = 1
@@ -224,7 +225,7 @@ class Default_Values_Specifier:
             if not (self.ACTR_updates == 'log' or self.ACTR_updates == 'task'):
                 sys.exit("You need to specify whether the simulation is log_based (log) or task_based (task)")
 
-            self.how_to_start_actr = file_open.readline().split(";")[1]
+            self.actr_env = file_open.readline().split(";")[1]
 
             self.log_file_folder = self.set_os_path_sep(path + file_open.readline().split(";")[1])
             self.cognitive_model_specifications_file = self.set_os_path_sep(path + file_open.readline().split(";")[1])

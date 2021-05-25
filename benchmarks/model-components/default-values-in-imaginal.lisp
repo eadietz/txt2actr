@@ -9,5 +9,5 @@
       isa collector
       DICT_OF_TEMP_VAL
 	=goal>
-      state    start
+      state    idle
 )

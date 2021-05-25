@@ -90,12 +90,15 @@
 	  car_brake 	 0 
 	  name 	 nil 
 	=goal>
-      state    start
+      state    idle
 )
 
 
 (set-buffer-chunk 'retrieval 'car_normal-info) 
+
   (p scan-if-item-retrieved
+       =goal>
+        state    idle
        =imaginal>
         name       nil
      ?imaginal>
@@ -104,8 +107,7 @@
          name       =name
          screen-x     =screenx
          screen-y     =screeny
-       ?visual-location>
-         state     free
+       =visual-location>
        ?visual>
          state     free
      ==>
@@ -120,9 +122,13 @@
       =retrieval>
      =imaginal>
         name       =name
+     =goal>
+       state    gd-attend
    )
  
  (p retrieve-attend-if-location-scanned
+     =goal>
+       state    gd-attend
       ?retrieval>
          state     free
       =retrieval>
@@ -143,17 +149,17 @@
        screen-pos =visual-location
      +retrieval>
        current-on-list  =current
+     =goal>
+       state    gd-update
    )
  
    (p gd-visual-ip-update-if-next-retrieved
-      ?retrieval>
-         state     free
+     =goal>
+       state    gd-update
       =retrieval>
        current-on-list  =current
        next-on-list  =next
        =imaginal>
-      ?imaginal>
-         state     free
        =visual>
          value     =val
      ==>
@@ -162,44 +168,34 @@
          name  nil
        +retrieval>
          name  =next
+     =goal>
+       state    idle
        !output! (goal-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Retrieved and attended
        successfully. Display =current is updated with =val)
    )
  
+ ; specify production rule priorities for goal driven component
+ (spp scan-if-item-retrieved :u 1)
  
- ; these production rules might not be necessary
- #|(p scan-again-if-retrieval-failed
-      ?visual-location>
-        state     error
-       ?visual>
-         state     free
-     ==>
-      +visual>
-         clear     t ;; Stop visual buffer from updating without explicit requests
-  )
  
- (p retrieve-again-if-retrieval-failed
+ ; get back to list, when loop was interrupted
+ (p retrieve-again-item-from-list
+      =goal>
+        state  idle
       ?retrieval>
-         state     error
+        buffer    empty
      ==>
       +retrieval>
         - next-on-list    nil
-      +visual>
-         clear     t ;; Stop visual buffer from updating without explicit requests
+      =goal>
+  )
  
-  )|#
- 
- ; specify production rule priorities for GDRA
- ;(spp scan-if-retrieved :u 10)
- ;(spp retrieve-attend-if-scanned :u 10)
- ;(spp gdra-update-if-retrieved :u 10)
+ ; catch failures, not necessary
 
-; (sgp :scene-change-threshold 1.0)
- 
- (p scan-if-scene-changed
+
+(p scan-if-scene-changed
      =goal>
-       isa      goal
-       state    start
+       state    idle
      ?imaginal>
        state    free
      =visual-location>
@@ -210,23 +206,20 @@
      +visual-location>
        :attended new
      +imaginal>
-       isa collector
        name       nil
      =goal>
-       state    update
+       state    dd-attend
  )
  
   (p attend-retrieve-if-location-scanned
      =goal>
-       isa      goal
-       state    update
+       state    dd-attend
       ?retrieval>
          state     free
       =visual-location>
         isa       visual-location
         screen-x  =screenx
         screen-y  =screeny
-        ;color     =name
      ?visual>
        state     free
     ==>
@@ -240,63 +233,55 @@
         cmd           move-attention
         screen-pos    =visual-location
       +retrieval>
-        isa display-info
+        ; isa display-info
+        - name     nil
         <= screen-x =maxx
         >= screen-x =minx
-        <= screen-y =maxy
+        ; screen-y  =screeny ; this is for use case driving-task and flight-task
+        <= screen-y =maxy  ;these two conditions if for use case paired-associates-task
         >= screen-y =miny
      =goal>
-     =visual-location
-     ;@visual-location>
+       state    dd-update
   )
  
   (p dd-visual-ip-update-if-item-retrieved
      =goal>
-       isa      goal
-       state    update
+       state     dd-update
       =visual>
         value     =val
       =retrieval>
-        name      =name
-     ?imaginal>
-       state    free
-    =imaginal>
-       ;isa collector
-       ;name      =name
+        name      =current
+      =imaginal>
      ?visual>
        state    free
     ==>
-       @imaginal>
-         isa collector
-         =name  =val
-      +imaginal>
-       isa collector
-       name       nil
+       =imaginal>
+         =current  =val
+         name  nil
+     +visual>
+         cmd    clear
      =goal>
-       state    start
-     +visual>
-       cmd      clear
+       state    idle
        !output! (data-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Attended and retrieved
-       successfully. Display =name is updated with =val)
+       successfully. Display =current is updated with =val)
   )
  
- (p handle-find-loc-failure
-      ?visual-location>
+ ; specify production rule priorities for data driven component
+ (spp scan-if-scene-changed :u 1)
+ 
+ ;; catch failures, not necessary
+ (p handle-retrieval-failure
+    =goal>
+       state dd-update
+     ?retrieval>
         state     error
-       ?visual>
-         state     free
-     =imaginal>
-         state    free
+     =visual-location>
      ==>
-     +visual>
-         clear     t
-  )
- 
- ; specify production rule priorities for DDAR
- ;(spp scan-if-scene-changed :u 0.1)
- ;(spp attend-retrieve-if-location-scanned :u 1)
- ;(spp dd-visual-ip-update-if-item-retrieved :u 5)
-
+     +visual-location>
+       :attended new
+    =goal>
+       state dd-attend
+ )
 
 
 

@@ -9,8 +9,7 @@
 
 (p attend-probe
     =goal>
-      isa      goal
-      state    start
+      state    idle
     ?imaginal>
       state    free
     =visual-location>
@@ -27,7 +26,6 @@
 
 (p read-probe
     =goal>
-      isa      goal
       state    attending-probe
     =visual>
       value    =val
@@ -48,7 +46,6 @@
 
 (p recall
     =goal>
-      isa      goal
       state    testing
     =retrieval>
       isa      collector
@@ -70,7 +67,6 @@
 
 (p cannot-recall
     =goal>
-      isa      goal
       state    testing
     ?retrieval>
       buffer   failure
@@ -85,7 +81,6 @@
 
 (p detect-study-item
     =goal>
-      isa      goal
       state    read-study-item
     =visual-location>
     ?visual>
@@ -101,7 +96,6 @@
 
 (p associate
     =goal>
-      isa      goal
       state    attending-target
     =visual>
       value    =val
@@ -115,7 +109,7 @@
       answer   =val
    -imaginal>
    =goal>
-      state    start
+      state    idle
    +visual>
       cmd      clear
 )
@@ -123,7 +117,7 @@
 
 ; (goal-focus goal)
 
-(spp attend-probe :u 1)
+(spp attend-probe :u 1.5)
 ;(spp read-probe :u 0)
 ;(spp recall :u 0)
 ;(spp detect-study-item :u 0)

@@ -11,7 +11,7 @@ class ACTR_app_starter:
     actr_link = actr_cmd = actr_script_running = None
     p_flags =  "-p 4000:4000 -p 2650:2650"
     docker_lnx = "docker run -i -v ~/act-r-tutorial:/home/actr/actr7.x/tutorial db30/act-r-container"
-    docker_lnx_web = f"docker run -i {p_flags} -v ~/act-r-tutorial:/home/actr/actr7.x/tutorial db30/act-r-container"
+    docker_lnx_web = f"docker run -i {p_flags} -v ~/Documents/GitHub/txt2actr/benchmarks/use-cases:/home/actr/actr7.x/tutorial db30/act-r-container"
     docker_win = "docker run -i -v %homedrive%%homepath%\act-r-tutorial:/home/actr/actr7.x/tutorial db30/act-r-container"
     docker_win_web = f"docker run -i {p_flags} -v %homedrive%%homepath%\act-r-tutorial:/home/actr/actr7.x/tutorial db30/act-r-container"
 
@@ -49,23 +49,24 @@ class ACTR_app_starter:
     def execute_actr_app(self):
         if not actr.current_connection:
             if _platform.startswith('darwin') or _platform.startswith('linux'):
-                with open(f'{self.actr_lnk}', 'w') as actr_script:
+                with open(f'../{self.actr_lnk}', 'w') as actr_script:
                     actr_script.write(self.actr_cmd)
-                self.actr_script_running = subprocess.Popen(["bash", f'../{self.actr_lnk}'])
-                #subprocess.Popen(f'../{self.actr_lnk}',stdout=subprocess.PIPE,
-                #                                        stderr=subprocess.PIPE)ß
-
-                #print("executes", "docker run -i -p 4000:4000 -p 2650:2650 -v ~/act-r-tutorial:/home/actr/actr7.x/tutorial db30/act-r-container")
-                os.system(self.actr_cmd)
+                execute = ["bash", f'../{self.actr_lnk}']
+                #self.actr_script_running = subprocess.Popen(["bash", f'../{self.actr_lnk}'], stdout=subprocess.PIPE,
+                #                                       stderr=subprocess.PIPE)
             elif _platform.startswith('win'):
                 #with open(f'{self.actr_lnk}', 'w') as actr_script:
                 #    actr_script.write(self.actr_cmd)
-                self.actr_script_running = subprocess.Popen(f'../{self.actr_lnk}',
-                                                            stdout=subprocess.PIPE,
-                                                            stderr=subprocess.PIPE,
-                                                            cwd='external_connections')
+                execute = f'../{self.actr_lnk}'
+                #self.actr_script_running = subprocess.Popen(f'../{self.actr_lnk}',
+                #                                            stdout=subprocess.PIPE,
+                #                                            stderr=subprocess.PIPE,
+                #                                            cwd='external_connections')
             else:
                 sys.exit('Could not identify operating system. Exit.')
+
+            self.actr_script_running = subprocess.Popen(execute, stdout=subprocess.PIPE,
+                                                        stderr=subprocess.PIPE)
 
             print("A connection to ACT-R will be established now... "
                   "waiting for 15 seconds until ACT-R is ready ...")

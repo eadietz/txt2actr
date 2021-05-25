@@ -34,7 +34,7 @@ class Cognitive_Model_Assembler:
         self.chunk_types_file = self.path_mc + "chunk-types.lisp"
         self.def_val_in_imaginal_file = self.path_mc + "default-values-in-imaginal.lisp"
         self.gdr_file = self.path_mc + "goal-driven.lisp"
-        self.ddr_file = self.path_mc + "data-driven-by-goal-slot.lisp"
+        self.ddr_file = self.path_mc + "data-driven.lisp"
 
     def set_path(self, path):
         path = path.replace("/", self.mac_vs_ws)
@@ -79,12 +79,12 @@ class Cognitive_Model_Assembler:
                 ddr_file if os.path.exists(self.path_mc + ddr_file) else self.ddr_file
 
         first_item_to_be_attend = f'\n(set-buffer-chunk \'retrieval \'{to_be_attended_list[0]}-info) \n' \
-            if (to_be_attended_list and gdr_file) else ""
+            if to_be_attended_list else ""
 
         chunk_types = self.chunk_types_as_str() if include_chunk_types else ""
         chunks = self.chunks_as_str() if include_chunks else ""
         dm = self.instantiated_chunks_as_str(to_be_attended_list) if include_instantiated_chunks else ""
-        gdr = self.file_as_str(self.gdr_file) if self.gdr_file else ""
+        gdr = first_item_to_be_attend + "\n" + self.file_as_str(self.gdr_file) if self.gdr_file else ""
         ddr = self.file_as_str(self.ddr_file) if self.ddr_file else ""
         goal = self.goal_as_str(default_goal_slots_and_values) if default_goal_slots_and_values else ""
         uc_specific = self.file_as_str(uc_specific_file) if os.path.exists(uc_specific_file) else ""
@@ -94,8 +94,8 @@ class Cognitive_Model_Assembler:
 
 
 
-        self.construct_cognitive_model("\n\n" + chunk_types + chunks + goal + dm + production_rule_default_val +
-                                       first_item_to_be_attend + gdr + ddr + uc_specific)
+        self.construct_cognitive_model("\n\n" + chunk_types + chunks + goal + dm +
+                                       production_rule_default_val + gdr + ddr + uc_specific)
 
 
     @staticmethod

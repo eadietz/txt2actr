@@ -1,28 +1,30 @@
 (p scan-if-scene-changed
+    =goal>
+      state    idle
     ?imaginal>
       state    free
-    ?visual-location>
-      state     free
+    =visual-location>
     ?visual>
-       state     free
-       scene-change t
+      scene-change t
+      state        free
   ==>
     +visual-location>
       :attended new
     +imaginal>
       name       nil
+    =goal>
+      state    dd-attend
 )
 
  (p attend-retrieve-if-location-scanned
+    =goal>
+      state    dd-attend
      ?retrieval>
         state     free
-    =imaginal>
-      name      nil
      =visual-location>
        isa       visual-location
        screen-x  =screenx
        screen-y  =screeny
-       ;color     =name
     ?visual>
       state     free
    ==>
@@ -30,41 +32,58 @@
      !bind! =maxx (+ =screenx 20)
      !bind! =minx (- =screenx 20)
      ; height of word in pixels (e.g. fontsize 12 is 16px)
-     ;!bind! =maxy (+ =screeny 16)
-     ;!bind! =miny (- =screeny 16)
+     !bind! =maxy (+ =screeny 16)
+     !bind! =miny (- =screeny 16)
      +visual>
        cmd           move-attention
        screen-pos    =visual-location
-    +visual>
-        clear     t ;; Stop visual buffer from updating without explicit requests
      +retrieval>
-       ;name   =name
-       isa display-info
+       ; isa display-info
+       - name     nil
        <= screen-x =maxx
        >= screen-x =minx
-       = screen-y  =screeny
-       ; >= screen-y  =miny
-    =imaginal>
+       ; screen-y  =screeny ; this is for use case driving-task and flight-task
+       <= screen-y =maxy  ;these two conditions if for use case paired-associates-task
+       >= screen-y =miny
+    =goal>
+      state    dd-update
  )
 
  (p dd-visual-ip-update-if-item-retrieved
-     =retrieval>
-       name      =name
-    =imaginal>
-      name      nil
-    ?imaginal>
-      state    free
+    =goal>
+      state     dd-update
      =visual>
        value     =val
+     =retrieval>
+       name      =current
+     =imaginal>
+    ?visual>
+      state    free
    ==>
       =imaginal>
-        =name  =val
-   !output! (data-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Attended and retrieved
-      successfully. Display =name is updated with =val)
+        =current  =val
+        name  nil
+    +visual>
+        cmd    clear
+    =goal>
+      state    idle
+      !output! (data-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Attended and retrieved
+      successfully. Display =current is updated with =val)
  )
 
+; specify production rule priorities for data driven component
+(spp scan-if-scene-changed :u 1)
 
-; specify production rule priorities for DDAR
-;(spp scan-if-scene-changed :u 10)
-;(spp attend-retrieve-if-scanned :u 10)
-;(spp ddar-update-if-retrieved :u 7)
+;; catch failures, not necessary
+(p handle-retrieval-failure
+   =goal>
+      state dd-update
+    ?retrieval>
+       state     error
+    =visual-location>
+    ==>
+    +visual-location>
+      :attended new
+   =goal>
+      state dd-attend
+)

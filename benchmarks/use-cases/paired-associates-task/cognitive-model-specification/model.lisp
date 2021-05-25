@@ -82,17 +82,12 @@
 	  probe 	 nil 
 	  associate 	 nil 
 	=goal>
-      state    start
+      state    idle
 )
 
-
-(set-buffer-chunk 'retrieval 'probe_associate-info) 
-; (sgp :scene-change-threshold 1.0)
- 
- (p scan-if-scene-changed
+(p scan-if-scene-changed
      =goal>
-       isa      goal
-       state    start
+       state    idle
      ?imaginal>
        state    free
      =visual-location>
@@ -103,23 +98,20 @@
      +visual-location>
        :attended new
      +imaginal>
-       isa collector
        name       nil
      =goal>
-       state    update
+       state    dd-attend
  )
  
   (p attend-retrieve-if-location-scanned
      =goal>
-       isa      goal
-       state    update
+       state    dd-attend
       ?retrieval>
          state     free
       =visual-location>
         isa       visual-location
         screen-x  =screenx
         screen-y  =screeny
-        ;color     =name
      ?visual>
        state     free
     ==>
@@ -133,63 +125,55 @@
         cmd           move-attention
         screen-pos    =visual-location
       +retrieval>
-        isa display-info
+        ; isa display-info
+        - name     nil
         <= screen-x =maxx
         >= screen-x =minx
-        <= screen-y =maxy
+        ; screen-y  =screeny ; this is for use case driving-task and flight-task
+        <= screen-y =maxy  ;these two conditions if for use case paired-associates-task
         >= screen-y =miny
      =goal>
-     =visual-location
-     ;@visual-location>
+       state    dd-update
   )
  
   (p dd-visual-ip-update-if-item-retrieved
      =goal>
-       isa      goal
-       state    update
+       state     dd-update
       =visual>
         value     =val
       =retrieval>
-        name      =name
-     ?imaginal>
-       state    free
-    =imaginal>
-       ;isa collector
-       ;name      =name
+        name      =current
+      =imaginal>
      ?visual>
        state    free
     ==>
-       @imaginal>
-         isa collector
-         =name  =val
-      +imaginal>
-       isa collector
-       name       nil
+       =imaginal>
+         =current  =val
+         name  nil
+     +visual>
+         cmd    clear
      =goal>
-       state    start
-     +visual>
-       cmd      clear
+       state    idle
        !output! (data-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Attended and retrieved
-       successfully. Display =name is updated with =val)
+       successfully. Display =current is updated with =val)
   )
  
- (p handle-find-loc-failure
-      ?visual-location>
+ ; specify production rule priorities for data driven component
+ (spp scan-if-scene-changed :u 1)
+ 
+ ;; catch failures, not necessary
+ (p handle-retrieval-failure
+    =goal>
+       state dd-update
+     ?retrieval>
         state     error
-       ?visual>
-         state     free
-     =imaginal>
-         state    free
+     =visual-location>
      ==>
-     +visual>
-         clear     t
-  )
- 
- ; specify production rule priorities for DDAR
- (spp scan-if-scene-changed :u 0.5)
- ;(spp attend-retrieve-if-location-scanned :u 1)
- ;(spp dd-visual-ip-update-if-item-retrieved :u 5)
-
+     +visual-location>
+       :attended new
+    =goal>
+       state dd-attend
+ )
 
 
  (sgp :seed (200 4))
@@ -202,8 +186,7 @@
  
  (p attend-probe
      =goal>
-       isa      goal
-       state    start
+       state    idle
      ?imaginal>
        state    free
      =visual-location>
@@ -220,7 +203,6 @@
  
  (p read-probe
      =goal>
-       isa      goal
        state    attending-probe
      =visual>
        value    =val
@@ -241,7 +223,6 @@
  
  (p recall
      =goal>
-       isa      goal
        state    testing
      =retrieval>
        isa      collector
@@ -263,7 +244,6 @@
  
  (p cannot-recall
      =goal>
-       isa      goal
        state    testing
      ?retrieval>
        buffer   failure
@@ -278,7 +258,6 @@
  
  (p detect-study-item
      =goal>
-       isa      goal
        state    read-study-item
      =visual-location>
      ?visual>
@@ -294,7 +273,6 @@
  
  (p associate
      =goal>
-       isa      goal
        state    attending-target
      =visual>
        value    =val
@@ -308,7 +286,7 @@
        answer   =val
     -imaginal>
     =goal>
-       state    start
+       state    idle
     +visual>
        cmd      clear
  )
@@ -316,7 +294,7 @@
  
  ; (goal-focus goal)
  
- (spp attend-probe :u 1)
+ (spp attend-probe :u 1.5)
  ;(spp read-probe :u 0)
  ;(spp recall :u 0)
  ;(spp detect-study-item :u 0)
