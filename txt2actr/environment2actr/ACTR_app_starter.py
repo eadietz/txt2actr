@@ -57,7 +57,7 @@ class ACTR_app_starter:
             elif _platform.startswith('win'):
                 #with open(f'{self.actr_lnk}', 'w') as actr_script:
                 #    actr_script.write(self.actr_cmd)
-                execute = f'../{self.actr_lnk}'
+                execute = ["bash", f'../{self.actr_lnk}']
                 #self.actr_script_running = subprocess.Popen(f'../{self.actr_lnk}',
                 #                                            stdout=subprocess.PIPE,
                 #                                            stderr=subprocess.PIPE,
