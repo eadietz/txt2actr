@@ -29,6 +29,9 @@
    )
 
 (add-word-characters ".")
+(add-word-characters "  :")
+(add-word-characters "_")
+(add-word-characters "-")
 (set-visloc-default)
 
 ;; ---> insert additional model modules after here
@@ -134,105 +137,95 @@
       state    idle
 )
 
-
-(set-buffer-chunk 'retrieval 'ALTITUDE-info) 
-
-  (p scan-if-item-retrieved
-       =goal>
-        state    idle
-       =imaginal>
-        name       nil
+(p scan-if-scene-changed
+     =goal>
+       state    idle
      ?imaginal>
        state    free
-       =retrieval>
-         name       =name
-         screen-x     =screenx
-         screen-y     =screeny
-       =visual-location>
-       ?visual>
-         state     free
-     ==>
-      !bind! =maxx (+ =screenx 15)
-      !bind! =minx (- =screenx 15)
-      +visual-location>
-         <= screen-x   =maxx
-         >= screen-x   =minx
-         screen-y   =screeny
-     +visual>
-         clear     t ;; Stop visual buffer from updating without explicit requests
-      =retrieval>
-     =imaginal>
-        name       =name
+     =visual-location>
+     ?visual>
+       scene-change t
+       state        free
+   ==>
+     +visual-location>
+       :attended new
+     +imaginal>
+       name       nil
      =goal>
-       state    gd-attend
-   )
+       state    dd-attend
+ )
  
- (p retrieve-attend-if-location-scanned
+  (p attend-retrieve-if-location-scanned
      =goal>
-       state    gd-attend
+       state    dd-attend
       ?retrieval>
          state     free
-      =retrieval>
-        name        =current
-         screen-x     =screenx
-         screen-y     =screeny
-      !bind! =maxx (+ =screenx 15)
-      !bind! =minx (- =screenx 15)
       =visual-location>
-         <= screen-x   =maxx
-         >= screen-x   =minx
-         screen-y   =screeny
+        isa       visual-location
+        screen-x  =screenx
+        screen-y  =screeny
      ?visual>
-        state   free
-     ==>
-     +visual>
-       cmd       move-attention
-       screen-pos =visual-location
-     +retrieval>
-       current-on-list  =current
+       state     free
+    ==>
+      ;; length of value in pixels (1 character is 7 pixels), the margin needs to be adapted according to the environment
+      !bind! =maxx (+ =screenx 50)
+      !bind! =minx (- =screenx 50)
+      ; height of word in pixels (e.g. fontsize 12 is 16px)
+      !bind! =maxy (+ =screeny 16)
+      !bind! =miny (- =screeny 16)
+      +visual>
+        cmd           move-attention
+        screen-pos    =visual-location
+      +retrieval>
+        ; isa display-info
+        - name     nil
+        <= screen-x =maxx
+        >= screen-x =minx
+        ; screen-y  =screeny ; this is for use case driving-task and flight-task
+        <= screen-y =maxy  ;these two conditions if for use case paired-associates-task
+        >= screen-y =miny
      =goal>
-       state    gd-update
-   )
+       state    dd-update
+  )
  
-   (p gd-visual-ip-update-if-next-retrieved
+  (p dd-visual-ip-update-if-item-retrieved
      =goal>
-       state    gd-update
+       state     dd-update
+      =visual>
+        value     =val
       =retrieval>
-       current-on-list  =current
-       next-on-list  =next
-       =imaginal>
-       =visual>
-         value     =val
-     ==>
+        name      =current
+      =imaginal>
+     ?visual>
+       state    free
+    ==>
        =imaginal>
          =current  =val
          name  nil
-       +retrieval>
-         name  =next
+     +visual>
+         cmd    clear
      =goal>
        state    idle
-       !output! (goal-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Retrieved and attended
+       !output! (data-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Attended and retrieved
        successfully. Display =current is updated with =val)
-   )
- 
- ; specify production rule priorities for goal driven component
- (spp scan-if-item-retrieved :u 1)
- 
- 
- ; get back to list, when loop was interrupted
- (p retrieve-again-item-from-list
-      =goal>
-        state  idle
-      ?retrieval>
-        buffer    empty
-     ==>
-      +retrieval>
-        - next-on-list    nil
-      =goal>
   )
  
- ; catch failures, not necessary
-
+ ; specify production rule priorities for data driven component
+ (spp scan-if-scene-changed :u 1)
+ 
+ ;; catch failures, not necessary
+ (p handle-retrieval-failure
+    =goal>
+       state dd-update
+     ?retrieval>
+        state     error
+     =visual-location>
+     ==>
+     +visual-location>
+       :attended new
+    =goal>
+       state dd-attend
+ )
 
 
 

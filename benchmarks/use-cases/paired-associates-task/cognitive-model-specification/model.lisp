@@ -63,7 +63,7 @@
 
 
 (add-dm ;; the location specification for each item (label) value 
- (probe_associate-info isa display-info name probe_associate screen-x 467 screen-y 368) 
+ (probe_associate-info isa display-info name probe_associate screen-x 593 screen-y 368) 
 ;; the list of items that are to be attended in a routine loop 
 (probe_associate-0 ISA list-info current-on-list probe_associate next-on-list probe_associate) 
  
@@ -85,95 +85,105 @@
       state    idle
 )
 
-(p scan-if-scene-changed
-     =goal>
-       state    idle
+
+(set-buffer-chunk 'retrieval 'probe_associate-info) 
+
+  (p scan-if-item-retrieved
+       =goal>
+        state    idle
+       =imaginal>
+        name       nil
      ?imaginal>
        state    free
-     =visual-location>
-     ?visual>
-       scene-change t
-       state        free
-   ==>
-     +visual-location>
-       :attended new
-     +imaginal>
-       name       nil
+       =retrieval>
+         name       =name
+         screen-x     =screenx
+         screen-y     =screeny
+       =visual-location>
+       ?visual>
+         state     free
+     ==>
+      !bind! =maxx (+ =screenx 15)
+      !bind! =minx (- =screenx 15)
+      +visual-location>
+         <= screen-x   =maxx
+         >= screen-x   =minx
+         screen-y   =screeny
+     +visual>
+         clear     t ;; Stop visual buffer from updating without explicit requests
+      =retrieval>
+     =imaginal>
+        name       =name
      =goal>
-       state    dd-attend
- )
+       state    gd-attend
+   )
  
-  (p attend-retrieve-if-location-scanned
+ (p retrieve-attend-if-location-scanned
      =goal>
-       state    dd-attend
+       state    gd-attend
       ?retrieval>
          state     free
-      =visual-location>
-        isa       visual-location
-        screen-x  =screenx
-        screen-y  =screeny
-     ?visual>
-       state     free
-    ==>
-      ;; length of value in pixels (1 character is 7 pixels), the margin needs to be adapted according to the environment
-      !bind! =maxx (+ =screenx 20)
-      !bind! =minx (- =screenx 20)
-      ; height of word in pixels (e.g. fontsize 12 is 16px)
-      !bind! =maxy (+ =screeny 16)
-      !bind! =miny (- =screeny 16)
-      +visual>
-        cmd           move-attention
-        screen-pos    =visual-location
-      +retrieval>
-        ; isa display-info
-        - name     nil
-        <= screen-x =maxx
-        >= screen-x =minx
-        ; screen-y  =screeny ; this is for use case driving-task and flight-task
-        <= screen-y =maxy  ;these two conditions if for use case paired-associates-task
-        >= screen-y =miny
-     =goal>
-       state    dd-update
-  )
- 
-  (p dd-visual-ip-update-if-item-retrieved
-     =goal>
-       state     dd-update
-      =visual>
-        value     =val
       =retrieval>
-        name      =current
-      =imaginal>
+        name        =current
+         screen-x     =screenx
+         screen-y     =screeny
+      !bind! =maxx (+ =screenx 15)
+      !bind! =minx (- =screenx 15)
+      =visual-location>
+         <= screen-x   =maxx
+         >= screen-x   =minx
+         screen-y   =screeny
      ?visual>
-       state    free
-    ==>
+        state   free
+     ==>
+     +visual>
+       cmd       move-attention
+       screen-pos =visual-location
+     +retrieval>
+       current-on-list  =current
+     =goal>
+       state    gd-update
+   )
+ 
+   (p gd-visual-ip-update-if-next-retrieved
+     =goal>
+       state    gd-update
+      =retrieval>
+       current-on-list  =current
+       next-on-list  =next
+       =imaginal>
+       =visual>
+         value     =val
+     ==>
        =imaginal>
          =current  =val
          name  nil
-     +visual>
-         cmd    clear
+       +retrieval>
+         name  =next
      =goal>
        state    idle
-       !output! (data-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Attended and retrieved
+       !output! (goal-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Retrieved and attended
        successfully. Display =current is updated with =val)
+   )
+ 
+ ; specify production rule priorities for goal driven component
+ (spp scan-if-item-retrieved :u 1)
+ 
+ 
+ ; get back to list, when loop was interrupted
+ (p retrieve-again-item-from-list
+      =goal>
+        state  idle
+      ?retrieval>
+        buffer    empty
+     ==>
+      +retrieval>
+        - next-on-list    nil
+      =goal>
   )
  
- ; specify production rule priorities for data driven component
- (spp scan-if-scene-changed :u 1)
- 
- ;; catch failures, not necessary
- (p handle-retrieval-failure
-    =goal>
-       state dd-update
-     ?retrieval>
-        state     error
-     =visual-location>
-     ==>
-     +visual-location>
-       :attended new
-    =goal>
-       state dd-attend
- )
+ ; catch failures, not necessary
+
 
 
  (sgp :seed (200 4))

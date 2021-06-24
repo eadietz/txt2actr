@@ -17,6 +17,7 @@
    )
 (add-word-characters ".")
 (add-word-characters "_")
+(add-word-characters "-")
 
 ;; ---> insert additional model modules after here
 

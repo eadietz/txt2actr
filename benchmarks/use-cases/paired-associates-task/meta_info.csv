@@ -15,8 +15,8 @@ Sampling rate in hz (log based updating) or time interval in msec between presen
 Skip rate in log file in rows;50;
 Column start idx in dataset;0;
 Row start idx in dataset;1;
-show environment windows;yes;
-show display labels (only has effect if 'show environment windows is 'yes');no;
+show environment windows;no;
+show display labels (only has effect if 'show environment windows is 'yes');yes;
 Number of decimal in values (default 2);0;
 time interval to new value in msc (default 1);1;
 simulate with human interaction;no;

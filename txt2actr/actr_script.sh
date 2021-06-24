@@ -1,0 +1,1 @@
+docker run -i -p 4000:4000 -p 2650:2650 -v ~/Documents/GitHub/txt2actr/benchmarks/use-cases:/home/actr/actr7.x/tutorial db30/act-r-container

@@ -1,6 +1,6 @@
 vision;description;y position;x position;width;length;fontsize;x text position;y text position;header labels
 HUD;Head-up Display displays flight parameters and guidance information in flight crew's field of vision;40;90;320;170;12;50;50;
-FCU;Flight Unit Control with EFIS (Electronic Flight Instrument System) Control Panels (CP), used to select the display on the onside PFD and ND and to change the barometer setting, AFS (Auto Flight System) CP, which is the main interface with the Flight Guidance (FG) system;220;510;760;150;12;50;50;ALTS,VSPS,BAL1,BAL1
+FCU;Flight Unit Control with EFIS (Electronic Flight Instrument System) Control Panels (CP), used to select the display on the onside PFD and ND and to change the barometer setting, AFS (Auto Flight System) CP, which is the main interface with the Flight Guidance (FG) system;220;510;760;150;12;50;50;ALTS,VSPS,BAL1
 OIS;Onboard Information System (OIS) is a set of electronic documentation and applications for flight, maintainenance and cabin operations (operating manuals, performance computation and mission management information);410;0;250;150;12;50;50;
 PFD;Primary Flight Display for short-term flight information;410;255;250;150;12;50;50;CASS,ALT
 ND;Navigation Display for medium and long term flight information;410;510;250;150;12;50;50;
