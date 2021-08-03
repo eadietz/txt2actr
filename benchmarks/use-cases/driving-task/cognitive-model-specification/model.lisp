@@ -224,8 +224,8 @@
        state     free
     ==>
       ;; length of value in pixels (1 character is 7 pixels), the margin needs to be adapted according to the environment
-      !bind! =maxx (+ =screenx 20)
-      !bind! =minx (- =screenx 20)
+      !bind! =maxx (+ =screenx 50)
+      !bind! =minx (- =screenx 50)
       ; height of word in pixels (e.g. fontsize 12 is 16px)
       !bind! =maxy (+ =screeny 16)
       !bind! =miny (- =screeny 16)

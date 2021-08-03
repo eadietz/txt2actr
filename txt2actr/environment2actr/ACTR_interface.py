@@ -56,6 +56,7 @@ class ACTR_interface:
 
         actr.add_word_characters(".")
         actr.add_word_characters("_")
+        actr.add_word_characters("-")
 
         actr.add_command("update_window_with_labels", self.update_window_with_labels,
                          "updates window with params actr_window, "
