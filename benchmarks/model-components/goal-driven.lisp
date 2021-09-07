@@ -1,3 +1,7 @@
+(add-dm
+(roll-0 ISA list-info current-on-list ROLL next-on-list PTCH)
+ (pitch-1 ISA list-info current-on-list PTCH next-on-list ROLL)
+)
   (p scan-if-item-retrieved
       =goal>
        state    idle
@@ -86,10 +90,28 @@
        state  idle
      ?retrieval>
        buffer    empty
+       state     free
     ==>
      +retrieval>
        - next-on-list    nil
      =goal>
  )
 
-; catch failures, not necessary
+
+
+(p retrieve-item-coordinates
+     =goal>
+       state  idle
+    ?imaginal>
+      state    free
+     ?retrieval>
+       state    free
+     =retrieval>
+       next-on-list    =name
+    ==>
+     +retrieval>
+       name    =name
+      +imaginal>
+        name  nil
+     =goal>
+)
