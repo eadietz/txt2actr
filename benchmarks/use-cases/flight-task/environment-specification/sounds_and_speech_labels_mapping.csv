@@ -1,6 +1,0 @@
-label;value;sound value;duration in milliseconds;sound type;word;
-APUF;10.0;1000;1000;nil;APU FIRE;
-MW;18.0;2000;1000;nil;MASTER;
-SMOK;11.0;3000;1000;nil;SMOKE;
-TOCW;1.0;4000;1000;nil;TAKEOFF CONF;
-WSHR;3.0;5000;1000;nil;WINDSHEAR;

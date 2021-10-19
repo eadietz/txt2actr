@@ -15,10 +15,10 @@ class ACTR_app_starter:
     docker_win = "docker run -i -v %homedrive%%homepath%\act-r-tutorial:/home/actr/actr7.x/tutorial db30/act-r-container"
     docker_win_web = f"docker run -i {p_flags} -v %homedrive%%homepath%\act-r-tutorial:/home/actr/actr7.x/tutorial db30/act-r-container"
 
-    def __init__(self, how_to_start_actr, actr_lnk="run-act-r.bat.lnk", actr_cmd=None):
+    def __init__(self, how_to_start_actr, actr_lnk="actr_script.sh", actr_cmd=None):
 
+        # self.actr_lnk =  run-act-r.bat.lnk
         self.actr_lnk = actr_lnk
-        self.actr_lnk = 'actr_script.sh'
 
         self.how_to_start_actr = how_to_start_actr
 
@@ -52,8 +52,6 @@ class ACTR_app_starter:
                 with open(f'../{self.actr_lnk}', 'w') as actr_script:
                     actr_script.write(self.actr_cmd)
                 execute = ["bash", f'../{self.actr_lnk}']
-                #self.actr_script_running = subprocess.Popen(["bash", f'../{self.actr_lnk}'], stdout=subprocess.PIPE,
-                #                                       stderr=subprocess.PIPE)
             elif _platform.startswith('win'):
                 #with open(f'{self.actr_lnk}', 'w') as actr_script:
                 #    actr_script.write(self.actr_cmd)

@@ -22,19 +22,5 @@ class Task_Based_Updater:
             self.time_interval_in_msec = time_interval_in_msec
 
     def specify_and_pass(self, log_file_name=""):
+        print("this function needs to be adjusted according to the task")
 
-        pairs = list(zip(['bank', 'card', 'dart', 'face', 'game', 'hand', 'jack', 'king', 'lamb', 'mask',
-                          'neck', 'pipe', 'quip', 'rope', 'sock', 'tent', 'vent', 'wall', 'xray', 'zinc'],
-                         ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8',
-                          '9']))
-
-        schedule_time = 1
-        for i in range(2):
-            self.headers_list = ['number', 'letter']
-            self.values_list = [""] * len(self.headers_list)
-            for item in itertools.permutations(pairs[20 - 2:]):
-                for (number, noun) in item:
-                    self.actr_interface.update_actr_env({'value': f'{number}'}, schedule_time)
-                    schedule_time = int(schedule_time) + int(self.time_interval_in_msec)
-                    self.actr_interface.update_actr_env({'value': f'{noun}'}, schedule_time)
-                    schedule_time = int(schedule_time) + int(self.time_interval_in_msec)

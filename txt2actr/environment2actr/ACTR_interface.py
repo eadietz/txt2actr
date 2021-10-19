@@ -7,6 +7,8 @@ Created on Tue Jul  7 10:24:10 2020
 
 import re
 from txt2actr.environment2actr import actr
+import io
+from contextlib import redirect_stdout
 # =============================================================================
 # This class is all about setting up the ACT-R Environment, including adding
 # goals to the (cognitive) ACT-R Model
@@ -15,14 +17,17 @@ from txt2actr.environment2actr import actr
 
 class ACTR_interface:
 
+    global clear_windows
+
     # nr_of_frac is the number of digits after comma
     def __init__(self, actr_env, cognitive_model_file, windows_dict, sounds_dict, nr_of_frac,
                  show_display_labels, time_interval_to_new_val_in_msc=1,
-                 human_interaction=False, show_env_windows=False):
+                 human_interaction=False, show_env_windows=False, analysis_module=None, py_functions_in_cm={}):
 
         self.actr_env = actr_env
         self.cognitive_model_file = cognitive_model_file
         self.windows_dict = windows_dict
+        self.clear_windows = False
 
         self.sounds_dict = sounds_dict
         self.nr_of_frac = nr_of_frac
@@ -30,8 +35,11 @@ class ACTR_interface:
         self.time_interval_to_new_val_in_msc = time_interval_to_new_val_in_msc
         self.human_interaction = human_interaction
         self.show_env_windows = show_env_windows
+        self.analysis_module = analysis_module
+        self.py_functions_in_cm = py_functions_in_cm
 
-        self.actr_window_updater = "update_window" if not show_display_labels else "update_window_with_labels"
+        self.actr_window_updater = "update_window_with_labels" if show_display_labels else "update_window"
+
 
     def get_actr_instance(self):
         return actr
@@ -39,6 +47,8 @@ class ACTR_interface:
     def connect_with_actr(self):
 
         actr.connection() if not actr.current_connection else actr.reset()
+        self.add_actr_commands()
+
         #a= actr("act-r.vlab.eu.airbus.corp", 2650)
         #print(actr)
         #actr.start("act-r.vlab.eu.airbus.corp", 2650)
@@ -47,16 +57,21 @@ class ACTR_interface:
         # if the actr_env started from a docker, we need to load the model from the tutorial path
         if self.actr_env.startswith('d'):
             rel_path_to_file = self.cognitive_model_file.partition('use-cases')[2]
-            print("rel_path_to_file", rel_path_to_file)
+            #print("rel_path_to_file", rel_path_to_file)
             actr.load_act_r_code(f'/home/actr/actr7.x/tutorial{rel_path_to_file}')
         else:
             # for local act-r it seems that ';' is necessary as path seperator
             self.cognitive_model_file = self.cognitive_model_file[start_idx:].replace("/",";").replace("\\", ";")
-            actr.load_act_r_code(self.cognitive_model_file)
+            if self.human_interaction:
+                actr.load_act_r_code("dummy_model.lisp")
+            else:
+                actr.load_act_r_code(self.cognitive_model_file)
 
         actr.add_word_characters(".")
         actr.add_word_characters("_")
         actr.add_word_characters("-")
+
+    def add_actr_commands(self):
 
         actr.add_command("update_window_with_labels", self.update_window_with_labels,
                          "updates window with params actr_window, "
@@ -70,8 +85,11 @@ class ACTR_interface:
         actr.add_command("update_sound", self.update_sound, "produces tone sound with params freq, duration")
         actr.add_command("update_button", self.update_button, "updates button")
         actr.add_command("update_image", self.update_image, "updates image")
+        actr.add_command("update_line", self.update_line, "updates line")
 
-        #actr.add_command("add_result", self.add_result, "adding result to list")
+        if self.analysis_module:
+            for function_name, description in self.py_functions_in_cm.items():
+                actr.add_command(function_name, getattr(self.analysis_module, function_name), description)
 
     def reload_actr_code(self, compile=False):
         # actr.load_act_r_code(self.cognitive_model_file)
@@ -80,50 +98,64 @@ class ACTR_interface:
     def set_actr_windows(self):
 
         for window in self.windows_dict.values():
+
             actr_window = actr.open_exp_window(window.name, visible=self.show_env_windows, width=window.width,
                                                height=window.length, x=window.x_loc, y=window.y_loc)
             window.actr_window = actr_window
+            for i in window.images_dict.values():
+                if i.color == "line":
+                    actr.add_line_to_exp_window(actr_window, [i.x_loc,i.y_loc],
+                                                [i.x_end, i.y_end], "black")
+                else:
+                    actr.add_image_to_exp_window(actr_window, i.name, i.color, i.x_loc, i.y_loc, i.x_end, i.y_end)
+
             window_labels_as_string = "" if not self.show_display_labels else \
-                                      ", ".join(value[0] for (_, value) in window.labels_dict.items())
+                                      ", ".join(value for (_, [[value, x, y],_]) in window.labels_dict.items())
             actr.add_text_to_exp_window(actr_window, window_labels_as_string, x=window.x_text,
-                                        y=window.y_text, font_size=window.font_size)
+                                        y=window.y_text, font_size=window.font_size, color="black")
             for b in window.buttons_dict.values():
                 actr.add_button_to_exp_window(actr_window, text=b.label, x=b.x_loc, y=b.y_loc, action=b.action,
-                                              height=b.height, width=b.width, color='gray')
-            for i in window.images_dict.values():
-                actr.add_image_to_exp_window(actr_window, i.name, i.color, i.x_loc, i.y_loc, i.x_end, i.y_end)
+                                              height=b.height, width=b.width, color=b.label)
             actr.install_device(actr_window)  # Install window
 
         #actr.install_device(["vision", "cursor"])
-        #actr.install_device(["motor", "keyboard"])
+        #actr.install_device(["motor", "mouse"])
 
-    def update_actr_env(self, changes_dict, schedule_time):
+    def update_actr_env(self, changes_dict, schedule_time=None):
 
         for window in self.windows_dict.values():
             relevant_list = self.intersection(window.labels_dict, changes_dict)
             if relevant_list:
-                for b in window.buttons_dict.values():
-                    actr.schedule_event(schedule_time, "update_button", params=[window.actr_window, b.label,
-                                        b.x_loc, b.y_loc, b.action, b.height, b.width], time_in_ms=True)
-                for i in window.images_dict.values():
-                    if i.appearance == 'True':
-                        actr.schedule_event(schedule_time, "update_image", params=[window.actr_window, i.name, i.color,
-                                             i.x_loc, i.y_loc, i.x_end, i.y_end], time_in_ms=True)
                 window_labels_dict = window.labels_dict
                 window_labels_dict.update((label, [window_labels_dict[label][0],
                                                    changes_dict[label]]) for label in relevant_list)
-                actr.schedule_event(schedule_time - self.time_interval_to_new_val_in_msc,
-                                    "clear_window", params=[window.actr_window], time_in_ms=True)
-                for index, (_, value) in enumerate(window_labels_dict.items(), start=-2):
-                    new_value = self.convert_val(value[1])
-                    display_label = value[0]
-                    for i in window.images_dict.values():
-                        if i.label == display_label and self.convert_val(f'{i.appearance}') == new_value:
-                            actr.schedule_event(schedule_time, "update_image", params=[window.actr_window, i.name,
-                                                i.color, i.x_loc, i.y_loc, i.x_end, i.y_end], time_in_ms=True)
-                    actr.schedule_event(schedule_time, self.actr_window_updater, params=[window.actr_window,
-                                                display_label, new_value, index, window.x_text,
-                                                window.y_text, window.font_size], time_in_ms=True)
+                clear_time = schedule_time - self.time_interval_to_new_val_in_msc \
+                    if schedule_time else schedule_time
+                self.schedule_event(clear_time, "clear_window", params=[window.actr_window], time_in_ms=True)
+                for b in window.buttons_dict.values():
+                    self.schedule_event(schedule_time, "update_button", params=[window.actr_window, b.label,
+                                        b.x_loc, b.y_loc, b.action, b.height, b.width], time_in_ms=True)
+                for i in window.images_dict.values():
+                    if i.color == "line":
+                        roll = float(window_labels_dict["Roll_angle"][1])
+                        pitch = float(window_labels_dict["Pitch_angle"][1])
+                        x_start, y_start, x_end, y_end = self.horizon(roll, pitch, i.x_loc, i.y_loc)
+                        self.schedule_event(schedule_time, "update_line",
+                                            params=[window.actr_window,
+                                        [x_start, y_start], [x_end, y_end]], time_in_ms=True)
+                #    else: #if i.label == display_label: # and self.convert_val(f'{i.appearance}') == new_value:
+                #        self.schedule_event(schedule_time, "update_image",
+                #                            params=[window.actr_window, i.name, i.color,
+                #                        i.x_loc, i.y_loc, i.x_end, i.y_end], time_in_ms=True)
+                for index, (_, [[label, x, y], value]) in enumerate(window_labels_dict.items(), start=-2):
+                    if str(x) == "nan" or str(x) == "":
+                        x = window.x_text
+                        y = window.y_text - (index * 24)
+                    new_value = self.convert_val(value)
+                    display_label = label
+                    self.schedule_event(schedule_time, self.actr_window_updater,
+                                        params=[window.actr_window, display_label, new_value,
+                                        x, y, window.font_size], time_in_ms=True)
         # trying to find an efficient way to record changes in sounds
         new_tone_sounds = filter(lambda new: str(changes_dict.get(new[0])) == str(new[1]), self.sounds_dict)
         if new_tone_sounds:
@@ -133,8 +165,36 @@ class ACTR_interface:
                 sound_type = self.sounds_dict[key].sound_type
                 word = self.sounds_dict[key].word
                 print(schedule_time, freq, duration, sound_type, word)
-                actr.schedule_event(schedule_time, "update_sound",
-                                    params=[float(sound_type), freq, duration, word], time_in_ms=True)
+                self.schedule_event(schedule_time, "update_sound",
+                                    params=[sound_type, freq, duration, word], time_in_ms=True)
+        self.clear_windows = True
+
+    def schedule_event(self, schedule_time, function, params, time_in_ms=True):
+        if schedule_time:
+            actr.schedule_event(schedule_time, function, params, time_in_ms)
+        else:
+            actr.schedule_event_now(function, params)
+
+
+
+    def horizon(self, roll, pitch, x_start=10, y_start=20):
+        # x_start, y_start, x_end, y_end
+        return x_start, round(y_start+pitch-roll), (x_start+300), round(y_start+pitch+roll)
+            #round(float(10+x_start)), \
+            #   round(float((0.5*roll)-pitch+y_start),2), \
+            #   round(float(300+x_start)), \
+            #   round(float((-0.5*roll)-pitch+y_start),2)
+
+    def compute_value_from_string_eq(self, eq, dict):
+        s = eq.find("$") + len("$")
+        e = eq.rfind("$")
+        var = eq[s:e]
+        val = dict[var][1]
+        eq = eq[:s - 1] + val + eq[e + 1:]
+        try:
+            return eval(eq)
+        except Exception as e:
+            print(e)
 
     # update_actr_env excluding clear_window
     def first_update_actr_env(self, changes_dict, schedule_time):
@@ -142,26 +202,28 @@ class ACTR_interface:
         for window in self.windows_dict.values():
             relevant_list = self.intersection(window.labels_dict, changes_dict)
             if relevant_list:
-                for b in window.buttons_dict.values():
-                    actr.schedule_event(schedule_time, "update_button", params=[window.actr_window, b.label,
-                                        b.x_loc, b.y_loc, b.action, b.height, b.width], time_in_ms=True)
-                for i in window.images_dict.values():
-                    if i.appearance == 'True':
-                        actr.schedule_event(schedule_time, "update_image", params=[window.actr_window, i.name, i.color,
-                                             i.x_loc, i.y_loc, i.x_end, i.y_end], time_in_ms=True)
                 window_labels_dict = window.labels_dict
                 window_labels_dict.update((label, [window_labels_dict[label][0],
                                                    changes_dict[label]]) for label in relevant_list)
-                for index, (_, value) in enumerate(window_labels_dict.items(), start=-2):
-                    new_value = self.convert_val(value[1])
-                    display_label = value[0]
-                    for i in window.images_dict.values():
-                        if i.label == display_label and self.convert_val(f'{i.appearance}') == new_value:
-                            actr.schedule_event(schedule_time, "update_image", params=[window.actr_window, i.name,
-                                                i.color, i.x_loc, i.y_loc, i.x_end, i.y_end], time_in_ms=True)
-                    actr.schedule_event(schedule_time, self.actr_window_updater, params=[window.actr_window,
-                                                display_label, new_value, index, window.x_text,
-                                                window.y_text, window.font_size], time_in_ms=True)
+                for b in window.buttons_dict.values():
+                    self.schedule_event(schedule_time, "update_button", params=[window.actr_window, b.label,
+                                        b.x_loc, b.y_loc, b.action, b.height, b.width], time_in_ms=True)
+                #for i in window.images_dict.values():
+                #    if i.appearance == 'True':
+                #        self.schedule_event(schedule_time, "update_image", params=[window.actr_window, i.name, i.color,
+                #                             i.x_loc, i.y_loc, i.x_end, i.y_end], time_in_ms=True)
+                for index, (_, [[label, x, y], value])  in enumerate(window_labels_dict.items(), start=-2):
+                    if str(x) == "nan" or str(x) == "":
+                        x = window.x_text
+                        y = window.y_text - (index * 24)
+                    new_value = self.convert_val(value)
+                    display_label = label
+                    #for i in window.images_dict.values():
+                    #    if i.label == display_label and self.convert_val(f'{i.appearance}') == new_value:
+                    #        self.schedule_event(schedule_time, "update_image", params=[window.actr_window, i.name,
+                    #                            i.color, i.x_loc, i.y_loc, i.x_end, i.y_end], time_in_ms=True)
+                    self.schedule_event(schedule_time, self.actr_window_updater, params=[window.actr_window,
+                                                display_label, new_value, x, y, window.font_size], time_in_ms=True)
         # trying to find an efficient way to record changes in sounds
         new_tone_sounds = filter(lambda new: str(changes_dict.get(new[0])) == str(new[1]), self.sounds_dict)
         if new_tone_sounds:
@@ -171,33 +233,38 @@ class ACTR_interface:
                 sound_type = self.sounds_dict[key].sound_type
                 word = self.sounds_dict[key].word
                 print(schedule_time, freq, duration, sound_type, word)
-                actr.schedule_event(schedule_time, "update_sound",
-                                    params=[float(sound_type), freq, duration, word], time_in_ms=True)
+                self.schedule_event(schedule_time, "update_sound",
+                                    params=[self.convert_val(sound_type), freq, duration, word], time_in_ms=True)
 
     @staticmethod
     def update_button(actr_window, label, x_loc, y_loc, action, height, width):
         actr.add_button_to_exp_window(actr_window, text=label, x=x_loc, y=y_loc, action=action, height=height,
                                       width=width, color='gray')
 
+
+    @staticmethod
+    def update_line(actr_window, start, end):
+        actr.add_line_to_exp_window(actr_window, start, end)
+
     @staticmethod
     def update_image(actr_window, name, color, x_loc, y_loc, width, height):
         actr.add_image_to_exp_window(actr_window, name, color, x_loc, y_loc, width, height)
 
     @staticmethod
-    def update_window(actr_window, display_label, new_value, idx, x_text, y_text, font_size):
+    def update_window(actr_window, display_label, new_value, x_text, y_text, font_size):
         actr.add_text_to_exp_window(actr_window,
                                     text=new_value,
                                     color=display_label, x=x_text,
-                                    y=y_text - (idx * 24),
+                                    y=y_text,
                                     font_size=font_size, width=75)
 
     @staticmethod
-    def update_window_with_labels(actr_window, display_label, new_value, idx, x_text, y_text, font_size):
+    def update_window_with_labels(actr_window, display_label, new_value, x_text, y_text, font_size):
         actr.add_text_to_exp_window(actr_window,
                                     text=f'{display_label}: {new_value}',
                                     color=display_label,
                                     x=x_text,
-                                    y=y_text - (idx * 24),
+                                    y=y_text,
                                     font_size=font_size,
                                     width=75)
 
@@ -209,10 +276,8 @@ class ACTR_interface:
     @staticmethod
     def update_sound(sound_type, freq, duration, word):
         if sound_type == "text":
-            print(sound_type, word)
             actr.new_word_sound(word)
         else:
-            print(freq, duration)
             actr.new_tone_sound(int(freq), int(duration))
 
     @staticmethod
@@ -220,13 +285,24 @@ class ACTR_interface:
         return [key for key in dict_a if key in dict_b]
 
     def convert_val(self, value):
+
         if re.match(r'[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?', value): # re.match(r'^-?\d+(?:\.\d+)$', value):
             return '{:.{prec}f}'.format(float(value), prec=self.nr_of_frac)
         return value
 
     @staticmethod
-    def run_actr(n=10000, real_time=False, run_full_time=False):
+    def run_actr(n=100000, real_time=False, run_full_time=False):
         actr.run_full_time(n, real_time) if run_full_time else actr.run(n, real_time)
+
+    def get_dm(self, ):
+
+        f = io.StringIO()
+        with redirect_stdout(f):
+            for chunk in actr.sdm("-", "eventname", "nil"):
+                actr.dm(chunk)
+            return f.getvalue()
+
+
 
     @staticmethod
     def actr_running():
@@ -267,7 +343,7 @@ class Task_Execution:
         print("to be implemented")
 
     @staticmethod
-    def button_pressed(value):
+    def button_pressed(self, value):
         print("button pressed", value)
 
     @staticmethod

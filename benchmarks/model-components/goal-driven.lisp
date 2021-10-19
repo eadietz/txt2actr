@@ -1,117 +1,68 @@
-(add-dm
-(roll-0 ISA list-info current-on-list ROLL next-on-list PTCH)
- (pitch-1 ISA list-info current-on-list PTCH next-on-list ROLL)
-)
-  (p scan-if-item-retrieved
+(p retrieve-item-from-list
+     =goal>
+       state    idle
+     ?retrieval>
+       state     free
+    ==>
+     +retrieval>
+       - current-on-list    nil
+     =goal>
+ )
+
+ (p scan-if-item-retrieved
       =goal>
        state    idle
-      =imaginal>
-       name       nil
-    ?imaginal>
-      state    free
       =retrieval>
-        name       =name
-        screen-x     =screenx
-        screen-y     =screeny
-      =visual-location>
+        current-on-list       =name
+      ?visual-location>
+        state     free
       ?visual>
         state     free
+      ?imaginal>
+        state    free
     ==>
-     !bind! =maxx (+ =screenx 15)
-     !bind! =minx (- =screenx 15)
      +visual-location>
-        <= screen-x   =maxx
-        >= screen-x   =minx
-        screen-y   =screeny
+        color =name
     +visual>
         clear     t ;; Stop visual buffer from updating without explicit requests
      =retrieval>
-    =imaginal>
-       name       =name
     =goal>
-      state    gd-attend
-  )
+      state    attend
+     +imaginal>
+        =name  nil
+    )
 
-(p retrieve-attend-if-location-scanned
+(p attend
     =goal>
-      state    gd-attend
-     ?retrieval>
-        state     free
-     =retrieval>
-       name        =current
-        screen-x     =screenx
-        screen-y     =screeny
-     !bind! =maxx (+ =screenx 15)
-     !bind! =minx (- =screenx 15)
-     =visual-location>
-        <= screen-x   =maxx
-        >= screen-x   =minx
-        screen-y   =screeny
+      state    attend
+    =visual-location>
     ?visual>
        state   free
     ==>
+    =visual-location>
     +visual>
       cmd       move-attention
       screen-pos =visual-location
-    +retrieval>
-      current-on-list  =current
     =goal>
-      state    gd-update
+      state    read
   )
 
-  (p gd-visual-ip-update-if-next-retrieved
-    =goal>
-      state    gd-update
+  (p read-info
+     =goal>
+       state     read
      =retrieval>
       current-on-list  =current
       next-on-list  =next
-      =imaginal>
       =visual>
         value     =val
+    =imaginal>
     ==>
-      =imaginal>
-        =current  =val
-        name  nil
-      +retrieval>
-        name  =next
+    =imaginal>
+        =current =val
+    +retrieval>
+      current-on-list  =next
     =goal>
       state    idle
       !output! (goal-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Retrieved and attended
       successfully. Display =current is updated with =val)
   )
-
-; specify production rule priorities for goal driven component
-(spp scan-if-item-retrieved :u 1)
-
-
-; get back to list, when loop was interrupted
-(p retrieve-again-item-from-list
-     =goal>
-       state  idle
-     ?retrieval>
-       buffer    empty
-       state     free
-    ==>
-     +retrieval>
-       - next-on-list    nil
-     =goal>
- )
-
-
-
-(p retrieve-item-coordinates
-     =goal>
-       state  idle
-    ?imaginal>
-      state    free
-     ?retrieval>
-       state    free
-     =retrieval>
-       next-on-list    =name
-    ==>
-     +retrieval>
-       name    =name
-      +imaginal>
-        name  nil
-     =goal>
-)

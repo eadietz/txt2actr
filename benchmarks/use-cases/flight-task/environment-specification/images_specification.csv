@@ -1,1 +1,0 @@
-image;description;y start;x start;y end;x end;color;window;label;appearance;(description for appearance: set to 'TRUE' if it should always appear, otherwise set to value of the respective label in log_file);

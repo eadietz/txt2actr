@@ -422,7 +422,7 @@ def set_current_model(name):
     if name.lower() in (x.lower() for x in mp_models()):
         locals.model_name = name
     else:
-        print("%s is not one of the currently available models: %s"%(name,mp_models()))
+        print("%s is not one of the currently available cognitive-model-specification: %s"%(name,mp_models()))
 
 
 def reset ():
@@ -647,7 +647,7 @@ def spp (*params):
     return current_connection.evaluate_single("spp", *params)
 
 def mp_models():
-    return current_connection.evaluate_single("mp-models")
+    return current_connection.evaluate_single("mp-cognitive-model-specification")
 
 def all_productions():
     return current_connection.evaluate_single("all-productions")

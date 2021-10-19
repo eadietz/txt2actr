@@ -15,10 +15,12 @@ from itertools import islice
 
 class Log_Based_Updater:
 
-    headers_list = values_list = None
+    global values_list
+    global headers_list
 
     def __init__(self, actr_interface, column_separator=",",
-                 sampling_rate=100, skip_rate_in_log=5, row_start_idx=1, col_start_idx=0, start_time=0):
+                 sampling_rate=100, skip_rate_in_log=5, row_start_idx=1,
+                 col_start_idx=0, start_time=0):
 
         self.actr_interface = actr_interface
         self.column_separator = column_separator
@@ -30,6 +32,9 @@ class Log_Based_Updater:
 
     def specify_and_pass(self, log_file_name):
 
+        global values_list
+        global headers_list
+
         sampling_rate = self.sampling_rate
         skip_rate_in_log = self.skip_rate_in_log
         row_start_idx = self.row_start_idx
@@ -40,8 +45,8 @@ class Log_Based_Updater:
             with open(log_file_name, 'r') as log_file:
                 # read and set header of log file
                 line = log_file.readline()
-                self.headers_list = line.strip().split(self.column_separator)[0:]
-                self.values_list = [""] * len(self.headers_list)
+                headers_list = line.strip().split(self.column_separator)[0:]
+                values_list = [""] * len(headers_list)
                 schedule_time = start_time
                 # this can surely be made nicer...
                 for i in range(row_start_idx):
@@ -51,7 +56,7 @@ class Log_Based_Updater:
                                                  schedule_time)
                 for line in islice(log_file, row_start_idx, None, skip_rate_in_log):
                     # float('{:.{prec}f}'.format(float(idx/sampling_rate), prec=3))
-                    schedule_time = start_time + int(row_start_idx / sampling_rate * 100)
+                    schedule_time = start_time + int(row_start_idx / sampling_rate * 1000)
                     self.pass_new_data_to_actr_env(line.strip().split(self.column_separator)[col_start_idx:],
                                                    schedule_time)
                     row_start_idx += skip_rate_in_log
@@ -66,10 +71,14 @@ class Log_Based_Updater:
 
     def pass_new_data_to_actr_env(self, new_values_list, schedule_time):
 
-        dict_of_changes = {self.headers_list[idx]: value for idx, value in
-                           enumerate(new_values_list) if self.values_list[idx] != value}
+        global values_list
+        global headers_list
 
-        self.values_list = new_values_list
+        dict_of_changes = {headers_list[idx]: value for idx, value in
+                           enumerate(new_values_list) if values_list[idx] != value}
+
+        values_list = new_values_list
+
         if dict_of_changes:
             try:
                 self.actr_interface.update_actr_env(dict_of_changes, schedule_time)
@@ -78,12 +87,23 @@ class Log_Based_Updater:
 
     def pass_first_data_to_actr_env(self, new_values_list, schedule_time):
 
-        dict_of_changes = {self.headers_list[idx]: value for idx, value in
-                           enumerate(new_values_list) if self.values_list[idx] != value}
+        global values_list
+        global headers_list
 
-        self.values_list = new_values_list
+        dict_of_changes = {headers_list[idx]: self.set_mod_value(headers_list[idx], value)
+                           for idx, value in enumerate(new_values_list) if values_list[idx] != value}
+
+        values_list = new_values_list
         if dict_of_changes:
             try:
                 self.actr_interface.first_update_actr_env(dict_of_changes, schedule_time)
             except Exception as e:
                 print(e)
+
+    def set_mod_value(self, name, value):
+        if (name == "ASU") and (value != ""):
+            if float(value) > 1.5:
+                return "2.0"
+            else:
+                return "1.0"
+        return value
