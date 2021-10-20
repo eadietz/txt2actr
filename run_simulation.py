@@ -12,7 +12,7 @@ class Simulation():
         self.abs_path = f'{os.path.dirname(__file__)}/'
 
         # for windows ...
-        self.abs_path = self.abs_path[1:] if self.abs_path.startswith("C:") else self.abs_path
+        self.abs_path = self.abs_path[2:] if self.abs_path.startswith("C:") else self.abs_path
 
         self.model_components_path = f'{self.abs_path}benchmarks{self.path_sep}model-components{self.path_sep}'
         self.config_file = 'meta_info.csv'
