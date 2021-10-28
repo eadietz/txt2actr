@@ -1,0 +1,418 @@
+[
+  {
+	"simulationType": "log",
+	"startACTR": "e",
+	"paths": {
+        "use_case_folder": "flight-task",
+		"data_analysis_folder": "",
+		"simulationSpecifications": "datasets/merged.csv",
+		"cognitiveModel": "cognitive-model-specification/model.lisp",
+		"resultsFolder": "sessions",
+		"consoleOutputACTR": "console_output.txt"
+	},
+	"pyFunctionsInCognitiveModel" : {},
+	 "cognitive_model_config": {
+		 "cognitive_model_name": "flight-task",
+		 "model_params_dict": {"key": "val"},
+		 "default_val_dict": {},
+		 "include_chunk_types": true,
+		 "include_chunks": true,
+		 "include_instantiated_chunks": true,
+		 "to_be_attended_names": ["CASS","ALT"],
+		 "default_goal_slots_and_values": "state idle",
+		 "uc_specific_list_of_files": [],
+		 "gdr_file": "goal-driven.lisp",
+		 "ddr_file": ""
+	 },
+	  "params": {
+		"windows_specification": [
+			{
+				"vision": "HUD",
+				"description": "Head-up Display displays flight parameters and guidance information in flight crew's field of vision",
+				"y_position": 40,
+				"x_position": 90,
+				"width": 320,
+				"length": 170,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": ""
+			},
+			{
+				"vision": "FCU",
+				"description": "Flight Unit Control with EFIS (Electronic Flight Instrument System) Control Panels (CP), used to select the display on the onside PFD and ND and to change the barometer setting, AFS (Auto Flight System) CP, which is the main interface with the Flight Guidance (FG) system",
+				"y_position": 220,
+				"x_position": 510,
+				"width": 760,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "ALTS,VSPS,BAL1"
+			},
+			{
+				"vision": "OIS",
+				"description": "Onboard Information System (OIS) is a set of electronic documentation and applications for flight, maintainenance and cabin operations (operating manuals, performance computation and mission management information)",
+				"y_position": 410,
+				"x_position": 0,
+				"width": 250,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": ""
+			},
+			{
+				"vision": "PFD",
+				"description": "Primary Flight Display for short-term flight information",
+				"y_position": 410,
+				"x_position": 255,
+				"width": 250,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "CASS,ALT"
+			},
+			{
+				"vision": "ND",
+				"description": "Navigation Display for medium and long term flight information",
+				"y_position": 410,
+				"x_position": 510,
+				"width": 250,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": ""
+			},
+			{
+				"vision": "Engine",
+				"description": "Electronic Centralized Aircraft Monitoring (ECAM)? to monitor and manage a/c systems during ab/normal operations,Mailbox to establish datalink communication with active ATC",
+				"y_position": 410,
+				"x_position": 765,
+				"width": 250,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": ""
+			},
+			{
+				"vision": "System",
+				"description": "also ECAM?",
+				"y_position": 410,
+				"x_position": 1020,
+				"width": 250,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": ""
+			},
+			{
+				"vision": "Warning",
+				"y_position": 410,
+				"x_position": 1275,
+				"width": 250,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "APUF,MW,SMOK,TOCW,WSHR"
+			},
+			{
+				"vision": "L/G",
+				"description": "Landing Gear, PRK BRK panel, GRVTY EXTN panel,Landing Gears Extension and Retraction System?",
+				"y_position": 410,
+				"x_position": 1530,
+				"width": 250,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "LGDN,LGUP"
+			},
+			{
+				"vision": "ISIS",
+				"description": "Integrated Standby Instrument System (ISIS) provides backup of flight parameters and navigation data in case of loss of EFIS",
+				"y_position": 605,
+				"x_position": 600,
+				"width": 250,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": ""
+			},
+			{
+				"vision": "MFD",
+				"description": "Multi-Function Display (MFD) provides interface with FMS,ATC Datalink System, SURV, ECAM NORM C/L, FCU Backup function for AFS, dsiplays filed flight plan with waypoint details",
+				"y_position": 605,
+				"x_position": 855,
+				"width": 250,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "GMT_SEC,GMT_MINUTE,GMT_HOUR,DATE_DAY,DATE_MONTH,DATE_YEAR"
+			},
+			{
+				"vision": "THROTTLE",
+				"description": "Throttle Control Levers gives power to engines",
+				"y_position": 800,
+				"x_position": 855,
+				"width": 250,
+				"length": 130,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "PLA_1,PLA_2,PLA_3,PLA_4"
+			},
+			{
+				"vision": "FLAPS",
+				"description": "Flaps Control Lever displays current flaps position and changes flaps angle",
+				"y_position": 990,
+				"x_position": 600,
+				"width": 250,
+				"length": 130,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": ""
+			},
+			{
+				"vision": "Pilot",
+				"description": "pilot",
+				"y_position": 790,
+				"x_position": 255,
+				"width": 250,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": ""
+			},
+			{
+				"vision": "Overhead Panel",
+				"description": "contains miscellaneous controls and features not directly involved in flying. E.g. air conditioning, anti-ice controls, cabin pressurization controls, oxygen controls, etc.",
+				"y_position": 20,
+				"x_position": 510,
+				"width": 760,
+				"length": 150,
+				"fontsize": 30,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "overhead"
+			}
+		],
+		"buttons_specification": [
+			{
+				"button": "button_1",
+				"y_position": 10,
+				"x_position": 400,
+				"height": 30,
+				"width": 40,
+				"window": "FCU",
+				"label": "FD",
+				"action": ""
+			},
+			{
+				"button": "button_2",
+				"y_position": 60,
+				"x_position": 350,
+				"height": 30,
+				"width": 40,
+				"window": "FCU",
+				"label": "AP1",
+				"action": ""
+			},
+			{
+				"button": "button_3",
+				"y_position": 60,
+				"x_position": 450,
+				"height": 30,
+				"width": 40,
+				"window": "FCU",
+				"label": "AP2",
+				"action": ""
+			},
+			{
+				"button": "button_4",
+				"y_position": 110,
+				"x_position": 400,
+				"height": 30,
+				"width": 40,
+				"window": "FCU",
+				"label": "A_THR",
+				"action": ""
+			}
+		],
+		"images_specification": [
+			{
+				"image": "Image One",
+				"description": "Test Image",
+				"x_start": 0,
+				"y_start": 0,
+				"x_end": 0,
+				"y_end": 0,
+				"color": "",
+				"window": "MFD",
+				"label": "none",
+				"appearance": true
+			}
+		],
+		"windows_labels_mapping": [
+			{
+				"key": "ALT",
+				"value": "ALTITUDE"
+			},
+			{
+				"key": "ALTS",
+				"value": "APU_FIRE_WARNINGMASTER_WARNING"
+			},
+			{
+				"key": "BAL1",
+				"value": "BARO_1_CORRECT_ALTITUDE_LSP"
+			},
+			{
+				"key": "BAL2",
+				"value": "BARO_2_CORRECT_ALTITUDE_LSP"
+			},
+			{
+				"key": "CASS",
+				"value": "SPEED"
+			},
+			{
+				"key": "DATE_MONTH",
+				"value": "M"
+			},
+			{
+				"key": "DATE_YEAR",
+				"value": "Y"
+			},
+			{
+				"key": "GMT_SEC",
+				"value": "SEC"
+			},
+			{
+				"key": "GMT_MINUTE",
+				"value": "MIN"
+			},
+			{
+				"key": "GMT_HOUR",
+				"value": "HRS"
+			},
+			{
+				"key": "LGDN",
+				"value": "GEARS_L-R_DOWN_LOCKED"
+			},
+			{
+				"key": "LGUP",
+				"value": "GEARS_L-R_UP_LOCKED"
+			},
+			{
+				"key": "MW",
+				"value": "MASTER_WARNING"
+			},
+			{
+				"key": "overhead",
+				"value": "A_LOT_OF_BUTTONS"
+			},
+			{
+				"key": "PLA_1",
+				"value": "POWER_LEVER_ANGLE_1"
+			},
+			{
+				"key": "PLA_2",
+				"value": "POWER_LEVER_ANGLE_2"
+			},
+			{
+				"key": "PLA_3",
+				"value": "POWER_LEVER_ANGLE_3"
+			},
+			{
+				"key": "PLA_4",
+				"value": "POWER_LEVER_ANGLE_4"
+			},
+			{
+				"key": "SMOK",
+				"value": ""
+			},
+			{
+				"key": "TOCW",
+				"value": "TAKEOFF_CONF_WARNING"
+			},
+			{
+				"key": "WSHR",
+				"value": "WIND-FLAP_POSITION"
+			},
+			{
+				"key": "VSPS",
+				"value": "SELECTED_VERTICAL_SPEED"
+			},
+			{
+				"key": "AudioEvent",
+				"value": ""
+			}
+		],
+		"sounds_and_speech_labels_mapping": [
+			{
+				"label": "APUF",
+				"value": 10.0,
+				"sound_value": 1000,
+				"duration_in_milliseconds": 1000,
+				"sound_type": "nil",
+				"word": "APU FIRE"
+			},
+			{
+				"label": "MW",
+				"value": 18.0,
+				"sound_value": 2000,
+				"duration_in_milliseconds": 1000,
+				"sound_type": "nil",
+				"word": "MASTER"
+			},
+			{
+				"label": "SMOK",
+				"value": 11.0,
+				"sound_value": 3000,
+				"duration_in_milliseconds": 1000,
+				"sound_type": "nil",
+				"word": "SMOKE"
+			},
+			{
+				"label": "TOCW",
+				"value": 11.0,
+				"sound_value": 3000,
+				"duration_in_milliseconds": 1000,
+				"sound_type": "nil",
+				"word": "TAKEOFF CONF"
+			},
+			{
+				"label": "WSHR",
+				"value": 3.0,
+				"sound_value": 5000,
+				"duration_in_milliseconds": 1000,
+				"sound_type": "nil",
+				"word": "WINDSHEAR"
+			}
+        ]
+	},
+	"columnSeparator": ";",
+	"startTimeFirstEvent": 0,
+	"samplingRateHz": 100,
+	"skipRateInLog": 1,
+	"columnStartIndex": 0,
+	"rowStartIndex": 1,
+	"simulationTimeSeconds": 100000,
+	"decimalNumbers": 2,
+	"timeIntervalMilliseconds": 2,
+	"displayLabels": true,
+	"humanInteraction": false,
+	"environmentWindows": true,
+	"fulltimeACTR": true,
+	"realtimeACTR": false,
+	"consoleOutput": false
+  }
+]
