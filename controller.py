@@ -14,6 +14,7 @@ from txt2actr.environment2actr.obj_instantiator_for_ACTR_env import *
 from txt2actr.environment2actr.ACTR_app_starter import *
 from txt2actr.environment2actr.ACTR_interface import *
 from txt2actr.environment2actr.log_based_updater import *
+from txt2actr.environment2actr.server_based_updater import *
 
 
 # =============================================================================
@@ -98,14 +99,17 @@ class Controller:
             env_simulator = Log_Based_Updater(actr_interface, self.column_separator,
                                               self.sampling_rate, self.skip_rate_in_log, self.row_start_idx_in_dataset,
                                               self.col_start_idx_in_dataset,
-                                              self.start_time_of_first_event)
+                                              self.start_time_of_first_event, self.start_time_of_first_event)
         elif self.ACTR_updates == 'task':
             env_simulator = self.get_module(f'{self.log_file_folder}',
-                                                 'task_based_updater', 'Task_Based_Updater',
+                                                 'task_based_updater', 'Task_Based_Updater', analysis_class,
                                                  self.absolute_path_uc, actr_interface, self.column_separator,
                                                 self.sampling_rate,
                                                 self.skip_rate_in_log, self.row_start_idx_in_dataset,
-                                                self.col_start_idx_in_dataset, self.start_time_of_first_event)
+                                                self.col_start_idx_in_dataset, self.start_time_of_first_event,
+                                                self.nr_of_decimals_in_values)
+        elif self.ACTR_updates == 'server':
+            env_simulator = Server_Based_Updater(self.url, actr_interface, self.default_values.list_of_values_from_server)
 
         print(self.log_file_folder)
 
@@ -199,8 +203,12 @@ class Controller:
     def set_file_names(self):
 
         self.ACTR_updates = self.default_values.ACTR_updates
-        if not (self.ACTR_updates == 'log' or self.ACTR_updates == 'task'):
+        if not (self.ACTR_updates == 'log' or self.ACTR_updates == 'task'or self.ACTR_updates == 'server'):
             sys.exit("You need to specify whether the simulation is log_based (log) or task_based (task)")
+
+        if self.ACTR_updates=='server':
+            self.list_of_values_from_server = self.default_values.list_of_values_from_server
+            self.url = self.default_values.url
 
         self.actr_env = self.default_values.actr_env
 
@@ -218,6 +226,7 @@ class Controller:
         self.windows_labels_specs = self.default_values.windows_labels_specs
         self.sounds_specs = self.default_values.sounds_specs
 
+        self.start_time_of_first_event = self.default_values.start_time_of_first_event
         self.column_separator = self.default_values.column_separator
         self.start_time_of_first_event = int(self.default_values.start_time_of_first_event)
         self.sampling_rate = int(self.default_values.sampling_rate)
@@ -262,7 +271,7 @@ class Default_Values_Specifier:
         self.cognitive_model_config_df = None
         self.actr_env = 'e'
         self.column_separator = ";"
-        self.start_time_of_first_event = 1
+        self.start_time_of_first_event = False
         self.sampling_rate = 100
         self.skip_rate_in_log = 50
         self.col_start_idx_in_dataset = 0
@@ -283,16 +292,13 @@ class Default_Values_Specifier:
 
         self.set_json_values(path, config_specs) if json_bool else self.set_csv_values_into_lists(path, config_specs)
 
-
         if json_bool:
-            sys.exit(0) if not self.verify_if_files_exist([self.log_file_folder,
-                                                           self.absolute_path_da]) else True
-        else:
-            sys.exit(0) if not self.verify_if_files_exist([self.log_file_folder, self.windows_specs,
+            sys.exit(0) if not self.verify_if_files_exist([self.absolute_path_da,self.log_file_folder]) else True
+        elif not json_bool:
+            sys.exit(0) if not self.verify_if_files_exist([self.absolute_path_da, self.log_file_folder, self.windows_specs,
                                                            self.cognitive_model_file, self.buttons_specs,
-                                                           self.images_specs,
-                                                           self.windows_labels_specs, self.sounds_specs,
-                                                           self.absolute_path_da]) else True
+                                                           self.images_specs, self.windows_labels_specs,
+                                                           self.sounds_specs]) else True
 
     def set_json_values(self, path, json_data):
 
@@ -300,8 +306,12 @@ class Default_Values_Specifier:
             #json_data = json.load(file_open)[0]
 
         self.ACTR_updates = json_data["simulationType"]
-        if not (self.ACTR_updates == 'log' or self.ACTR_updates == 'task'):
+        if not (self.ACTR_updates == 'log' or self.ACTR_updates == 'task' or self.ACTR_updates == 'server'):
             sys.exit("You need to specify whether the simulation is log_based (log) or task_based (task)")
+
+        if (self.ACTR_updates == 'server'):
+            self.list_of_values_from_server = json_data["valuesList"]
+            self.url = json_data["url"]
 
         self.actr_env = json_data["startACTR"]
         json_paths_obj = json_data["paths"]
@@ -355,6 +365,8 @@ class Default_Values_Specifier:
 
         self.column_separator = json_data["columnSeparator"]
 
+        if "scheduleNextPossibleEvent" in json_data:
+            self.start_time_of_first_event = json_data["scheduleNextPossibleEvent"]
         if isinstance(json_data["startTimeFirstEvent"], int):
             self.start_time_of_first_event = json_data["startTimeFirstEvent"]
         if isinstance(json_data["samplingRateHz"], int):
@@ -394,7 +406,7 @@ class Default_Values_Specifier:
         with open(path + config_file, 'r') as file_open:
 
             self.ACTR_updates = file_open.readline().split(";")[1]
-            if not (self.ACTR_updates == 'log' or self.ACTR_updates == 'task'):
+            if not (self.ACTR_updates == 'log' or self.ACTR_updates == 'task' or self.ACTR_updates == 'server'):
                 sys.exit("You need to specify whether the simulation is log_based (log) or task_based (task)")
 
             self.actr_env = file_open.readline().split(";")[1]

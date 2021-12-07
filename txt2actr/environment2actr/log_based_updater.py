@@ -20,7 +20,7 @@ class Log_Based_Updater:
 
     def __init__(self, actr_interface, column_separator=",",
                  sampling_rate=100, skip_rate_in_log=5, row_start_idx=1,
-                 col_start_idx=0, start_time=0):
+                 col_start_idx=0, start_time=0, schedule_next_possible_time=False):
 
         self.actr_interface = actr_interface
         self.column_separator = column_separator
@@ -29,6 +29,7 @@ class Log_Based_Updater:
         self.row_start_idx = row_start_idx
         self.col_start_idx = col_start_idx
         self.start_time = start_time
+        self.schedule_next_possible_time = schedule_next_possible_time
 
     def specify_and_pass(self, log_file_name):
 
@@ -56,7 +57,8 @@ class Log_Based_Updater:
                                                  schedule_time)
                 for line in islice(log_file, row_start_idx, None, skip_rate_in_log):
                     # float('{:.{prec}f}'.format(float(idx/sampling_rate), prec=3))
-                    schedule_time = start_time + int(row_start_idx / sampling_rate * 1000)
+                    schedule_time = None if self.schedule_next_possible_time else \
+                        start_time + int(row_start_idx / sampling_rate * 1000)
                     self.pass_new_data_to_actr_env(line.strip().split(self.column_separator)[col_start_idx:],
                                                    schedule_time)
                     row_start_idx += skip_rate_in_log

@@ -42,10 +42,10 @@ class Obj_Instantiator_For_ACTR_Env:
         values = [temp_images_df['image'], temp_images_df['x start'],
                   temp_images_df['y start'], temp_images_df['x end'],
                   temp_images_df['y end'], temp_images_df['color'],
-                  temp_images_df['label'], temp_images_df['appearance']]
+                  temp_images_df['label'], temp_images_df['appearance'], temp_images_df['description']]
         self.images_dict = Obj_Dict(keys, Image, *values).obj_dict
 
-        # read mapping between labels and how they should be represented in ACTR windows
+       # read mapping between labels and how they should be represented in ACTR windows
         windows_labels_df = pd.read_csv(self.windows_labels_specs, delimiter=";")
 
         if not windows_labels_df.empty:
@@ -97,7 +97,7 @@ class Obj_Instantiator_For_ACTR_Env:
             values = [temp_images_df['image'], temp_images_df['x_start'],
                       temp_images_df['y_start'], temp_images_df['x_end'],
                       temp_images_df['y_end'], temp_images_df['color'],
-                      temp_images_df['label'], temp_images_df['appearance']]
+                      temp_images_df['label'], temp_images_df['appearance'], temp_images_df['description']]
             self.images_dict = Obj_Dict(keys, Image, *values).obj_dict
 
         # read mapping between labels and how they should be represented in ACTR windows

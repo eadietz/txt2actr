@@ -1,16 +1,20 @@
 [
   {
-	"simulationType": "log",
-	"startACTR": "e",
+	"simulationType": "server",
+	"url": "http://localhost:8080/fsuipc/",
+	"valuesList": ["CASS"],
+	"startACTR": "i",
 	"paths": {
         "use_case_folder": "flight-task",
-		"data_analysis_folder": "",
-		"simulationSpecifications": "datasets/merged.csv",
+		"data_analysis_folder": "analysis",
+		"simulationSpecifications": "",
 		"cognitiveModel": "cognitive-model-specification/model.lisp",
 		"resultsFolder": "sessions",
 		"consoleOutputACTR": "console_output.txt"
 	},
-	"pyFunctionsInCognitiveModel" : {},
+	"pyFunctionsInCognitiveModel" : {
+		"pass_data_to_sim": "passes new inputs to Flight Simulator"
+	},
 	 "cognitive_model_config": {
 		 "cognitive_model_name": "flight-task",
 		 "model_params_dict": {"key": "val"},
@@ -20,8 +24,8 @@
 		 "include_instantiated_chunks": true,
 		 "to_be_attended_names": ["CASS","ALT"],
 		 "default_goal_slots_and_values": "state idle",
-		 "uc_specific_list_of_files": [],
-		 "gdr_file": "goal-driven.lisp",
+		 "uc_specific_list_of_files": ["cognitive-model-specification/control-aircraft.lisp"],
+		 "gdr_file": "",
 		 "ddr_file": ""
 	 },
 	  "params": {
@@ -66,13 +70,13 @@
 				"vision": "PFD",
 				"description": "Primary Flight Display for short-term flight information",
 				"y_position": 410,
-				"x_position": 255,
-				"width": 250,
-				"length": 150,
+				"x_position": 310,
+				"width": 190,
+				"length": 300,
 				"fontsize": 12,
 				"x_text_position": 50,
-				"y_text_position": 50,
-				"header_labels": "CASS,ALT"
+				"y_text_position": 230,
+				"header_labels": "CASS,ALT,ROLL,PTCH"
 			},
 			{
 				"vision": "ND",
@@ -248,24 +252,20 @@
 				"action": ""
 			}
 		],
-		"images_specification": [
-			{
-				"image": "Image One",
-				"description": "Test Image",
-				"x_start": 0,
-				"y_start": 0,
-				"x_end": 0,
-				"y_end": 0,
-				"color": "",
-				"window": "MFD",
-				"label": "none",
-				"appearance": true
-			}
+		  "images_specification": [
 		],
 		"windows_labels_mapping": [
 			{
 				"key": "ALT",
 				"value": "ALTITUDE"
+			},
+			{
+				"key": "PTCH",
+				"value": ""
+			},
+			{
+				"key": "ROLL",
+				"value": ""
 			},
 			{
 				"key": "ALTS",
@@ -407,16 +407,12 @@
 	"rowStartIndex": 1,
 	"simulationTimeSeconds": 100000,
 	"decimalNumbers": 2,
-	"timeIntervalMilliseconds": 2,
-	"displayLabels": true,
+	"timeIntervalMilliseconds": 1,
+	"displayLabels": false,
 	"humanInteraction": false,
 	"environmentWindows": true,
 	"fulltimeACTR": true,
 	"realtimeACTR": false,
 	"consoleOutput": false
   }
-<<<<<<< HEAD
 ]
-=======
-]
->>>>>>> f96958702077d4ea45ccce941805a07aa147b790

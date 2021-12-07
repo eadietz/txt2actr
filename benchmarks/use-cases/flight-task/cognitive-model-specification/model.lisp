@@ -6,7 +6,7 @@
    ;:visual-activation 10
    ;:imaginal-activation 10
    ;:retrieval-activation 10
-   :auto-attend t ;; -auto-attend 
+   :auto-attend t ;; -auto-attend
    ;:bll 0.5
    ;:declarative-finst-span 1.0
    ;:emt nil ; em? et? em?
@@ -23,7 +23,7 @@
    :trace-detail low
    ;:ul t
    ;:unstuff-aural-location t
-   :v t ;; -model-output 
+   :v t ;; -model-output
    ;:visual-activation 10
    ;:tone-detect-delay 1.0
    )
@@ -65,6 +65,8 @@
 (button_3) 
 (button_4) 
 (ALTITUDE) 
+(PTCH) 
+(ROLL) 
 (SPEED) 
 (MASTER_WARNING) 
 (SMOK) 
@@ -77,7 +79,6 @@
 (SEC) 
 (MIN) 
 (HRS) 
-(Image One) 
 (POWER_LEVER_ANGLE_1) 
 (POWER_LEVER_ANGLE_2) 
 (POWER_LEVER_ANGLE_3) 
@@ -94,32 +95,33 @@
 
 
 (add-dm ;; the location specification for each item (label) value 
- (APU_FIRE_WARNINGMASTER_WARNING-info isa display-info name APU_FIRE_WARNINGMASTER_WARNING screen-x 720.0 screen-y 324.0) 
- (BARO_1_CORRECT_ALTITUDE_LSP-info isa display-info name BARO_1_CORRECT_ALTITUDE_LSP screen-x 699.0 screen-y 300.0) 
- (SELECTED_VERTICAL_SPEED-info isa display-info name SELECTED_VERTICAL_SPEED screen-x 671.0 screen-y 276.0) 
+ (APU_FIRE_WARNINGMASTER_WARNING-info isa display-info name APU_FIRE_WARNINGMASTER_WARNING screen-x 517.0 screen-y 324.0) 
+ (BARO_1_CORRECT_ALTITUDE_LSP-info isa display-info name BARO_1_CORRECT_ALTITUDE_LSP screen-x 517.0 screen-y 300.0) 
+ (SELECTED_VERTICAL_SPEED-info isa display-info name SELECTED_VERTICAL_SPEED screen-x 517.0 screen-y 276.0) 
  (button_1-info isa button-info name button_1 screen-x 930.0 screen-y 245.0) 
  (button_2-info isa button-info name button_2 screen-x 880.0 screen-y 295.0) 
  (button_3-info isa button-info name button_3 screen-x 980.0 screen-y 295.0) 
  (button_4-info isa button-info name button_4 screen-x 930.0 screen-y 345.0) 
- (ALTITUDE-info isa display-info name ALTITUDE screen-x 311.0 screen-y 514.0) 
- (SPEED-info isa display-info name SPEED screen-x 290.0 screen-y 490.0) 
- (MASTER_WARNING-info isa display-info name MASTER_WARNING screen-x 1373.0 screen-y 514.0) 
- (SMOK-info isa display-info name SMOK screen-x 1303.0 screen-y 490.0) 
- (TAKEOFF_CONF_WARNING-info isa display-info name TAKEOFF_CONF_WARNING screen-x 1415.0 screen-y 466.0) 
- (WIND-FLAP_POSITION-info isa display-info name WIND-FLAP_POSITION screen-x 1401.0 screen-y 442.0) 
- (GEARS_L-R_DOWN_LOCKED-info isa display-info name GEARS_L-R_DOWN_LOCKED screen-x 1677.0 screen-y 514.0) 
- (GEARS_L-R_UP_LOCKED-info isa display-info name GEARS_L-R_UP_LOCKED screen-x 1663.0 screen-y 490.0) 
+ (ALTITUDE-info isa display-info name ALTITUDE screen-x 317.0 screen-y 694.0) 
+ (PTCH-info isa display-info name PTCH screen-x 317.0 screen-y 670.0) 
+ (ROLL-info isa display-info name ROLL screen-x 317.0 screen-y 646.0) 
+ (SPEED-info isa display-info name SPEED screen-x 317.0 screen-y 622.0) 
+ (MASTER_WARNING-info isa display-info name MASTER_WARNING screen-x 1282.0 screen-y 514.0) 
+ (SMOK-info isa display-info name SMOK screen-x 1282.0 screen-y 490.0) 
+ (TAKEOFF_CONF_WARNING-info isa display-info name TAKEOFF_CONF_WARNING screen-x 1282.0 screen-y 466.0) 
+ (WIND-FLAP_POSITION-info isa display-info name WIND-FLAP_POSITION screen-x 1282.0 screen-y 442.0) 
+ (GEARS_L-R_DOWN_LOCKED-info isa display-info name GEARS_L-R_DOWN_LOCKED screen-x 1537.0 screen-y 514.0) 
+ (GEARS_L-R_UP_LOCKED-info isa display-info name GEARS_L-R_UP_LOCKED screen-x 1537.0 screen-y 490.0) 
  (M-info isa display-info name M screen-x 862.0 screen-y 709.0) 
  (Y-info isa display-info name Y screen-x 862.0 screen-y 685.0) 
- (SEC-info isa display-info name SEC screen-x 876.0 screen-y 661.0) 
- (MIN-info isa display-info name MIN screen-x 876.0 screen-y 637.0) 
- (HRS-info isa display-info name HRS screen-x 876.0 screen-y 613.0) 
- (Image One-info isa image-info name Image One screen-x 855 screen-y 605) 
- (POWER_LEVER_ANGLE_1-info isa display-info name POWER_LEVER_ANGLE_1 screen-x 988.0 screen-y 904.0) 
- (POWER_LEVER_ANGLE_2-info isa display-info name POWER_LEVER_ANGLE_2 screen-x 988.0 screen-y 880.0) 
- (POWER_LEVER_ANGLE_3-info isa display-info name POWER_LEVER_ANGLE_3 screen-x 988.0 screen-y 856.0) 
- (POWER_LEVER_ANGLE_4-info isa display-info name POWER_LEVER_ANGLE_4 screen-x 988.0 screen-y 832.0) 
- (A_LOT_OF_BUTTONS-info isa display-info name A_LOT_OF_BUTTONS screen-x 622.0 screen-y 133.0) 
+ (SEC-info isa display-info name SEC screen-x 862.0 screen-y 661.0) 
+ (MIN-info isa display-info name MIN screen-x 862.0 screen-y 637.0) 
+ (HRS-info isa display-info name HRS screen-x 862.0 screen-y 613.0) 
+ (POWER_LEVER_ANGLE_1-info isa display-info name POWER_LEVER_ANGLE_1 screen-x 862.0 screen-y 904.0) 
+ (POWER_LEVER_ANGLE_2-info isa display-info name POWER_LEVER_ANGLE_2 screen-x 862.0 screen-y 880.0) 
+ (POWER_LEVER_ANGLE_3-info isa display-info name POWER_LEVER_ANGLE_3 screen-x 862.0 screen-y 856.0) 
+ (POWER_LEVER_ANGLE_4-info isa display-info name POWER_LEVER_ANGLE_4 screen-x 862.0 screen-y 832.0) 
+ (A_LOT_OF_BUTTONS-info isa display-info name A_LOT_OF_BUTTONS screen-x 517.0 screen-y 133.0) 
 ;; the list of items that are to be attended in a routine loop 
 (CASS-0 ISA list-info current-on-list CASS next-on-list ALT) 
  (ALT-1 ISA list-info current-on-list ALT next-on-list CASS) 
@@ -127,76 +129,78 @@
 )
 
 
-(set-buffer-chunk 'retrieval 'CASS-info) 
-
-(p retrieve-item-from-list
-      =goal>
-        state    idle
-      ?retrieval>
-        state     free
-     ==>
-      +retrieval>
-        - current-on-list    nil
-      =goal>
-  )
  
-  (p scan-if-item-retrieved
+ (set-buffer-chunk 'retrieval 'CASS-info)
+ 
+ (p retrieve-item-from-list
        =goal>
-        state    idle
+         state    idle
+       ?retrieval>
+         state     free
+      ==>
+       +retrieval>
+         - current-on-list    nil
+       =goal>
+   )
+ 
+   (p scan-if-item-retrieved
+        =goal>
+         state    idle
+        =retrieval>
+          current-on-list       =name
+        ?visual-location>
+          state     free
+        ?visual>
+          state     free
+        ?imaginal>
+          state    free
+      ==>
+       +visual-location>
+          color =name
+      +visual>
+          clear     t ;; Stop visual buffer from updating without explicit requests
        =retrieval>
-         current-on-list       =name
-       ?visual-location>
-         state     free
-       ?visual>
-         state     free
-       ?imaginal>
-         state    free
-     ==>
-      +visual-location>
-         color =name
-     +visual>
-         clear     t ;; Stop visual buffer from updating without explicit requests
-      =retrieval>
-     =goal>
-       state    attend
-      +imaginal>
-         =name  nil
-     )
- 
- (p attend
-     =goal>
-       state    attend
-     =visual-location>
-     ?visual>
-        state   free
-     ==>
-     =visual-location>
-     +visual>
-       cmd       move-attention
-       screen-pos =visual-location
-     =goal>
-       state    read
-   )
- 
-   (p read-info
       =goal>
-        state     read
-      =retrieval>
-       current-on-list  =current
-       next-on-list  =next
-       =visual>
-         value     =val
-     =imaginal>
-     ==>
-     =imaginal>
-         =current =val
-     +retrieval>
-       current-on-list  =next
-     =goal>
-       state    idle
-       !output! (goal-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Retrieved and attended
-       successfully. Display =current is updated with =val)
-   )
+        state    attend
+       +imaginal>
+          =name  nil
+      )
+ 
+  (p attend
+      =goal>
+        state    attend
+      =visual-location>
+      ?visual>
+         state   free
+      ==>
+      =visual-location>
+      +visual>
+        cmd       move-attention
+        screen-pos =visual-location
+      =goal>
+        state    read
+    )
+ 
+    (p read-info
+       =goal>
+         state     read
+       =retrieval>
+        current-on-list  =current
+        next-on-list  =next
+        =visual>
+          value     =val
+      =imaginal>
+      ==>
+      =imaginal>
+          =current =val
+      +retrieval>
+        current-on-list  =next
+      =goal>
+        state    idle
+        !output! (goal-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Retrieved and attended
+        successfully. Display =current is updated with =val)
+         !eval! ("pass_data_to_sim" (list =val))
+    )
 
 
 

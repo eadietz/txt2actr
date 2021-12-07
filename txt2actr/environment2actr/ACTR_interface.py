@@ -8,11 +8,14 @@ Created on Tue Jul  7 10:24:10 2020
 import re
 from txt2actr.environment2actr import actr
 import io
+import math
+import numbers
 from contextlib import redirect_stdout
 # =============================================================================
 # This class is all about setting up the ACT-R Environment, including adding
 # goals to the (cognitive) ACT-R Model
 # =============================================================================
+
 
 
 class ACTR_interface:
@@ -103,7 +106,7 @@ class ACTR_interface:
                                                height=window.length, x=window.x_loc, y=window.y_loc)
             window.actr_window = actr_window
             for i in window.images_dict.values():
-                if i.color == "line":
+                if i.label == "line":
                     actr.add_line_to_exp_window(actr_window, [i.x_loc,i.y_loc],
                                                 [i.x_end, i.y_end], "black")
                 else:
@@ -126,27 +129,34 @@ class ACTR_interface:
         for window in self.windows_dict.values():
             relevant_list = self.intersection(window.labels_dict, changes_dict)
             if relevant_list:
+                clear_time = schedule_time - self.time_interval_to_new_val_in_msc \
+                    if schedule_time else schedule_time
+                self.schedule_event(clear_time, "clear_window", params=[window.actr_window], time_in_ms=clear_time)
                 window_labels_dict = window.labels_dict
                 window_labels_dict.update((label, [window_labels_dict[label][0],
                                                    changes_dict[label]]) for label in relevant_list)
-                clear_time = schedule_time - self.time_interval_to_new_val_in_msc \
-                    if schedule_time else schedule_time
-                self.schedule_event(clear_time, "clear_window", params=[window.actr_window], time_in_ms=True)
                 for b in window.buttons_dict.values():
                     self.schedule_event(schedule_time, "update_button", params=[window.actr_window, b.label,
                                         b.x_loc, b.y_loc, b.action, b.height, b.width], time_in_ms=True)
                 for i in window.images_dict.values():
-                    if i.color == "line":
-                        roll = float(window_labels_dict["Roll_angle"][1])
-                        pitch = float(window_labels_dict["Pitch_angle"][1])
-                        x_start, y_start, x_end, y_end = self.horizon(roll, pitch, i.x_loc, i.y_loc)
+                    if i.label == "line":
+                        self.schedule_event(schedule_time, "update_image",
+                                            params=[window.actr_window, i.name,
+                                                    i.description[0], 0, 0, 200, 200],
+                                            time_in_ms = True)
+                        #actr.add_image_to_exp_window(window.actr_window, i.name, "attitude-indicator.gif", 0, 0, 200, 200)
+                        roll = float(window_labels_dict[i.description[1]][1])
+                        pitch = float(window_labels_dict[i.description[2]][1])
+                        # x_start, y_shift, x_end
+                        x_start, y_start, x_end, y_end = self.horizon(roll, pitch, i.x_loc, i.y_loc, i.x_end)
+                        #actr.add_line_to_exp_window(window.actr_window, [x_start, y_start], [x_end, y_end], i.color)
                         self.schedule_event(schedule_time, "update_line",
                                             params=[window.actr_window,
-                                        [x_start, y_start], [x_end, y_end]], time_in_ms=True)
-                #    else: #if i.label == display_label: # and self.convert_val(f'{i.appearance}') == new_value:
-                #        self.schedule_event(schedule_time, "update_image",
-                #                            params=[window.actr_window, i.name, i.color,
-                #                        i.x_loc, i.y_loc, i.x_end, i.y_end], time_in_ms=True)
+                                        [x_start, y_start], [x_end, y_end], i.color], time_in_ms=True)
+                    if i.label == "pic":
+                        self.schedule_event(schedule_time, "update_image",
+                                            params=[window.actr_window, i.name, i.color, i.x_loc,
+                                            i.y_loc, i.x_end, i.y_end])
                 for index, (_, [[label, x, y], value]) in enumerate(window_labels_dict.items(), start=-2):
                     if str(x) == "nan" or str(x) == "":
                         x = window.x_text
@@ -175,15 +185,17 @@ class ACTR_interface:
         else:
             actr.schedule_event_now(function, params)
 
+    def horizon(self, roll, pitch, x_start=10, y_shift=50, x_end=200):
+        f = -2.5 # px*180grad/ pi*rad, 1grad entspricht f pixel
+        y_d = f*pitch
+        #y_shift = y_shift if pitch < 0 else y_shift*-1
+        ges = math.tan((roll*math.pi)/180)*200
 
-
-    def horizon(self, roll, pitch, x_start=10, y_start=20):
         # x_start, y_start, x_end, y_end
-        return x_start, round(y_start+pitch-roll), (x_start+300), round(y_start+pitch+roll)
-            #round(float(10+x_start)), \
-            #   round(float((0.5*roll)-pitch+y_start),2), \
-            #   round(float(300+x_start)), \
-            #   round(float((-0.5*roll)-pitch+y_start),2)
+        # as in old russian aircrafts
+        #x_start, round(y_d + ges) + y_shift, x_end, round(y_d - ges) + y_shift
+        # as in nowadays aicrafts
+        return x_start, round(y_d+ges)+y_shift, x_end, round(y_d-ges)+y_shift
 
     def compute_value_from_string_eq(self, eq, dict):
         s = eq.find("$") + len("$")
@@ -197,7 +209,7 @@ class ACTR_interface:
             print(e)
 
     # update_actr_env excluding clear_window
-    def first_update_actr_env(self, changes_dict, schedule_time):
+    def first_update_actr_env(self, changes_dict, schedule_time=None):
 
         for window in self.windows_dict.values():
             relevant_list = self.intersection(window.labels_dict, changes_dict)
@@ -212,7 +224,7 @@ class ACTR_interface:
                 #    if i.appearance == 'True':
                 #        self.schedule_event(schedule_time, "update_image", params=[window.actr_window, i.name, i.color,
                 #                             i.x_loc, i.y_loc, i.x_end, i.y_end], time_in_ms=True)
-                for index, (_, [[label, x, y], value])  in enumerate(window_labels_dict.items(), start=-2):
+                for index, (_, [[label, x, y], value]) in enumerate(window_labels_dict.items(), start=-2):
                     if str(x) == "nan" or str(x) == "":
                         x = window.x_text
                         y = window.y_text - (index * 24)
@@ -243,8 +255,8 @@ class ACTR_interface:
 
 
     @staticmethod
-    def update_line(actr_window, start, end):
-        actr.add_line_to_exp_window(actr_window, start, end)
+    def update_line(actr_window, start, end, color):
+        actr.add_line_to_exp_window(actr_window, start, end, color)
 
     @staticmethod
     def update_image(actr_window, name, color, x_loc, y_loc, width, height):
@@ -286,8 +298,10 @@ class ACTR_interface:
 
     def convert_val(self, value):
 
-        if re.match(r'[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?', value): # re.match(r'^-?\d+(?:\.\d+)$', value):
+        # test if value can be converted to float
+        if re.match(r'^[-+]?(?:\b[0-9]+(?:\.[0-9]*)?|\.[0-9]+\b)(?:[eE][-+]?[0-9]+\b)?$', value): #re.match(r'[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?', value): # re.match(r'^-?\d+(?:\.\d+)$', value):
             return '{:.{prec}f}'.format(float(value), prec=self.nr_of_frac)
+
         return value
 
     @staticmethod
@@ -301,8 +315,6 @@ class ACTR_interface:
             for chunk in actr.sdm("-", "eventname", "nil"):
                 actr.dm(chunk)
             return f.getvalue()
-
-
 
     @staticmethod
     def actr_running():
