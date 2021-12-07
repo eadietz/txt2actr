@@ -123,8 +123,7 @@
  (POWER_LEVER_ANGLE_4-info isa display-info name POWER_LEVER_ANGLE_4 screen-x 862.0 screen-y 832.0) 
  (A_LOT_OF_BUTTONS-info isa display-info name A_LOT_OF_BUTTONS screen-x 517.0 screen-y 133.0) 
 ;; the list of items that are to be attended in a routine loop 
-(CASS-0 ISA list-info current-on-list CASS next-on-list ALT) 
- (ALT-1 ISA list-info current-on-list ALT next-on-list CASS) 
+(CASS-0 ISA list-info current-on-list CASS next-on-list CASS) 
  
 )
 

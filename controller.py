@@ -99,7 +99,7 @@ class Controller:
             env_simulator = Log_Based_Updater(actr_interface, self.column_separator,
                                               self.sampling_rate, self.skip_rate_in_log, self.row_start_idx_in_dataset,
                                               self.col_start_idx_in_dataset,
-                                              self.start_time_of_first_event, self.start_time_of_first_event)
+                                              self.start_time_of_first_event)
         elif self.ACTR_updates == 'task':
             env_simulator = self.get_module(f'{self.log_file_folder}',
                                                  'task_based_updater', 'Task_Based_Updater', analysis_class,
@@ -109,7 +109,10 @@ class Controller:
                                                 self.col_start_idx_in_dataset, self.start_time_of_first_event,
                                                 self.nr_of_decimals_in_values)
         elif self.ACTR_updates == 'server':
-            env_simulator = Server_Based_Updater(self.url, actr_interface, self.default_values.list_of_values_from_server)
+            env_simulator = Server_Based_Updater(self.url, actr_interface,
+                                                 self.default_values.list_of_values_from_server,
+                                                 self.sampling_rate,
+                                                 self.start_time_of_first_event)
 
         print(self.log_file_folder)
 

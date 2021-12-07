@@ -22,7 +22,7 @@
 		 "include_chunk_types": true,
 		 "include_chunks": true,
 		 "include_instantiated_chunks": true,
-		 "to_be_attended_names": ["CASS","ALT"],
+		 "to_be_attended_names": ["CASS"],
 		 "default_goal_slots_and_values": "state idle",
 		 "uc_specific_list_of_files": ["cognitive-model-specification/control-aircraft.lisp"],
 		 "gdr_file": "",
