@@ -6,10 +6,13 @@ import json
 
 class Simulation():
 
+    # for windows ...
+
     def __init__(self, json_bool=True):
 
-        self.path_sep = "\\" if _platform.startswith('win') else "/"
-        self.abs_path = f'{os.path.dirname(__file__)}' if _platform.startswith('win') else f'{os.path.dirname(__file__)}/'
+        self.path_sep = "/"
+        self.abs_path = f'{os.path.dirname(__file__)}/'
+        self.abs_path = self.abs_path[2:] if self.abs_path.startswith("C:") else self.abs_path
 
         self.model_components_path = f'{self.abs_path}benchmarks{self.path_sep}model-components{self.path_sep}'
         self.config_file = 'meta_info.csv'

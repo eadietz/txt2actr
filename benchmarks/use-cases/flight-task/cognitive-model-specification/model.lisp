@@ -64,7 +64,7 @@
 (button_2) 
 (button_3) 
 (button_4) 
-(ALTITUDE) 
+(altitude) 
 (PTCH) 
 (ROLL) 
 (SPEED) 
@@ -102,7 +102,7 @@
  (button_2-info isa button-info name button_2 screen-x 880.0 screen-y 295.0) 
  (button_3-info isa button-info name button_3 screen-x 980.0 screen-y 295.0) 
  (button_4-info isa button-info name button_4 screen-x 930.0 screen-y 345.0) 
- (ALTITUDE-info isa display-info name ALTITUDE screen-x 317.0 screen-y 694.0) 
+ (altitude-info isa display-info name altitude screen-x 317.0 screen-y 694.0) 
  (PTCH-info isa display-info name PTCH screen-x 317.0 screen-y 670.0) 
  (ROLL-info isa display-info name ROLL screen-x 317.0 screen-y 646.0) 
  (SPEED-info isa display-info name SPEED screen-x 317.0 screen-y 622.0) 
@@ -123,7 +123,7 @@
  (POWER_LEVER_ANGLE_4-info isa display-info name POWER_LEVER_ANGLE_4 screen-x 862.0 screen-y 832.0) 
  (A_LOT_OF_BUTTONS-info isa display-info name A_LOT_OF_BUTTONS screen-x 517.0 screen-y 133.0) 
 ;; the list of items that are to be attended in a routine loop 
-(CASS-0 ISA list-info current-on-list CASS next-on-list CASS) 
+(altitude-0 ISA list-info current-on-list altitude next-on-list altitude) 
  
 )
 

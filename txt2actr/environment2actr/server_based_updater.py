@@ -16,7 +16,7 @@ class Server_Based_Updater:
     def specify_and_pass(self, log_file_name):
 
         print(f"Data from: {self.url}")
-        self.actr_interface.first_update_actr_env({"CASS": "Test"}, self.start_time_of_first_event)
+        self.actr_interface.first_update_actr_env({"altitude": "Test"}, self.start_time_of_first_event)
         idx = 0
         while True:
             for item in self.relevant_labels_list:
