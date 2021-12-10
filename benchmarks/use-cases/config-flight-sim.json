@@ -1,7 +1,8 @@
 [
   {
 	"simulationType": "server",
-	"url": "http://localhost:8080/fsuipc/",
+	"hostname": "localhost",
+	"port": "2048",
 	"valuesList": ["altitude"],
 	"startACTR": "i",
 	"paths": {

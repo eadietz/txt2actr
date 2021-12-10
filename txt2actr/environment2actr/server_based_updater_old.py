@@ -2,7 +2,7 @@ import requests
 import time
 
 
-class Server_Based_Updater:
+class Server_Based_Updater_Old:
 
     def __init__(self, url, actr_interface, relevant_labels_list,
                  sampling_rate, start_time_of_first_event):

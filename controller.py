@@ -109,7 +109,7 @@ class Controller:
                                                 self.col_start_idx_in_dataset, self.start_time_of_first_event,
                                                 self.nr_of_decimals_in_values)
         elif self.ACTR_updates == 'server':
-            env_simulator = Server_Based_Updater(self.url, actr_interface,
+            env_simulator = Server_Based_Updater(self.hostname, self.port, actr_interface,
                                                  self.default_values.list_of_values_from_server,
                                                  self.sampling_rate,
                                                  self.start_time_of_first_event)
@@ -211,7 +211,8 @@ class Controller:
 
         if self.ACTR_updates=='server':
             self.list_of_values_from_server = self.default_values.list_of_values_from_server
-            self.url = self.default_values.url
+            self.hostname = self.default_values.hostname
+            self.port = self.default_values.port
 
         self.actr_env = self.default_values.actr_env
 
@@ -314,7 +315,8 @@ class Default_Values_Specifier:
 
         if (self.ACTR_updates == 'server'):
             self.list_of_values_from_server = json_data["valuesList"]
-            self.url = json_data["url"]
+            self.hostname = json_data["hostname"]
+            self.port = json_data["port"]
 
         self.actr_env = json_data["startACTR"]
         json_paths_obj = json_data["paths"]
