@@ -19,6 +19,7 @@ class Server_Based_Updater:
         self.relevant_labels_list = relevant_labels_list
         self.sampling_rate = sampling_rate
         self.start_time = start_time_of_first_event
+        self.idx = 0
 
     async def show_offset_values(self, payload):
 
@@ -30,16 +31,10 @@ class Server_Based_Updater:
         altitude = round(int(payload_data.get("altitude")) / (65535 * 65535) * 3.28084)
         speed = round(int(payload_data.get("speed")) / 128)
 
-        vals_of_interest_dict = {"ALTITUDE" : altitude, "SPEED": speed, "HEADING": heading, "AP": AP}
+        vals_of_interest_dict = {"ALTITUDE": altitude, "SPEED": speed, "HEADING": heading, "AP": AP}
 
-        self.actr_interface.update_actr_env(vals_of_interest_dict)
-
-        idx = 1
-        while True:
-            vals_of_interest_dict = {k: str(idx) for k, v in vals_of_interest_dict.items()}
-            schedule_time = self.start_time + int(idx / self.sampling_rate * 1000)
-            self.actr_interface.update_actr_env(vals_of_interest_dict, schedule_time)
-            idx += 1
+        schedule_time = self.start_time + int(self.idx / self.sampling_rate * 1000)
+        self.actr_interface.update_actr_env(vals_of_interest_dict, schedule_time)
 
         #print(f"Heading: {heading}, Altitude: {altitude}, Speed: {speed}, Autopilot 1: {AP}")
 
@@ -88,11 +83,6 @@ class Server_Based_Updater:
 
             #####################receive_count = 0 #for use with receive_count < 100
 
-            if self.actr_interface != None:
-                self.actr_interface.first_update_actr_env({"altitude": "Test"}, self.start_time_of_first_event)
-
-            idx = 0
-
             while True:
 
                 # Read data
@@ -105,10 +95,7 @@ class Server_Based_Updater:
                     # await show_offset_values(payload=response_data)
                     await self.handle_offset_receive(payload=response_data)
 
-                    if self.actr_interface != None:
-                        schedule_time = self.start_time_of_first_event + int(idx / self.sampling_rate * 1000)
-                        self.actr_interface.update_actr_env({"altitude": f"{idx}"}, schedule_time)
-                        idx += 1
+                    self.idx += 1
 
                 else:
                     print("[ERROR]", response_data.get("errorCode"), response_data.get("errorMessage"))
