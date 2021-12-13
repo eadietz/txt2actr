@@ -1,6 +1,6 @@
 
 
-(set-buffer-chunk 'retrieval 'CASS-info)
+(set-buffer-chunk 'retrieval 'SPEED-info)
 
 (p retrieve-item-from-list
       =goal>
@@ -69,5 +69,5 @@
        state    idle
        !output! (goal-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Retrieved and attended
        successfully. Display =current is updated with =val)
-        !eval! ("pass_data_to_sim" (list =val))
+        !eval! ("pass_data_to_sim" (list =current =val))
    )

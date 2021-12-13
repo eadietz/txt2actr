@@ -7,10 +7,10 @@ from txt2actr.environment2actr import actr
 import os
 import io
 import numpy as np
-from contextlib import redirect_stdout
-from ast import literal_eval
-from sklearn.metrics import mean_squared_error
-from math import sqrt
+#from contextlib import redirect_stdout
+#from ast import literal_eval
+#from sklearn.metrics import mean_squared_error
+#from math import sqrt
 
 
 
@@ -45,8 +45,8 @@ class Analysis:
         else:
             return False
 
-    def pass_data_to_sim(self, value):
-        print(value)
+    def pass_data_to_sim(self, label_and_value):
+        print("the cognitive model reads", label_and_value)
 
     # called by the cognitive model in act-r
     def add_result(self, results):

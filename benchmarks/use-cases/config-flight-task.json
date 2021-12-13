@@ -20,9 +20,9 @@
 		 "include_chunk_types": true,
 		 "include_chunks": true,
 		 "include_instantiated_chunks": true,
-		 "to_be_attended_names": ["CASS","ALT"],
+		 "to_be_attended_names": [],
 		 "default_goal_slots_and_values": "state idle",
-		 "uc_specific_list_of_files": ["cognitive-model-specification/control-aircraft.lisp"],
+		 "uc_specific_list_of_files": ["cognitive-model-specification/control-aircraft-ddr.lisp"],
 		 "gdr_file": "",
 		 "ddr_file": ""
 	 },
@@ -50,7 +50,7 @@
 				"fontsize": 12,
 				"x_text_position": 50,
 				"y_text_position": 50,
-				"header_labels": "ALTS,VSPS,BAL1"
+				"header_labels": "Autopilot"
 			},
 			{
 				"vision": "OIS",
@@ -74,7 +74,7 @@
 				"fontsize": 12,
 				"x_text_position": 50,
 				"y_text_position": 230,
-				"header_labels": "CASS,ALT,ROLL,PTCH"
+				"header_labels": "SPEED,ALTITUDE,ROLL,PTCH,HEADING"
 			},
 			{
 				"vision": "ND",
@@ -186,9 +186,9 @@
 			{
 				"vision": "Pilot",
 				"description": "pilot",
-				"y_position": 790,
-				"x_position": 255,
-				"width": 250,
+				"y_position": 850,
+				"x_position": 140,
+				"width": 150,
 				"length": 150,
 				"fontsize": 12,
 				"x_text_position": 50,
@@ -266,8 +266,20 @@
 		],
 		"windows_labels_mapping": [
 			{
+				"key": "APUF",
+				"value": "Autopilot"
+			},
+			{
+				"key": "HDGS",
+				"value": "HEADING"
+			},
+			{
 				"key": "ALT",
 				"value": "ALTITUDE"
+			},
+			{
+				"key": "CASS",
+				"value": "SPEED"
 			},
 			{
 				"key": "PTCH",
@@ -288,10 +300,6 @@
 			{
 				"key": "BAL2",
 				"value": "BARO_2_CORRECT_ALTITUDE_LSP"
-			},
-			{
-				"key": "CASS",
-				"value": "SPEED"
 			},
 			{
 				"key": "DATE_MONTH",

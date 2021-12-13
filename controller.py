@@ -109,7 +109,7 @@ class Controller:
                                                 self.col_start_idx_in_dataset, self.start_time_of_first_event,
                                                 self.nr_of_decimals_in_values)
         elif self.ACTR_updates == 'server':
-            env_simulator = Server_Based_Updater(self.hostname, self.port, actr_interface,
+            env_simulator = Server_Based_Updater(actr_interface, self.hostname, self.port,
                                                  self.default_values.list_of_values_from_server,
                                                  self.sampling_rate,
                                                  self.start_time_of_first_event)
@@ -230,7 +230,6 @@ class Controller:
         self.windows_labels_specs = self.default_values.windows_labels_specs
         self.sounds_specs = self.default_values.sounds_specs
 
-        self.start_time_of_first_event = self.default_values.start_time_of_first_event
         self.column_separator = self.default_values.column_separator
         self.start_time_of_first_event = int(self.default_values.start_time_of_first_event)
         self.sampling_rate = int(self.default_values.sampling_rate)

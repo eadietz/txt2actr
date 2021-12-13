@@ -112,8 +112,7 @@ class ACTR_interface:
                 else:
                     actr.add_image_to_exp_window(actr_window, i.name, i.color, i.x_loc, i.y_loc, i.x_end, i.y_end)
 
-            window_labels_as_string = "" if not self.show_display_labels else \
-                                      ", ".join(value for (_, [[value, x, y],_]) in window.labels_dict.items())
+            window_labels_as_string = ", ".join(value for (_, [[value, x, y],_]) in window.labels_dict.items())
             actr.add_text_to_exp_window(actr_window, window_labels_as_string, x=window.x_text,
                                         y=window.y_text, font_size=window.font_size, color="black")
             for b in window.buttons_dict.values():
@@ -180,7 +179,8 @@ class ACTR_interface:
         self.clear_windows = True
 
     def schedule_event(self, schedule_time, function, params, time_in_ms=True):
-        if schedule_time:
+
+        if isinstance(schedule_time, float) or isinstance(schedule_time, int):
             actr.schedule_event(schedule_time, function, params, time_in_ms)
         else:
             actr.schedule_event_now(function, params)
@@ -207,46 +207,6 @@ class ACTR_interface:
             return eval(eq)
         except Exception as e:
             print(e)
-
-    # update_actr_env excluding clear_window
-    def first_update_actr_env(self, changes_dict, schedule_time=None):
-
-        for window in self.windows_dict.values():
-            relevant_list = self.intersection(window.labels_dict, changes_dict)
-            if relevant_list:
-                window_labels_dict = window.labels_dict
-                window_labels_dict.update((label, [window_labels_dict[label][0],
-                                                   changes_dict[label]]) for label in relevant_list)
-                for b in window.buttons_dict.values():
-                    self.schedule_event(schedule_time, "update_button", params=[window.actr_window, b.label,
-                                        b.x_loc, b.y_loc, b.action, b.height, b.width], time_in_ms=True)
-                #for i in window.images_dict.values():
-                #    if i.appearance == 'True':
-                #        self.schedule_event(schedule_time, "update_image", params=[window.actr_window, i.name, i.color,
-                #                             i.x_loc, i.y_loc, i.x_end, i.y_end], time_in_ms=True)
-                for index, (_, [[label, x, y], value]) in enumerate(window_labels_dict.items(), start=-2):
-                    if str(x) == "nan" or str(x) == "":
-                        x = window.x_text
-                        y = window.y_text - (index * 24)
-                    new_value = self.convert_val(value)
-                    display_label = label
-                    #for i in window.images_dict.values():
-                    #    if i.label == display_label and self.convert_val(f'{i.appearance}') == new_value:
-                    #        self.schedule_event(schedule_time, "update_image", params=[window.actr_window, i.name,
-                    #                            i.color, i.x_loc, i.y_loc, i.x_end, i.y_end], time_in_ms=True)
-                    self.schedule_event(schedule_time, self.actr_window_updater, params=[window.actr_window,
-                                                display_label, new_value, x, y, window.font_size], time_in_ms=True)
-        # trying to find an efficient way to record changes in sounds
-        new_tone_sounds = filter(lambda new: str(changes_dict.get(new[0])) == str(new[1]), self.sounds_dict)
-        if new_tone_sounds:
-            for key in new_tone_sounds:
-                freq = self.sounds_dict[key].value
-                duration = self.sounds_dict[key].duration
-                sound_type = self.sounds_dict[key].sound_type
-                word = self.sounds_dict[key].word
-                print(schedule_time, freq, duration, sound_type, word)
-                self.schedule_event(schedule_time, "update_sound",
-                                    params=[self.convert_val(sound_type), freq, duration, word], time_in_ms=True)
 
     @staticmethod
     def update_button(actr_window, label, x_loc, y_loc, action, height, width):
@@ -297,9 +257,8 @@ class ACTR_interface:
         return [key for key in dict_a if key in dict_b]
 
     def convert_val(self, value):
-
         # test if value can be converted to float
-        if re.match(r'^[-+]?(?:\b[0-9]+(?:\.[0-9]*)?|\.[0-9]+\b)(?:[eE][-+]?[0-9]+\b)?$', value): #re.match(r'[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?', value): # re.match(r'^-?\d+(?:\.\d+)$', value):
+        if isinstance(value, float) or re.match(r'^[-+]?(?:\b[0-9]+(?:\.[0-9]*)?|\.[0-9]+\b)(?:[eE][-+]?[0-9]+\b)?$', value): #re.match(r'[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?', value): # re.match(r'^-?\d+(?:\.\d+)$', value):
             return '{:.{prec}f}'.format(float(value), prec=self.nr_of_frac)
 
         return value

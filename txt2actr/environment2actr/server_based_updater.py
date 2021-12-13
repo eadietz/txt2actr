@@ -1,43 +1,47 @@
 from asyncio import events
 import json
 import asyncio
-#import websockets
-#from websockets.typing import Subprotocol
-#from websockets import client
+import websockets
+from websockets.typing import Subprotocol
+from websockets import client
 from argparse import ArgumentParser  # Direkt aus terminal Arguments übergeben
 
-#fsuipc_protocol = Subprotocol("fsuipc")  # as stated in documentation
+fsuipc_protocol = Subprotocol("fsuipc")  # as stated in documentation
 
 
 class Server_Based_Updater:
 
-    def __init__(self, hostname="localhost", port="2048", actr_interface=None, relevant_labels_list=["altitude"],
+    def __init__(self, actr_interface=None, hostname="localhost", port="2048", relevant_labels_list=["altitude"],
                  sampling_rate=100, start_time_of_first_event=0):
         self.hostname = hostname
         self.port = port
         self.actr_interface = actr_interface
         self.relevant_labels_list = relevant_labels_list
         self.sampling_rate = sampling_rate
-        self.start_time_of_first_event = start_time_of_first_event
-
+        self.start_time = start_time_of_first_event
 
     async def show_offset_values(self, payload):
 
-        # print(f"Dump: {json.dumps(payload)}")
         payload_data = payload.get("data")
 
-        if payload_data.get("AP1STS") == 1:
-            AP1StatusPrint = "ON"
-        elif payload_data.get("AP1STS") == 0:
-            AP1StatusPrint = "OFF"
+        AP = "ON" if payload_data.get("AP1STS") == 1 else "OFF"
 
         heading = round(int(payload_data.get("heading")) * 360 / (65536 * 65536), 0)
         altitude = round(int(payload_data.get("altitude")) / (65535 * 65535) * 3.28084)
         speed = round(int(payload_data.get("speed")) / 128)
 
-        print(
-            f"Heading: {heading}, Altitude: {altitude}, Speed: {speed}, Autopilot 1: {AP1StatusPrint}"
-        )
+        vals_of_interest_dict = {"ALTITUDE" : altitude, "SPEED": speed, "HEADING": heading, "AP": AP}
+
+        self.actr_interface.update_actr_env(vals_of_interest_dict)
+
+        idx = 1
+        while True:
+            vals_of_interest_dict = {k: str(idx) for k, v in vals_of_interest_dict.items()}
+            schedule_time = self.start_time + int(idx / self.sampling_rate * 1000)
+            self.actr_interface.update_actr_env(vals_of_interest_dict, schedule_time)
+            idx += 1
+
+        #print(f"Heading: {heading}, Altitude: {altitude}, Speed: {speed}, Autopilot 1: {AP}")
 
 
     async def handle_offset_receive(self, payload):
@@ -70,6 +74,7 @@ class Server_Based_Updater:
                     {"name": 'altitude', "address": 0x0570, "type": 'int', "size": 8},
                     {"name": 'heading', "address": 0x0580, "type": 'uint', "size": 4},
                     {"name": 'speed', "address": 0x02BC, "type": 'int', "size": 4},
+                    # local variable
                     {"name": 'AP1STS', "address": 0x66E1, "type": 'int', "size": 4},
                 ]
             }))
@@ -165,6 +170,20 @@ class Server_Based_Updater:
             # Stop event loop if running -- end program using Ctrl C
             if event_loop.is_running():
                 event_loop.stop()
+
+
+    def specify_and_pass_testing(self, logname=None):
+
+        vals_of_interest_dict = {"ALTITUDE": 100.0, "SPEED": 100.0, "HEADING": 100.0, "AP": 100.0}
+
+        self.actr_interface.update_actr_env(vals_of_interest_dict)
+        idx = 1
+        while True:
+            vals_of_interest_dict = {k: str(idx) for k, v in vals_of_interest_dict.items()}
+            schedule_time = self.start_time + int(idx / self.sampling_rate * 1000)
+            self.actr_interface.update_actr_env(vals_of_interest_dict, schedule_time)
+            idx += 1
+
 
 
 sbu = Server_Based_Updater()

@@ -80,7 +80,6 @@ class Log_Based_Updater:
                            enumerate(new_values_list) if values_list[idx] != value}
 
         values_list = new_values_list
-
         if dict_of_changes:
             try:
                 self.actr_interface.update_actr_env(dict_of_changes, schedule_time)
