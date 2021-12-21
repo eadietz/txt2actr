@@ -241,7 +241,7 @@
 	"rowStartIndex": 1,
 	"simulationTimeSeconds": 100000,
 	"decimalNumbers": 2,
-	"timeIntervalMilliseconds": 1,
+	"timeIntervalMilliseconds": 3,
 	"displayLabels": false,
 	"humanInteraction": false,
 	"environmentWindows": true,

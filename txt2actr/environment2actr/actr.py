@@ -870,7 +870,10 @@ def permute_list(l):
 def call_command(command,*parameters):
     return current_connection.evaluate_single(command,*parameters)
 
-# Customized
+# added functions
 
 def add_word_characters(word_char=None):
     return current_connection.evaluate_single("add-word-characters", word_char)
+
+def mp_queue_count():
+    return current_connection.evaluate_single("mp-queue-count")

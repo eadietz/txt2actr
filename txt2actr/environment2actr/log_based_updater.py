@@ -11,16 +11,16 @@ Created on Tue Jul 14 09:36:48 2020
 
 import sys
 from itertools import islice
+import time
 
 
 class Log_Based_Updater:
 
     global values_list
-    global headers_list
 
     def __init__(self, actr_interface, column_separator=",",
                  sampling_rate=100, skip_rate_in_log=5, row_start_idx=1,
-                 col_start_idx=0, start_time=0, schedule_next_possible_time=False):
+                 col_start_idx=0, start_time=0):
 
         self.actr_interface = actr_interface
         self.column_separator = column_separator
@@ -29,39 +29,28 @@ class Log_Based_Updater:
         self.row_start_idx = row_start_idx
         self.col_start_idx = col_start_idx
         self.start_time = start_time
-        self.schedule_next_possible_time = schedule_next_possible_time
 
     def specify_and_pass(self, log_file_name):
-
-        global values_list
-        global headers_list
-
-        sampling_rate = self.sampling_rate
-        skip_rate_in_log = self.skip_rate_in_log
-        row_start_idx = self.row_start_idx
-        col_start_idx = self.col_start_idx
-        start_time = self.start_time
 
         try:
             with open(log_file_name, 'r') as log_file:
                 # read and set header of log file
                 line = log_file.readline()
-                headers_list = line.strip().split(self.column_separator)[0:]
-                values_list = [""] * len(headers_list)
-                schedule_time = start_time
+                self.headers_list = line.strip().split(self.column_separator)[0:]
+                self.values_list = [""] * len(self.headers_list)
+                schedule_time = self.start_time
                 # this can surely be made nicer...
-                for i in range(row_start_idx):
+                for i in range(self.row_start_idx):
                     line = log_file.readline()
                 # schedule first event
-                self.pass_first_data_to_actr_env(line.strip().split(self.column_separator)[col_start_idx:],
+                self.pass_new_data_to_actr_env(line.strip().split(self.column_separator)[self.col_start_idx:],
                                                  schedule_time)
-                for line in islice(log_file, row_start_idx, None, skip_rate_in_log):
+                for line in islice(log_file, self.row_start_idx, None, self.skip_rate_in_log):
                     # float('{:.{prec}f}'.format(float(idx/sampling_rate), prec=3))
-                    schedule_time = None if self.schedule_next_possible_time else \
-                        start_time + int(row_start_idx / sampling_rate * 1000)
-                    self.pass_new_data_to_actr_env(line.strip().split(self.column_separator)[col_start_idx:],
+                    schedule_time = None if not self.sampling_rate else int((1 / self.sampling_rate) * 1000)
+                    self.pass_new_data_to_actr_env(line.strip().split(self.column_separator)[self.col_start_idx:],
                                                    schedule_time)
-                    row_start_idx += skip_rate_in_log
+                    self.row_start_idx += self.skip_rate_in_log
         except IOError:
             print('IOError: %s' % sys.exc_info()[0])
             log_file.close()
@@ -73,13 +62,11 @@ class Log_Based_Updater:
 
     def pass_new_data_to_actr_env(self, new_values_list, schedule_time):
 
-        global values_list
-        global headers_list
+        dict_of_changes = {self.headers_list[idx]: value for idx, value in
+                           enumerate(new_values_list) if self.values_list[idx] != value}
 
-        dict_of_changes = {headers_list[idx]: value for idx, value in
-                           enumerate(new_values_list) if values_list[idx] != value}
+        self.values_list = new_values_list
 
-        values_list = new_values_list
         if dict_of_changes:
             try:
                 self.actr_interface.update_actr_env(dict_of_changes, schedule_time)
@@ -88,13 +75,10 @@ class Log_Based_Updater:
 
     def pass_first_data_to_actr_env(self, new_values_list, schedule_time):
 
-        global values_list
-        global headers_list
+        dict_of_changes = {self.headers_list[idx]: self.set_mod_value(self.headers_list[idx], value)
+                           for idx, value in enumerate(new_values_list) if self.values_list[idx] != value}
 
-        dict_of_changes = {headers_list[idx]: self.set_mod_value(headers_list[idx], value)
-                           for idx, value in enumerate(new_values_list) if values_list[idx] != value}
-
-        values_list = new_values_list
+        self.values_list = new_values_list
         if dict_of_changes:
             try:
                 self.actr_interface.first_update_actr_env(dict_of_changes, schedule_time)

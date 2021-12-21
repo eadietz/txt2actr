@@ -77,12 +77,38 @@
  
 )
 
-(p scan-if-scene-changed
+(p scan-if-scene-did-not-change
+     =goal>
+       state    idle
+     ?visual-location>
+       state    free
+   ==>
+     +visual-location>
+       :attended new
+     =goal>
+       state    wait
+ )
+ 
+ (p wait
+     =goal>
+       state    wait
+     ?visual-location>
+       state    free
+   ==>
+     +visual-location>
+       :attended new
+     =goal>
+       state    idle
+ )
+ 
+ 
+ (p scan-if-scene-changed
      =goal>
        state    idle
      ?imaginal>
        state    free
-     =visual-location>
+     ?visual-location>
+       state    free
      ?visual>
        scene-change t
        state        free
@@ -140,7 +166,8 @@
   )
  
  ; specify production rule priorities for data driven component
- (spp scan-if-scene-changed :u 1)
+ (spp scan-if-scene-changed :u 10)
+ (spp scan-if-scene-did-not-change :u 1)
  
  ;; catch failures, not necessary
  (p handle-retrieval-failure

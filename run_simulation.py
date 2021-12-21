@@ -1,6 +1,7 @@
 from controller import Controller
 import os
 from sys import platform as _platform
+import sys
 import json
 
 
@@ -11,14 +12,14 @@ class Simulation():
     def __init__(self, json_bool=True):
 
         self.path_sep = "/"
-        self.abs_path = f'{os.path.dirname(__file__)}/'
+        self.abs_path = f'{os.path.dirname(os.path.abspath(__file__))}/'
         self.abs_path = self.abs_path[2:] if self.abs_path.startswith("C:") else self.abs_path
 
         self.model_components_path = f'{self.abs_path}benchmarks{self.path_sep}model-components{self.path_sep}'
         self.config_file = 'meta_info.csv'
 
         if json_bool:
-            config_file = "config-flight-sim.json" #test_by_event.json"
+            config_file = str(sys.argv[1]) if len(sys.argv)>1 else "config-flight-sim.json" #test_by_event.json"
             uc_path = f'{self.abs_path}benchmarks{self.path_sep}use-cases{self.path_sep}'
 
             with open(uc_path + config_file, 'r') as file_open:

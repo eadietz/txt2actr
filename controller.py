@@ -114,9 +114,9 @@ class Controller:
                                                  self.sampling_rate,
                                                  self.start_time_of_first_event)
 
-        print(self.log_file_folder)
+            self.log_file_folder = f"{self.hostname}:{self.port}"
 
-        if os.path.isfile(self.log_file_folder):
+        if self.ACTR_updates == 'server' or os.path.isfile(self.log_file_folder):
             if analysis_class:
                 analysis_class.reset(os.path.basename(self.log_file_folder))
             sim_run_time = self.new_sim_time(self.log_file_folder) if self.sim_run_time == 0 else self.sim_run_time
@@ -140,8 +140,6 @@ class Controller:
         else:
             print(f'{self.log_file_folder} is neither file nor path')
 
-        actr_interface.stop_actr()
-
     def get_module(self, path_to_py_file, module_name, class_name, *obj_pars):
         spec_file = importlib.util.spec_from_file_location(module_name, path_to_py_file)
         module = importlib.util.module_from_spec(spec_file)
@@ -164,7 +162,7 @@ class Controller:
             p1.start()
             p2.start()
             while actr_interface.actr_running():
-                time.sleep(1)
+                time.sleep(5)
             print(f" {log_file_name} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done")
         except KeyboardInterrupt:
             del actr_interface
@@ -247,7 +245,6 @@ class Controller:
         self.py_functions_in_cm = self.default_values.py_functions_in_cm
         self.suppress_console_output = self.default_values.suppress_console_output
         self.output_file = self.default_values.output_file
-
         self.use_case_folder = self.default_values.use_case_folder
 
         self.absolute_path_da = self.default_values.absolute_path_da
@@ -275,7 +272,7 @@ class Default_Values_Specifier:
         self.actr_env = 'e'
         self.column_separator = ";"
         self.start_time_of_first_event = False
-        self.sampling_rate = 100
+        self.sampling_rate = False
         self.skip_rate_in_log = 50
         self.col_start_idx_in_dataset = 0
         self.row_start_idx_in_dataset = 1
@@ -369,8 +366,6 @@ class Default_Values_Specifier:
 
         self.column_separator = json_data["columnSeparator"]
 
-        if "scheduleNextPossibleEvent" in json_data:
-            self.start_time_of_first_event = json_data["scheduleNextPossibleEvent"]
         if isinstance(json_data["startTimeFirstEvent"], int):
             self.start_time_of_first_event = json_data["startTimeFirstEvent"]
         if isinstance(json_data["samplingRateHz"], int):

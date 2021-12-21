@@ -1,7 +1,7 @@
 [
   {
 	"simulationType": "log",
-	"startACTR": "i",
+	"startACTR": "e",
 	"paths": {
         "use_case_folder": "flight-task",
 		"data_analysis_folder": "analysis",
@@ -419,7 +419,7 @@
 	},
 	"columnSeparator": ";",
 	"startTimeFirstEvent": 0,
-	"samplingRateHz": 100,
+	"samplingRateHz": 500,
 	"skipRateInLog": 1,
 	"columnStartIndex": 0,
 	"rowStartIndex": 1,

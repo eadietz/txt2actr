@@ -11,6 +11,8 @@ import io
 import math
 import numbers
 from contextlib import redirect_stdout
+import sys
+import time
 # =============================================================================
 # This class is all about setting up the ACT-R Environment, including adding
 # goals to the (cognitive) ACT-R Model
@@ -129,8 +131,8 @@ class ACTR_interface:
             relevant_list = self.intersection(window.labels_dict, changes_dict)
             if relevant_list:
                 clear_time = schedule_time - self.time_interval_to_new_val_in_msc \
-                    if schedule_time else schedule_time
-                self.schedule_event(clear_time, "clear_window", params=[window.actr_window], time_in_ms=clear_time)
+                if schedule_time else schedule_time
+                self.schedule_event(clear_time, "clear_window", params=[window.actr_window])
                 window_labels_dict = window.labels_dict
                 window_labels_dict.update((label, [window_labels_dict[label][0],
                                                    changes_dict[label]]) for label in relevant_list)
@@ -143,12 +145,15 @@ class ACTR_interface:
                                             params=[window.actr_window, i.name,
                                                     i.description[0], 0, 0, 200, 200],
                                             time_in_ms = True)
-                        #actr.add_image_to_exp_window(window.actr_window, i.name, "attitude-indicator.gif", 0, 0, 200, 200)
-                        roll = float(window_labels_dict[i.description[1]][1])
-                        pitch = float(window_labels_dict[i.description[2]][1])
+                        try:
+                            roll = float(window_labels_dict[i.description[1]][1])
+                            pitch = float(window_labels_dict[i.description[2]][1])
+                        except Exception as e:
+                            print("EXCEPTION", e)
+                            print("dict", list(window_labels_dict.items()))
                         # x_start, y_shift, x_end
                         x_start, y_start, x_end, y_end = self.horizon(roll, pitch, i.x_loc, i.y_loc, i.x_end)
-                        #actr.add_line_to_exp_window(window.actr_window, [x_start, y_start], [x_end, y_end], i.color)
+                        actr.add_line_to_exp_window(window.actr_window, [x_start, y_start], [x_end, y_end], i.color)
                         self.schedule_event(schedule_time, "update_line",
                                             params=[window.actr_window,
                                         [x_start, y_start], [x_end, y_end], i.color], time_in_ms=True)
@@ -180,12 +185,19 @@ class ACTR_interface:
 
     def schedule_event(self, schedule_time, function, params, time_in_ms=True):
 
-        if isinstance(schedule_time, float) or isinstance(schedule_time, int):
-            actr.schedule_event(schedule_time, function, params, time_in_ms)
-        else:
+        if schedule_time == None and actr.mp_queue_count() < 150:
+            #actr.schedule_event_now("clear_window", params=[params[0]])
+            #time.sleep(0.1)
             actr.schedule_event_now(function, params)
+        elif schedule_time is not None:
+            if function == "clear_window":
+                actr.schedule_event_relative(schedule_time, function, params, time_in_ms=time_in_ms)
+            elif actr.mp_queue_count() < 120:
+                actr.schedule_event_relative(schedule_time, function, params, priority=2, time_in_ms=time_in_ms)
+
 
     def horizon(self, roll, pitch, x_start=10, y_shift=50, x_end=200):
+
         f = -2.5 # px*180grad/ pi*rad, 1grad entspricht f pixel
         y_d = f*pitch
         #y_shift = y_shift if pitch < 0 else y_shift*-1
@@ -259,7 +271,7 @@ class ACTR_interface:
     def convert_val(self, value):
         # test if value can be converted to float
         if isinstance(value, float) or re.match(r'^[-+]?(?:\b[0-9]+(?:\.[0-9]*)?|\.[0-9]+\b)(?:[eE][-+]?[0-9]+\b)?$', value): #re.match(r'[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?', value): # re.match(r'^-?\d+(?:\.\d+)$', value):
-            return '{:.{prec}f}'.format(float(value), prec=self.nr_of_frac)
+                return '{:.{prec}f}'.format(float(value), prec=self.nr_of_frac)
 
         return value
 
