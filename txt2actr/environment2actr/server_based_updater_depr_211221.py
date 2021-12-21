@@ -1,13 +1,14 @@
 from asyncio import events
 import json
 import asyncio
-import websockets
 import time
-from websockets.typing import Subprotocol
-from websockets import client
+#import websockets
+#from websockets.typing import Subprotocol
+#from websockets import client
 from argparse import ArgumentParser  # Direkt aus terminal Arguments übergeben
 
-fsuipc_protocol = Subprotocol("fsuipc")  # as stated in documentation
+#fsuipc_protocol = Subprotocol("fsuipc")  # as stated in documentation
+
 
 class Server_Based_Updater:
 
@@ -31,17 +32,14 @@ class Server_Based_Updater:
         altitude = round(int(payload_data.get("altitude")) / (65535 * 65535) * 3.28084)
         speed = round(int(payload_data.get("speed")) / 128)
 
-        vals_of_interest_dict = {"ALTITUDE": f"{altitude}", "SPEED": f"{speed}", "HEADING": f"{heading}", "AP": AP}
-        self.idx += 1
-        schedule_time = self.start_time + int((1 / self.sampling_rate) * 1000)
-        self.actr_interface.update_actr_env(vals_of_interest_dict)
-        time.sleep(0.01)
-        #print("Scheduled Time", schedule_time)
+        vals_of_interest_dict = {"ALTITUDE": altitude, "SPEED": speed, "HEADING": heading, "AP": AP}
+
+        schedule_time = self.start_time + int(self.idx / self.sampling_rate * 1000)
+        self.actr_interface.update_actr_env(vals_of_interest_dict, schedule_time)
 
         print(f"Heading: {heading}, Altitude: {altitude}, Speed: {speed}, Autopilot 1: {AP}")
 
-        
-    
+
     async def handle_offset_receive(self, payload):
         if "command" in payload:
             if payload.get("command") == "offsets.declare":  # Server answering that offsets have been declared
@@ -62,7 +60,7 @@ class Server_Based_Updater:
         # Connect to server
         async with client.connect(server_url, subprotocols=[fsuipc_protocol]) as websocket:
 
-            print("* Websocket connected")
+            print(f"* Websocket connected")
 
             # Send declare request
             await websocket.send(json.dumps({
@@ -98,7 +96,7 @@ class Server_Based_Updater:
                     # await show_offset_values(payload=response_data)
                     await self.handle_offset_receive(payload=response_data)
 
-                    
+                    #self.idx += 1
 
                 else:
                     print("[ERROR]", response_data.get("errorCode"), response_data.get("errorMessage"))
@@ -120,7 +118,7 @@ class Server_Based_Updater:
         await asyncio.sleep(3)
 
 
-    def specify_and_pass(self, logname=None):
+    def specify_and_pass_depricated(self, logname=None):
         argparser = ArgumentParser(
             description="fsuipc python connector client - by Aurel Beheschti")  # Setup Argument Parser for Execution in CMD
 
@@ -162,7 +160,7 @@ class Server_Based_Updater:
                 event_loop.stop()
 
 
-    def specify_and_pass_depricated(self, logname=None):
+    def specify_and_pass(self, logname=None):
 
         vals_of_interest_dict = {"ALTITUDE": 100.0, "SPEED": 100.0, "HEADING": 100.0, "AP": 100.0}
 
@@ -170,8 +168,9 @@ class Server_Based_Updater:
         idx = 1
         while True:
             vals_of_interest_dict = {k: str(idx) for k, v in vals_of_interest_dict.items()}
-            schedule_time = self.start_time + int(idx / self.sampling_rate * 1000)
-            self.actr_interface.update_actr_env(vals_of_interest_dict, schedule_time)
+            schedule_time = int((1/self.sampling_rate)*1000)
+            self.actr_interface.update_actr_env(vals_of_interest_dict)
+            time.sleep(0.1)
             idx += 1
 
 
