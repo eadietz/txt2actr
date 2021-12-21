@@ -168,9 +168,9 @@ class Server_Based_Updater:
         idx = 1
         while True:
             vals_of_interest_dict = {k: str(idx) for k, v in vals_of_interest_dict.items()}
-            schedule_time = int(self.sampling_rate)
+            schedule_time = int((1/self.sampling_rate)*1000)
             self.actr_interface.update_actr_env(vals_of_interest_dict)
-            time.sleep(0.2)
+            time.sleep(0.1)
             idx += 1
 
 

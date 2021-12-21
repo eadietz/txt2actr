@@ -628,11 +628,6 @@ def schedule_event_relative (time_delay, action, params=None, module=':NONE', pr
 
 def schedule_event_after_module (after_module, action, params=None, module=':NONE', maintenance=False, destination=None, details=None, output=True, precondition=None, dynamic=False, delay=True, include_maintenance=False):
     return current_connection.evaluate("schedule-event-after-module",after_module,action,[["params", params],["module", module],
-                                                                        ["maintenance", maintenance],
-                                                                        ["destination", destination], ["details", details],
-                                                                        ["output", output],["delay", delay], ["dynamic", dynamic],
-                                                                        ["precondition", precondition],["include-maintenance", include_maintenance]])
-
 
 def schedule_break_relative (time_delay,time_in_ms=False, priority=":max", details=None):
     return current_connection.evaluate_single("schedule-break-relative",time_delay,[["time-in-ms", time_in_ms],["priority", priority],["details",details]])

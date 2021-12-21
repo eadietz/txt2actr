@@ -193,8 +193,7 @@ class ACTR_interface:
             if function == "clear_window":
                 actr.schedule_event_relative(schedule_time, function, params, time_in_ms=time_in_ms)
             elif actr.mp_queue_count() < 120:
-                actr.schedule_event_relative(schedule_time, function, params, priority=2, time_in_ms=time_in_ms)
-
+                actr.schedule_event_relative(schedule_time, function, params, time_in_ms=time_in_ms)
 
     def horizon(self, roll, pitch, x_start=10, y_shift=50, x_end=200):
 
