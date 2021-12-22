@@ -33,14 +33,14 @@ class Controller:
 
     def __init__(self, absolute_path_uc=os.path.dirname(os.path.abspath(__file__)),
                  absolute_path_mc=os.path.dirname(os.path.abspath(__file__)),
-                 config_specs=None, json_bool=True):
+                 config_specs=None, json_bool=True, actr_env=None):
 
         self.absolute_path_uc = absolute_path_uc
         self.absolute_path_mc = absolute_path_mc
         self.json_bool = json_bool
 
         self.default_values = Default_Values_Specifier(absolute_path_uc, config_specs, json_bool)
-        self.set_file_names()
+        self.set_file_names(actr_env)
 
         self.log = File_Logger(self.output_file) if self.suppress_console_output else Console_and_File_Logger(
             self.output_file)
@@ -201,7 +201,7 @@ class Controller:
             lines = len(f.readlines())
         return int(lines / 100)
 
-    def set_file_names(self):
+    def set_file_names(self, actr_env):
 
         self.ACTR_updates = self.default_values.ACTR_updates
         if not (self.ACTR_updates == 'log' or self.ACTR_updates == 'task'or self.ACTR_updates == 'server'):
@@ -212,7 +212,7 @@ class Controller:
             self.hostname = self.default_values.hostname
             self.port = self.default_values.port
 
-        self.actr_env = self.default_values.actr_env
+        self.actr_env = self.default_values.actr_env if not actr_env else actr_env
 
         self.log_file_folder = self.default_values.log_file_folder
         self.absolute_path_da = self.default_values.absolute_path_da

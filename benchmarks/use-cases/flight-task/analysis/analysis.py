@@ -45,6 +45,9 @@ class Analysis:
         else:
             return False
 
+    def waiting(self):
+        print("waiting")
+
     def pass_data_to_sim(self, label_and_value):
         print("the cognitive model reads", label_and_value)
 

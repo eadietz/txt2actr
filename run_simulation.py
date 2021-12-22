@@ -20,6 +20,7 @@ class Simulation():
 
         if json_bool:
             config_file = str(sys.argv[1]) if len(sys.argv)>1 else "config-flight-sim.json" #test_by_event.json"
+            actr_env = str(sys.argv[2]) if len(sys.argv)>2 else None
             uc_path = f'{self.abs_path}benchmarks{self.path_sep}use-cases{self.path_sep}'
 
             with open(uc_path + config_file, 'r') as file_open:
@@ -27,7 +28,8 @@ class Simulation():
                 for use_case in json_data:
                     c = Controller(absolute_path_uc=uc_path,
                                    absolute_path_mc=self.model_components_path,
-                                   config_specs=use_case, json_bool=json)
+                                   config_specs=use_case, json_bool=json,
+                                   actr_env=actr_env)
                     c.instantiate_default_obj()
                     c.construct_cognitive_model()
                     c.do_run()

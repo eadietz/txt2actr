@@ -185,14 +185,14 @@ class ACTR_interface:
 
     def schedule_event(self, schedule_time, function, params, time_in_ms=True):
 
-        if schedule_time == None and actr.mp_queue_count() < 150:
+        if schedule_time == None and actr.mp_queue_count() < 50:
             #actr.schedule_event_now("clear_window", params=[params[0]])
             #time.sleep(0.1)
             actr.schedule_event_now(function, params)
         elif schedule_time is not None:
             if function == "clear_window":
                 actr.schedule_event_relative(schedule_time, function, params, time_in_ms=time_in_ms)
-            elif actr.mp_queue_count() < 120:
+            elif actr.mp_queue_count() < 50:
                 actr.schedule_event_relative(schedule_time, function, params, time_in_ms=time_in_ms)
 
     def horizon(self, roll, pitch, x_start=10, y_shift=50, x_end=200):

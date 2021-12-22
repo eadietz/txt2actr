@@ -1,11 +1,7 @@
 (p scan-if-scene-did-not-change
     =goal>
       state    idle
-    ?visual-location>
-      state    free
   ==>
-    +visual-location>
-      :attended new
     =goal>
       state    wait
 )
@@ -13,13 +9,10 @@
 (p wait
     =goal>
       state    wait
-    ?visual-location>
-      state    free
   ==>
-    +visual-location>
-      :attended new
     =goal>
       state    idle
+      ; !eval! ("waiting")
 )
 
 
@@ -35,12 +28,18 @@
       state        free
   ==>
     +visual-location>
-      :attended new
+      :attended nil
     +imaginal>
       name       nil
     =goal>
       state    dd-attend
 )
+
+
+; specify production rule priorities for data driven component
+(spp scan-if-scene-changed :u 100)
+(spp scan-if-scene-did-not-change :u 1)
+
 
  (p attend-retrieve-if-location-scanned
     =goal>
@@ -86,9 +85,6 @@
       !eval! ("pass_data_to_sim" (list =current =val))
  )
 
-; specify production rule priorities for data driven component
-(spp scan-if-scene-changed :u 10)
-(spp scan-if-scene-did-not-change :u 1)
 
 ;; catch failures, not necessary
 (p handle-retrieval-failure

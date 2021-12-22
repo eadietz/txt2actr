@@ -35,7 +35,7 @@ class Server_Based_Updater:
         self.idx += 1
         schedule_time = self.start_time + int((1 / self.sampling_rate) * 1000)
         self.actr_interface.update_actr_env(vals_of_interest_dict)
-        time.sleep(0.01)
+        time.sleep(0.1)
         #print("Scheduled Time", schedule_time)
 
         print(f"Heading: {heading}, Altitude: {altitude}, Speed: {speed}, Autopilot 1: {AP}")
@@ -120,7 +120,7 @@ class Server_Based_Updater:
         await asyncio.sleep(3)
 
 
-    def specify_and_pass(self, logname=None):
+    def specify_and_pass_test(self, logname=None):
         argparser = ArgumentParser(
             description="fsuipc python connector client - by Aurel Beheschti")  # Setup Argument Parser for Execution in CMD
 
@@ -162,7 +162,7 @@ class Server_Based_Updater:
                 event_loop.stop()
 
 
-    def specify_and_pass_depricated(self, logname=None):
+    def specify_and_pass_test(self, logname=None):
 
         vals_of_interest_dict = {"ALTITUDE": 100.0, "SPEED": 100.0, "HEADING": 100.0, "AP": 100.0}
 
@@ -171,7 +171,8 @@ class Server_Based_Updater:
         while True:
             vals_of_interest_dict = {k: str(idx) for k, v in vals_of_interest_dict.items()}
             schedule_time = self.start_time + int(idx / self.sampling_rate * 1000)
-            self.actr_interface.update_actr_env(vals_of_interest_dict, schedule_time)
+            self.actr_interface.update_actr_env(vals_of_interest_dict)
+            time.sleep(0.3)
             idx += 1
 
 
