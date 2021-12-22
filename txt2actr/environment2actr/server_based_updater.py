@@ -120,7 +120,7 @@ class Server_Based_Updater:
         await asyncio.sleep(3)
 
 
-    def specify_and_pass_test(self, logname=None):
+    def specify_and_pass(self, logname=None):
         argparser = ArgumentParser(
             description="fsuipc python connector client - by Aurel Beheschti")  # Setup Argument Parser for Execution in CMD
 
