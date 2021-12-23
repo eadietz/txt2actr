@@ -33,11 +33,12 @@ class Controller:
 
     def __init__(self, absolute_path_uc=os.path.dirname(os.path.abspath(__file__)),
                  absolute_path_mc=os.path.dirname(os.path.abspath(__file__)),
-                 config_specs=None, json_bool=True, actr_env=None):
+                 config_specs=None, json_bool=True, actr_env=None, dummy_run=None):
 
         self.absolute_path_uc = absolute_path_uc
         self.absolute_path_mc = absolute_path_mc
         self.json_bool = json_bool
+        self.dummy_run = dummy_run
 
         self.default_values = Default_Values_Specifier(absolute_path_uc, config_specs, json_bool)
         self.set_file_names(actr_env)
@@ -155,7 +156,10 @@ class Controller:
         p1 = Thread(target=self.run_actr_model, args=(actr_interface, sim_run_time,
                                                       self.run_real_time, self.run_full_time,
                                                       log_file_name, abs_path_analysis_results))
-        p2 = Thread(target=self.watch_log_file_and_pass_values, args=(env_simulator, log_file_name))
+        if self.dummy_run:
+            p2 = Thread(target=self.dummy_watch_log_file_and_pass_values, args=(env_simulator, log_file_name))
+        else:
+            p2 = Thread(target=self.watch_log_file_and_pass_values, args=(env_simulator, log_file_name))
         try:
             print(
                 f"{log_file_name} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ started")
@@ -174,6 +178,21 @@ class Controller:
     @staticmethod
     def watch_log_file_and_pass_values(env_simulator, log_file_name):  # Observes changes and passes them to ACTR
         env_simulator.specify_and_pass(log_file_name)
+
+    @staticmethod
+    def dummy_watch_log_file_and_pass_values(env_simulator, log_file_name):  # Observes changes and passes them to ACTR
+
+        vals_of_interest_dict = {"ALTITUDE": 100.0, "SPEED": 100.0, "HEADING": 100.0, "AP": 100.0}
+
+        env_simulator.actr_interface.update_actr_env(vals_of_interest_dict)
+        idx = 1
+        while True:
+            vals_of_interest_dict = {k: str(idx) for k, v in vals_of_interest_dict.items()}
+            #schedule_time = self.start_time + int(idx / self.sampling_rate * 1000)
+            env_simulator.actr_interface.update_actr_env(vals_of_interest_dict)
+            time.sleep(0.3)
+            idx += 1
+
 
     @staticmethod
     def run_actr_model(actr_interface, n, real_time, full_time, log_file_name, abs_path_analysis_results):

@@ -19,7 +19,6 @@ class Server_Based_Updater:
         self.relevant_labels_list = relevant_labels_list
         self.sampling_rate = sampling_rate
         self.start_time = start_time_of_first_event
-        self.idx = 0
 
     async def show_offset_values(self, payload):
 
@@ -121,6 +120,7 @@ class Server_Based_Updater:
 
 
     def specify_and_pass(self, logname=None):
+
         argparser = ArgumentParser(
             description="fsuipc python connector client - by Aurel Beheschti")  # Setup Argument Parser for Execution in CMD
 
@@ -160,21 +160,6 @@ class Server_Based_Updater:
             # Stop event loop if running -- end program using Ctrl C
             if event_loop.is_running():
                 event_loop.stop()
-
-
-    def specify_and_pass_test(self, logname=None):
-
-        vals_of_interest_dict = {"ALTITUDE": 100.0, "SPEED": 100.0, "HEADING": 100.0, "AP": 100.0}
-
-        self.actr_interface.update_actr_env(vals_of_interest_dict)
-        idx = 1
-        while True:
-            vals_of_interest_dict = {k: str(idx) for k, v in vals_of_interest_dict.items()}
-            schedule_time = self.start_time + int(idx / self.sampling_rate * 1000)
-            self.actr_interface.update_actr_env(vals_of_interest_dict)
-            time.sleep(0.3)
-            idx += 1
-
 
 
 #sbu = Server_Based_Updater()
