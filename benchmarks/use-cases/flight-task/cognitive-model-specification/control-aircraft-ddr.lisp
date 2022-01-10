@@ -1,19 +1,19 @@
-(p scan-if-scene-did-not-change
-    =goal>
-      state    idle
-  ==>
-    =goal>
-      state    wait
-)
-
-(p wait
-    =goal>
-      state    wait
-  ==>
-    =goal>
-      state    idle
-      ; !eval! ("waiting")
-)
+;(p scan-if-scene-did-not-change
+;    =goal>
+;      state    idle
+;  ==>
+;    =goal>
+;      state    wait
+;);;
+;
+;(p wait
+;    =goal>
+;      state    wait
+;  ==>
+;    =goal>
+;      state    idle
+;       !eval! ("waiting")
+;)
 
 
 (p scan-if-scene-changed
@@ -37,7 +37,7 @@
 
 
 ; specify production rule priorities for data driven component
-(spp scan-if-scene-changed :u 100)
+;(spp scan-if-scene-changed :u 100)
 (spp scan-if-scene-did-not-change :u 1)
 
 

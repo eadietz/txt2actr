@@ -17,7 +17,7 @@ class Task_Based_Updater:
 
     headers_list = values_list = None
 
-    def __init__(self, actr_interface, time_interval_in_msec=1000):
+    def __init__(self, actr_interface, time_interval_in_msec=1000): ###############################################
             self.actr_interface = actr_interface
             self.time_interval_in_msec = time_interval_in_msec
 

@@ -190,7 +190,7 @@ class Controller:
             vals_of_interest_dict = {k: str(idx) for k, v in vals_of_interest_dict.items()}
             #schedule_time = self.start_time + int(idx / self.sampling_rate * 1000)
             env_simulator.actr_interface.update_actr_env(vals_of_interest_dict)
-            time.sleep(0.3)
+            time.sleep(0.1)             ###############################################################################################
             idx += 1
 
 

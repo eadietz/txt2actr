@@ -47,7 +47,7 @@ class Log_Based_Updater:
                                                  schedule_time)
                 for line in islice(log_file, self.row_start_idx, None, self.skip_rate_in_log):
                     # float('{:.{prec}f}'.format(float(idx/sampling_rate), prec=3))
-                    schedule_time = None if not self.sampling_rate else int((1 / self.sampling_rate) * 1000)
+                    schedule_time = None if not self.sampling_rate else int((1 / self.sampling_rate) * 1000)        ##########################################
                     self.pass_new_data_to_actr_env(line.strip().split(self.column_separator)[self.col_start_idx:],
                                                    schedule_time)
                     self.row_start_idx += self.skip_rate_in_log
