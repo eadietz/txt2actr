@@ -19,6 +19,7 @@ class Server_Based_Updater:
         self.relevant_labels_list = relevant_labels_list
         self.sampling_rate = sampling_rate
         self.start_time = start_time_of_first_event
+        self.idx = 0
 
     async def show_offset_values(self, payload):
 
@@ -30,11 +31,10 @@ class Server_Based_Updater:
         altitude = round(int(payload_data.get("altitude")) / (65535 * 65535) * 3.28084)
         speed = round(int(payload_data.get("speed")) / 128)
 
-        vals_of_interest_dict = {"ALTITUDE": f"{altitude}", "SPEED": f"{speed}", "HEADING": f"{heading}", "AP": AP}
+        vals_of_interest_dict = {"ALTITUDE": f"{altitude}", "SPEED": f"{speed}", "HEADING": f"{heading}", "AP": AP, "MW" : f"{0}"}
         self.idx += 1
-        schedule_time = self.start_time + int((1 / self.sampling_rate) * 1000)
         self.actr_interface.update_actr_env(vals_of_interest_dict)
-        time.sleep(0.1)
+        time.sleep(0.01)
         #print("Scheduled Time", schedule_time)
 
         print(f"Heading: {heading}, Altitude: {altitude}, Speed: {speed}, Autopilot 1: {AP}")
@@ -121,38 +121,13 @@ class Server_Based_Updater:
 
     def specify_and_pass(self, logname=None):
 
-        argparser = ArgumentParser(
-            description="fsuipc python connector client - by Aurel Beheschti")  # Setup Argument Parser for Execution in CMD
-
-        # Add Argument Parser for Hostname
-        argparser.add_argument(
-            "-H",
-            "--hostname",
-            type=str,
-            action="store",
-            dest="hostname",
-            default=self.hostname,
-            help="Hostname of fsuipc websocket server"
-        )
-        # Add Argument Parser for Port -- std is set to 2048. Ausführung sollte also ohne Übergabe der Werte aus dem Terminal funktionieren
-        argparser.add_argument(
-            "-P",
-            "--port",
-            type=int,
-            action="store",
-            dest="port",
-            default=self.port,
-            help="Port of fsuipc websocket server"
-        )
-
-        options = argparser.parse_args()  # Parsing input Arguments into format: options.argument
-
         try:
 
             print("* Start running main task")
+            
             event_loop = asyncio.new_event_loop()  # event_loop = asyncio.get_event_loop() #könnte hier alternativ verwendet werden - get_event will get the current thread’s default event loop object as long as being in the main thread
             event_loop.run_until_complete(  # will also handle all queued futures until all are finished
-                self.client_loop(hostname=options.hostname, port=options.port, regular_updates=35)
+                self.client_loop(hostname=self.hostname, port=self.port, regular_updates=35)
             )
 
         except KeyboardInterrupt:

@@ -230,13 +230,17 @@
 			{
 				"key": "SPEED",
 				"value": ""
-			}
+			},
+			{
+				"key": "MW",
+				"value": ""
+			}			
 		],
 		"sounds_and_speech_labels_mapping": []
 	},
 	"columnSeparator": ";",
 	"startTimeFirstEvent": 0,
-	"samplingRateHz": 100,
+	"samplingRateHz": 100,	
 	"skipRateInLog": 1,
 	"columnStartIndex": 0,
 	"rowStartIndex": 1,

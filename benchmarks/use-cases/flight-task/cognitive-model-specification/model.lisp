@@ -23,7 +23,12 @@
    :trace-detail low
    :ul t
    ;:unstuff-aural-location t
+<<<<<<< HEAD
    :v t ;; -model-output
+=======
+   :v nil
+;; -model-output
+>>>>>>> 5a39e2ddb3b1b55a54c538fe301c94b5c405d28d
    ;:visual-activation 10
    ;:tone-detect-delay 1.0
    )
@@ -61,6 +66,7 @@
 (HEADING) 
 (SPEED) 
 (AP) 
+(MW) 
 )
 
 (add-dm (starting-goal isa goal state idle)) 
@@ -72,11 +78,13 @@
  (HEADING-info isa display-info name HEADING screen-x 317.0 screen-y 670.0) 
  (SPEED-info isa display-info name SPEED screen-x 317.0 screen-y 646.0) 
  (AP-info isa display-info name AP screen-x 517.0 screen-y 324.0) 
+ (MW-info isa display-info name MW screen-x 1282.0 screen-y 514.0) 
 ;; the list of items that are to be attended in a routine loop 
 (altitude-0 ISA list-info current-on-list altitude next-on-list altitude) 
  
 )
 
+<<<<<<< HEAD
 (p scan-if-scene-did-not-change
      =goal>
        ;state    idle
@@ -93,6 +101,24 @@
        state    idle
        !eval! ("waiting")
  )
+=======
+;(p scan-if-scene-did-not-change
+ ;    =goal>
+ ;      state    idle
+ ;  ==>
+ ;    =goal>
+ ;      state    wait
+ ;);;
+ ;
+ ;(p wait
+ ;    =goal>
+ ;      state    wait
+ ;  ==>
+ ;    =goal>
+ ;      state    idle
+ ;       !eval! ("waiting")
+ ;)
+>>>>>>> 5a39e2ddb3b1b55a54c538fe301c94b5c405d28d
  
  
  (p scan-if-scene-changed
@@ -116,7 +142,7 @@
  
  
  ; specify production rule priorities for data driven component
- (spp scan-if-scene-changed :u 100)
+ ;(spp scan-if-scene-changed :u 100)
  (spp scan-if-scene-did-not-change :u 1)
  
  

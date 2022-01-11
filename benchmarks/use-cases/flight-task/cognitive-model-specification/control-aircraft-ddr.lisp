@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #|(p scan-if-scene-did-not-change
     =goal>
       state    idle
@@ -14,6 +15,24 @@
       state    idle
       !eval! ("waiting")
 )|#
+=======
+;(p scan-if-scene-did-not-change
+;    =goal>
+;      state    idle
+;  ==>
+;    =goal>
+;      state    wait
+;);;
+;
+;(p wait
+;    =goal>
+;      state    wait
+;  ==>
+;    =goal>
+;      state    idle
+;       !eval! ("waiting")
+;)
+>>>>>>> 5a39e2ddb3b1b55a54c538fe301c94b5c405d28d
 
 
 (p scan-if-scene-changed
@@ -37,8 +56,13 @@
 
 
 ; specify production rule priorities for data driven component
+<<<<<<< HEAD
 (spp scan-if-scene-changed :u 100)
 ; (spp scan-if-scene-did-not-change :u 1)
+=======
+;(spp scan-if-scene-changed :u 100)
+(spp scan-if-scene-did-not-change :u 1)
+>>>>>>> 5a39e2ddb3b1b55a54c538fe301c94b5c405d28d
 
 
  (p attend-retrieve-if-location-scanned
