@@ -23,7 +23,7 @@
    :trace-detail low
    :ul t
    ;:unstuff-aural-location t
-   :v nil ;; -model-output
+   :v t ;; -model-output
    ;:visual-activation 10
    ;:tone-detect-delay 1.0
    )
@@ -79,7 +79,7 @@
 
 (p scan-if-scene-did-not-change
      =goal>
-       state    idle
+       ;state    idle
    ==>
      =goal>
        state    wait
@@ -91,7 +91,7 @@
    ==>
      =goal>
        state    idle
-       ; !eval! ("waiting")
+       !eval! ("waiting")
  )
  
  

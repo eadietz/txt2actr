@@ -181,16 +181,15 @@ class Controller:
 
     @staticmethod
     def dummy_watch_log_file_and_pass_values(env_simulator, log_file_name):  # Observes changes and passes them to ACTR
-
+        #time.sleep(1)
         vals_of_interest_dict = {"ALTITUDE": 100.0, "SPEED": 100.0, "HEADING": 100.0, "AP": 100.0}
-
         env_simulator.actr_interface.update_actr_env(vals_of_interest_dict)
         idx = 1
         while True:
             vals_of_interest_dict = {k: str(idx) for k, v in vals_of_interest_dict.items()}
             #schedule_time = self.start_time + int(idx / self.sampling_rate * 1000)
             env_simulator.actr_interface.update_actr_env(vals_of_interest_dict)
-            time.sleep(0.3)
+            time.sleep(2)
             idx += 1
 
 

@@ -51,6 +51,9 @@ class Analysis:
     def pass_data_to_sim(self, label_and_value):
         print("the cognitive model reads", label_and_value)
 
+    #def write_data(self, values):
+
+
     # called by the cognitive model in act-r
     def add_result(self, results):
         if self.compared_df.empty:

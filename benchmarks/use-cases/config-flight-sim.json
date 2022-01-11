@@ -1,7 +1,7 @@
 [
   {
 	"simulationType": "server",
-	"hostname": "localhost",
+	"hostname": "127.0.0.1",
 	"port": "2048",
 	"valuesList": ["altitude"],
 	"startACTR": "i",
@@ -9,7 +9,7 @@
         "use_case_folder": "flight-task",
 		"data_analysis_folder": "analysis",
 		"simulationSpecifications": "datasets/dummy-dataset.csv",
-		"cognitiveModel": "cognitive-model-specification/model.lisp",
+		"cognitiveModel": "cognitive-model-specification/model-temp.lisp",
 		"resultsFolder": "sessions",
 		"consoleOutputACTR": "console_output.txt"
 	},
@@ -247,7 +247,7 @@
 	"humanInteraction": false,
 	"environmentWindows": true,
 	"fulltimeACTR": true,
-	"realtimeACTR": false,
+	"realtimeACTR": true,
 	"consoleOutput": false
   }
 ]
