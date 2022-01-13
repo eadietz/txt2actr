@@ -9,13 +9,14 @@
         "use_case_folder": "flight-task",
 		"data_analysis_folder": "analysis",
 		"simulationSpecifications": "datasets/dummy-dataset.csv",
-		"cognitiveModel": "cognitive-model-specification/model-temp.lisp",
+		"cognitiveModel": "cognitive-model-specification/model.lisp",
 		"resultsFolder": "sessions",
 		"consoleOutputACTR": "console_output.txt"
 	},
 	"pyFunctionsInCognitiveModel" : {
 		"pass_data_to_sim": "passes new inputs to Flight Simulator",
-		"waiting": "cognitive model is waiting for input"
+		"waiting": "cognitive model is waiting for input",
+		"send_instruction_to_sim" : "as the name suggests. runs possibly a lua script"
 	},
 	 "cognitive_model_config": {
 		 "cognitive_model_name": "flight-task",

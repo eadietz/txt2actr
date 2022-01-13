@@ -184,13 +184,6 @@ class ACTR_interface:
         self.clear_windows = True
 
     def schedule_event(self, schedule_time, function, params, time_in_ms=True):
-<<<<<<< HEAD
-
-        print("count", actr.mp_queue_count())
-
-=======
-        print("count", actr.mp_queue_count())
->>>>>>> 5a39e2ddb3b1b55a54c538fe301c94b5c405d28d
         if schedule_time == None and actr.mp_queue_count() < 50:
             #actr.schedule_event_now("clear_window", params=[params[0]])
             #time.sleep(0.1)

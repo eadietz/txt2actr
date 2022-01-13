@@ -23,12 +23,8 @@
    :trace-detail low
    :ul t
    ;:unstuff-aural-location t
-<<<<<<< HEAD
-   :v t ;; -model-output
-=======
    :v nil
 ;; -model-output
->>>>>>> 5a39e2ddb3b1b55a54c538fe301c94b5c405d28d
    ;:visual-activation 10
    ;:tone-detect-delay 1.0
    )
@@ -84,10 +80,9 @@
  
 )
 
-<<<<<<< HEAD
-(p scan-if-scene-did-not-change
+#|(p scan-if-scene-did-not-change
      =goal>
-       ;state    idle
+       state    idle
    ==>
      =goal>
        state    wait
@@ -100,26 +95,7 @@
      =goal>
        state    idle
        !eval! ("waiting")
- )
-=======
-;(p scan-if-scene-did-not-change
- ;    =goal>
- ;      state    idle
- ;  ==>
- ;    =goal>
- ;      state    wait
- ;);;
- ;
- ;(p wait
- ;    =goal>
- ;      state    wait
- ;  ==>
- ;    =goal>
- ;      state    idle
- ;       !eval! ("waiting")
- ;)
->>>>>>> 5a39e2ddb3b1b55a54c538fe301c94b5c405d28d
- 
+ )|#
  
  (p scan-if-scene-changed
      =goal>
@@ -143,8 +119,7 @@
  
  ; specify production rule priorities for data driven component
  ;(spp scan-if-scene-changed :u 100)
- (spp scan-if-scene-did-not-change :u 1)
- 
+ ;(spp scan-if-scene-did-not-change :u 1)
  
   (p attend-retrieve-if-location-scanned
      =goal>
@@ -178,7 +153,7 @@
      ?visual>
        state    free
     ==>
-       =imaginal>
+      +imaginal>
          =current  =val
          name  nil
      +visual>
@@ -190,6 +165,24 @@
        !eval! ("pass_data_to_sim" (list =current =val))
   )
  
+ 
+  (p change-if-altitude
+     =goal>
+       state     idle
+     =imaginal>
+        ALTITUDE =val
+     ?visual>
+       state    free
+    ==>
+     =goal>
+       state    idle
+     !eval! ("send_instruction_to_sim" (list =val))
+ )
+ 
+ 
+ ; specify production rule priorities
+ (spp change-if-altitude :u 100)
+ (spp scan-if-scene-changed :u 1)
  
  ;; catch failures, not necessary
  (p handle-retrieval-failure
