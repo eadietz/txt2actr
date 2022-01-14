@@ -72,8 +72,8 @@ class Analysis:
                 print("[ERROR] Error Message", json.loads(primary_response_data).get("errorMessage"), "Error Code",
                       json.loads(primary_response_data).get("errorCode"))
 
-    async def write(self, value):
-        print("write function called, value is", value)
+    async def write(self, label_and_value):
+        print("write function called, value is", label_and_value)
 
         n = random.randint(0, 365)
         offsets_write_dict = {
@@ -114,6 +114,15 @@ class Analysis:
 
     def pass_data_to_sim(self, label_and_value):
         print("the cognitive model reads", label_and_value)
+
+        try:
+            print('* run write')
+            asyncio.run(self.write(label_and_value))
+            print('* close write')
+        except:
+            print('* The Connection could not be established')
+
+
 
     async def eventloop(self):
 
