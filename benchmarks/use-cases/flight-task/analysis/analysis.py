@@ -120,11 +120,11 @@ class Analysis:
         print("number", label_and_value[1], isinstance(label_and_value[1], (int, float)))
         try:
             print('* run write')
-            #asyncio.run(self.write(label_and_value))
+            asyncio.run(self.write(label_and_value))
             print('* close write')
         except:
             print('* The Connection could not be established')
-            
+
     # write results into file
     def reset(self, log_file=None):
         # write back old data to file before reseting variables
