@@ -153,16 +153,17 @@
      ?visual>
        state    free
     ==>
+       !bind! =number (read-from-string =val)
       +imaginal>
-         =current  =val
+         =current  =number
          name  nil
      +visual>
          cmd    clear
      =goal>
        state    idle
-       !output! (data-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Attended and retrieved
-       successfully. Display =current is updated with =val)
-       !eval! ("pass_data_to_sim" (list =current =val))
+       !eval! ("print_read_data" (list =current =number))
+       ;!output! (data-driven update +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Attended and retrieved
+       ;successfully. Display =current is updated with =val)
   )
  
  
@@ -170,13 +171,16 @@
      =goal>
        state     idle
      =imaginal>
+        > ALTITUDE 10
+        < ALTITUDE 20
         ALTITUDE =val
      ?visual>
        state    free
     ==>
+     -imaginal>
      =goal>
        state    idle
-     !eval! ("send_instruction_to_sim" (list =val))
+     !eval! ("pass_data_to_sim" (list "ALTITUDE" =val))
  )
  
  

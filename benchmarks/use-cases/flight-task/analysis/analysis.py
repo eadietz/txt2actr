@@ -112,12 +112,15 @@ class Analysis:
     def waiting(self):
         print("waiting")
 
-    def pass_data_to_sim(self, label_and_value):
+    def print_read_data(self, label_and_value):
         print("the cognitive model reads", label_and_value)
 
+    def pass_data_to_sim(self, label_and_value):
+
+        print("number", label_and_value[1], isinstance(label_and_value[1], (int, float)))
         try:
             print('* run write')
-            asyncio.run(self.write(label_and_value))
+            #asyncio.run(self.write(label_and_value))
             print('* close write')
         except:
             print('* The Connection could not be established')
@@ -180,9 +183,6 @@ class Analysis:
                 print("[ERROR] Offsets have not been declared correctly")
                 print("[ERROR] Error Message", json.loads(primary_response_data).get("errorMessage"), "Error Code",
                       json.loads(primary_response_data).get("errorCode"))
-
-    def send_instruction_to_sim(self, values):
-        print("run lua script", values)
 
     # write results into file
     def reset(self, log_file=None):

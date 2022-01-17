@@ -14,9 +14,9 @@
 		"consoleOutputACTR": "console_output.txt"
 	},
 	"pyFunctionsInCognitiveModel" : {
+		"print_read_data": "data that has been read by cognitive model will be printed",
 		"pass_data_to_sim": "passes new inputs to Flight Simulator",
-		"waiting": "cognitive model is waiting for input",
-		"send_instruction_to_sim" : "as the name suggests. runs possibly a lua script"
+		"waiting": "cognitive model is waiting for input"
 	},
 	 "cognitive_model_config": {
 		 "cognitive_model_name": "flight-task",
