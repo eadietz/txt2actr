@@ -160,11 +160,15 @@ class Controller:
             p2 = Thread(target=self.dummy_watch_log_file_and_pass_values, args=(env_simulator, log_file_name))
         else:
             p2 = Thread(target=self.watch_log_file_and_pass_values, args=(env_simulator, log_file_name))
+
+        p3 = Thread(target=self.connect_to_server, args=())
+
         try:
             print(
                 f"{log_file_name} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ started")
             p1.start()
             p2.start()
+            p3.start()
             while actr_interface.actr_running():
                 time.sleep(5)
             print(f" {log_file_name} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done")
@@ -174,6 +178,10 @@ class Controller:
             # sys.exit(0)
         except Exception as e:
             print(e)
+
+    @staticmethod
+    def connect_to_server():
+        print("connect to server function still needs to be implemented")
 
     @staticmethod
     def watch_log_file_and_pass_values(env_simulator, log_file_name):  # Observes changes and passes them to ACTR
@@ -246,6 +254,7 @@ class Controller:
         self.windows_labels_specs = self.default_values.windows_labels_specs
         self.sounds_specs = self.default_values.sounds_specs
 
+        self.start_time_of_first_event = self.default_values.start_time_of_first_event
         self.column_separator = self.default_values.column_separator
         self.start_time_of_first_event = int(self.default_values.start_time_of_first_event)
         self.sampling_rate = int(self.default_values.sampling_rate)
@@ -263,6 +272,7 @@ class Controller:
         self.py_functions_in_cm = self.default_values.py_functions_in_cm
         self.suppress_console_output = self.default_values.suppress_console_output
         self.output_file = self.default_values.output_file
+
         self.use_case_folder = self.default_values.use_case_folder
 
         self.absolute_path_da = self.default_values.absolute_path_da
@@ -382,8 +392,11 @@ class Default_Values_Specifier:
         self.windows_labels_specs = json_params_obj["windows_labels_mapping"]
         self.sounds_specs = json_params_obj["sounds_and_speech_labels_mapping"]
 
-        self.column_separator = json_data["columnSeparator"]
+        if json_data["columnSeparator"]:
+            self.column_separator = json_data["columnSeparator"]
 
+        if "scheduleNextPossibleEvent" in json_data:
+            self.start_time_of_first_event = json_data["scheduleNextPossibleEvent"]
         if isinstance(json_data["startTimeFirstEvent"], int):
             self.start_time_of_first_event = json_data["startTimeFirstEvent"]
         if isinstance(json_data["samplingRateHz"], int):

@@ -183,7 +183,6 @@
      !eval! ("pass_data_to_sim" (list "ALTITUDE" =val))
  )
  
- 
  ; specify production rule priorities
  (spp change-if-altitude :u 100)
  (spp scan-if-scene-changed :u 1)

@@ -8,62 +8,15 @@ ACT-R connection has been started.
 #|Warning: Chunk-type IMAGE-INFO has the same specification as the chunk-types BUTTON-INFO, DISPLAY-INFO. |#
 #|Warning: Chunk-type SOUND-INFO has the same specification as the chunk-type CONSTANT-CHUNKS. |#
 127.0.0.1:2048 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ started
-the cognitive model reads ['HEADING', 1.0]
-the cognitive model reads ['SPEED', 2.0]
-the cognitive model reads ['ALTITUDE', 3.0]
-the cognitive model reads ['ALTITUDE', 4.0]
-the cognitive model reads ['HEADING', 5.0]
+needs to be fixed
+the cognitive model reads ['AP', 1.0]
+the cognitive model reads ['AP', 2.0]
+the cognitive model reads ['SPEED', 3.0]
+the cognitive model reads ['HEADING', 4.0]
+the cognitive model reads ['SPEED', 5.0]
 the cognitive model reads ['SPEED', 6.0]
-the cognitive model reads ['AP', 7.0]
-the cognitive model reads ['HEADING', 8.0]
+the cognitive model reads ['HEADING', 7.0]
+the cognitive model reads ['SPEED', 8.0]
 the cognitive model reads ['AP', 9.0]
-the cognitive model reads ['ALTITUDE', 10.0]
-the cognitive model reads ['HEADING', 11.0]
-the cognitive model reads ['HEADING', 12.0]
-the cognitive model reads ['ALTITUDE', 13.0]
-number 13.0 True
-* run write
-* close write
-the cognitive model reads ['ALTITUDE', 14.0]
-number 14.0 True
-* run write
-* close write
-the cognitive model reads ['HEADING', 15.0]
-the cognitive model reads ['HEADING', 16.0]
-the cognitive model reads ['HEADING', 17.0]
-the cognitive model reads ['ALTITUDE', 18.0]
-number 18.0 True
-* run write
-* close write
-the cognitive model reads ['ALTITUDE', 19.0]
-number 19.0 True
-* run write
-* close write
-the cognitive model reads ['AP', 20.0]
-the cognitive model reads ['ALTITUDE', 21.0]
-the cognitive model reads ['HEADING', 22.0]
-the cognitive model reads ['ALTITUDE', 23.0]
-the cognitive model reads ['ALTITUDE', 24.0]
-the cognitive model reads ['AP', 25.0]
-the cognitive model reads ['ALTITUDE', 26.0]
-the cognitive model reads ['ALTITUDE', 27.0]
-the cognitive model reads ['AP', 28.0]
-the cognitive model reads ['AP', 29.0]
-the cognitive model reads ['SPEED', 30.0]
-the cognitive model reads ['SPEED', 31.0]
-the cognitive model reads ['ALTITUDE', 32.0]
-the cognitive model reads ['ALTITUDE', 33.0]
-the cognitive model reads ['AP', 34.0]
-the cognitive model reads ['SPEED', 35.0]
-the cognitive model reads ['SPEED', 36.0]
-the cognitive model reads ['HEADING', 37.0]
-the cognitive model reads ['HEADING', 38.0]
-the cognitive model reads ['ALTITUDE', 39.0]
-the cognitive model reads ['SPEED', 40.0]
-the cognitive model reads ['SPEED', 41.0]
-the cognitive model reads ['ALTITUDE', 42.0]
-the cognitive model reads ['ALTITUDE', 43.0]
-the cognitive model reads ['SPEED', 44.0]
-the cognitive model reads ['HEADING', 45.0]
 ACT-R connection error connection no longer available.
 [Errno 32] Broken pipe

@@ -113,7 +113,7 @@ class ACTR_interface:
                                                 [i.x_end, i.y_end], "black")
                 else:
                     actr.add_image_to_exp_window(actr_window, i.name, i.color, i.x_loc, i.y_loc, i.x_end, i.y_end)
-
+	     # initially display the window labels to window
             window_labels_as_string = ", ".join(value for (_, [[value, x, y],_]) in window.labels_dict.items())
             actr.add_text_to_exp_window(actr_window, window_labels_as_string, x=window.x_text,
                                         y=window.y_text, font_size=window.font_size, color="black")
@@ -178,9 +178,10 @@ class ACTR_interface:
                 duration = self.sounds_dict[key].duration
                 sound_type = self.sounds_dict[key].sound_type
                 word = self.sounds_dict[key].word
-                print(schedule_time, freq, duration, sound_type, word)
-                self.schedule_event(schedule_time, "update_sound",
-                                    params=[sound_type, freq, duration, word], time_in_ms=True)
+                actr.schedule_event_now("update_sound",
+                                        params=[sound_type, freq, duration, schedule_time, word, True])
+                # self.schedule_event(schedule_time, "update_sound",
+                #                    params=[sound_type, freq, duration, schedule_time, word, True])
         self.clear_windows = True
 
     def schedule_event(self, schedule_time, function, params, time_in_ms=True):
@@ -256,17 +257,20 @@ class ACTR_interface:
         # actr.remove_items_from_exp_window(actr_window, item)
 
     @staticmethod
-    def update_sound(sound_type, freq, duration, word):
+    def update_sound(sound_type, freq, duration, schedule_time, word, time_in_ms):
         if sound_type == "text":
-            actr.new_word_sound(word)
+            actr.new_word_sound(word, schedule_time, 'external', time_in_ms)
         else:
-            actr.new_tone_sound(int(freq), int(duration))
+            # convert duration in seconds
+            duration_in_sec = (duration / 1000)
+            actr.new_tone_sound(freq, duration_in_sec, schedule_time, time_in_ms)
 
     @staticmethod
     def intersection(dict_a, dict_b):
         return [key for key in dict_a if key in dict_b]
 
     def convert_val(self, value):
+
         # test if value can be converted to float
         if isinstance(value, float) or re.match(r'^[-+]?(?:\b[0-9]+(?:\.[0-9]*)?|\.[0-9]+\b)(?:[eE][-+]?[0-9]+\b)?$', value): #re.match(r'[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?', value): # re.match(r'^-?\d+(?:\.\d+)$', value):
                 return '{:.{prec}f}'.format(float(value), prec=self.nr_of_frac)

@@ -64,8 +64,10 @@ class Analysis:
             if json.loads(primary_response_data).get("success"):
                 print(*"Offsets Declared Successful")
 
-            while json.loads(primary_response_data).get("success"):
-                await self.write()
+            while True:
+                asyncio.sleep()
+            #while json.loads(primary_response_data).get("success"):
+            #    await self.write()
             else:
                 print(json.loads(primary_response_data).get("success", "* No Success Message has been returned"))
                 print("[ERROR] Offsets have not been declared correctly")
@@ -100,6 +102,8 @@ class Analysis:
             primary_response_data2_value = primary_response_data2_data.get("write")
             self.counter = 0
             print(f"Offset written with value {primary_response_data2_value}")
+
+
 
     # called by the cognitive model in act-r to compute similarity between two numbers
     def numberSimilarities(self, a, b):
