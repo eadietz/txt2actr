@@ -181,7 +181,7 @@ class Controller:
 
     @staticmethod
     def connect_to_server():
-        print("connect to server function still needs to be implemented")
+        print("needs to be fixed")
 
     @staticmethod
     def watch_log_file_and_pass_values(env_simulator, log_file_name):  # Observes changes and passes them to ACTR

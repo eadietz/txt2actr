@@ -67,6 +67,7 @@ class ACTR_interface:
         else:
             # for local act-r it seems that ';' is necessary as path seperator
             self.cognitive_model_file = self.cognitive_model_file[start_idx:].replace("/",";").replace("\\", ";")
+            print("cognitive model file", self.cognitive_model_file)
             if self.human_interaction:
                 actr.load_act_r_code("dummy_model.lisp")
             else:
