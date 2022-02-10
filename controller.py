@@ -33,12 +33,13 @@ class Controller:
 
     def __init__(self, absolute_path_uc=os.path.dirname(os.path.abspath(__file__)),
                  absolute_path_mc=os.path.dirname(os.path.abspath(__file__)),
-                 config_specs=None, json_bool=True, actr_env=None, dummy_run=None):
+                 config_specs=None, json_bool=True, actr_env=None, dummy_run=None, load_cog_model=None):
 
         self.absolute_path_uc = absolute_path_uc
         self.absolute_path_mc = absolute_path_mc
         self.json_bool = json_bool
         self.dummy_run = dummy_run
+        self.load_cog_model = load_cog_model
 
         self.default_values = Default_Values_Specifier(absolute_path_uc, config_specs, json_bool)
         self.set_file_names(actr_env)
@@ -92,7 +93,8 @@ class Controller:
                                         self.objs_inst.sounds_dict,
                                         self.nr_of_decimals_in_values, self.show_display_labels,
                                         self.time_interval_to_new_val_in_msc, self.human_interaction,
-                                        self.show_env_windows, analysis_class, self.py_functions_in_cm)
+                                        self.show_env_windows, analysis_class, self.py_functions_in_cm,
+                                        self.load_cog_model)
         actr_interface.connect_with_actr()
 
         env_simulator = None

@@ -27,7 +27,8 @@ class ACTR_interface:
     # nr_of_frac is the number of digits after comma
     def __init__(self, actr_env, cognitive_model_file, windows_dict, sounds_dict, nr_of_frac,
                  show_display_labels, time_interval_to_new_val_in_msc=1,
-                 human_interaction=False, show_env_windows=False, analysis_module=None, py_functions_in_cm={}):
+                 human_interaction=False, show_env_windows=False, analysis_module=None,
+                 py_functions_in_cm={}, load_cog_model=None):
 
         self.actr_env = actr_env
         self.cognitive_model_file = cognitive_model_file
@@ -42,6 +43,7 @@ class ACTR_interface:
         self.show_env_windows = show_env_windows
         self.analysis_module = analysis_module
         self.py_functions_in_cm = py_functions_in_cm
+        self.load_cog_model = load_cog_model
 
         self.actr_window_updater = "update_window_with_labels" if show_display_labels else "update_window"
 
@@ -70,7 +72,7 @@ class ACTR_interface:
             print("cognitive model file", self.cognitive_model_file)
             if self.human_interaction:
                 actr.load_act_r_code("dummy_model.lisp")
-            else:
+            elif not self.load_cog_model:
                 actr.load_act_r_code(self.cognitive_model_file)
 
         actr.add_word_characters(".")
