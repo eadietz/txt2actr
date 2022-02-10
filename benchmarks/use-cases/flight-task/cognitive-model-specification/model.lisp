@@ -171,8 +171,7 @@
      =goal>
        state     idle
      =imaginal>
-        > ALTITUDE 10
-        < ALTITUDE 20
+        > ALTITUDE 100
         ALTITUDE =val
      ?visual>
        state    free

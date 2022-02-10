@@ -9,6 +9,7 @@ from argparse import ArgumentParser  # Direkt aus terminal Arguments übergeben
 
 fsuipc_protocol = Subprotocol("fsuipc")  # as stated in documentation
 
+
 class Server_Based_Updater:
 
     def __init__(self, actr_interface=None, hostname="localhost", port="2048", relevant_labels_list=["altitude"],
@@ -31,16 +32,15 @@ class Server_Based_Updater:
         altitude = round(int(payload_data.get("altitude")) / (65535 * 65535) * 3.28084)
         speed = round(int(payload_data.get("speed")) / 128)
 
-        vals_of_interest_dict = {"ALTITUDE": f"{altitude}", "SPEED": f"{speed}", "HEADING": f"{heading}", "AP": AP, "MW" : f"{0}"}
+        vals_of_interest_dict = {"ALTITUDE": f"{altitude}", "SPEED": f"{speed}", "HEADING": f"{heading}", "AP": AP,
+                                 "MW": f"{0}"}
         self.idx += 1
         self.actr_interface.update_actr_env(vals_of_interest_dict)
         time.sleep(0.01)
-        #print("Scheduled Time", schedule_time)
+        # print("Scheduled Time", schedule_time)
 
-        print(f"Heading: {heading}, Altitude: {altitude}, Speed: {speed}, Autopilot 1: {AP}")
+        # print(f"Heading: {heading}, Altitude: {altitude}, Speed: {speed}, Autopilot 1: {AP}")
 
-        
-    
     async def handle_offset_receive(self, payload):
         if "command" in payload:
             if payload.get("command") == "offsets.declare":  # Server answering that offsets have been declared
@@ -50,7 +50,6 @@ class Server_Based_Updater:
             elif payload.get("command") == "offsets.read" and payload.get("name") == "myOffsets":
                 # Read custom offset -> print out
                 await self.show_offset_values(payload=payload)
-
 
     async def client_loop(self, hostname, port, regular_updates):
         print("test")
@@ -97,7 +96,7 @@ class Server_Based_Updater:
                     # await show_offset_values(payload=response_data)
                     await self.handle_offset_receive(payload=response_data)
 
-                    
+
 
                 else:
                     print("[ERROR]", response_data.get("errorCode"), response_data.get("errorMessage"))
@@ -118,13 +117,12 @@ class Server_Based_Updater:
         print("* Websocket disconnecting")
         await asyncio.sleep(3)
 
-
     def specify_and_pass(self, logname=None):
 
         try:
 
             print("* Start running main task")
-            
+
             event_loop = asyncio.new_event_loop()  # event_loop = asyncio.get_event_loop() #könnte hier alternativ verwendet werden - get_event will get the current thread’s default event loop object as long as being in the main thread
             event_loop.run_until_complete(  # will also handle all queued futures until all are finished
                 self.client_loop(hostname=self.hostname, port=self.port, regular_updates=35)
@@ -136,7 +134,5 @@ class Server_Based_Updater:
             if event_loop.is_running():
                 event_loop.stop()
 
-
-#sbu = Server_Based_Updater()
-#sbu.specify_and_pass()
-
+# sbu = Server_Based_Updater()
+# sbu.specify_and_pass()
