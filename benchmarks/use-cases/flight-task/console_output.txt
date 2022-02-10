@@ -1,8 +1,5 @@
 A new cognitive model will be constructed: /Users/thd7as/Documents/GitHub/txt2actr/benchmarks/use-cases/flight-task/cognitive-model-specification/model.lisp will be the cognitive model
 A connection to ACT-R will be established now... waiting for 15 seconds until ACT-R is ready ...
-* Start running main task
-* run eventloop
-* The Connection could not be established
 ACT-R connection has been started.
 cognitive model file Users;thd7as;Documents;GitHub;txt2actr;benchmarks;use-cases;flight-task;cognitive-model-specification;model.lisp
 #|Warning: Chunk-type BUTTON-INFO has the same specification as the chunk-type DISPLAY-INFO. |#
@@ -10,9 +7,39 @@ cognitive model file Users;thd7as;Documents;GitHub;txt2actr;benchmarks;use-cases
 #|Warning: Chunk-type SOUND-INFO has the same specification as the chunk-type CONSTANT-CHUNKS. |#
 127.0.0.1:2048 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ started
 needs to be fixed
-the cognitive model reads ['ALTITUDE', 1.0]
 the cognitive model reads ['ALTITUDE', 2.0]
-the cognitive model reads ['SPEED', 3.0]
+the cognitive model reads ['AP', 3.0]
 the cognitive model reads ['HEADING', 4.0]
+the cognitive model reads ['HEADING', 5.0]
+the cognitive model reads ['HEADING', 6.0]
+the cognitive model reads ['AP', 7.0]
+the cognitive model reads ['AP', 8.0]
+the cognitive model reads ['ALTITUDE', 9.0]
+the cognitive model reads ['HEADING', 10.0]
+the cognitive model reads ['ALTITUDE', 11.0]
+send data to fs 11.0 True
+* run write
+* The Connection could not be established
+the cognitive model reads ['SPEED', 12.0]
+the cognitive model reads ['HEADING', 13.0]
+the cognitive model reads ['AP', 14.0]
+the cognitive model reads ['AP', 15.0]
+the cognitive model reads ['ALTITUDE', 16.0]
+send data to fs 16.0 True
+* run write
+* The Connection could not be established
+the cognitive model reads ['HEADING', 17.0]
+the cognitive model reads ['ALTITUDE', 18.0]
+send data to fs 18.0 True
+* run write
+* The Connection could not be established
+the cognitive model reads ['ALTITUDE', 19.0]
+send data to fs 19.0 True
+* run write
+* The Connection could not be established
+the cognitive model reads ['ALTITUDE', 20.0]
+the cognitive model reads ['SPEED', 21.0]
+the cognitive model reads ['ALTITUDE', 22.0]
+the cognitive model reads ['HEADING', 23.0]
 ACT-R connection error connection no longer available.
 [Errno 32] Broken pipe

@@ -40,19 +40,17 @@ class Log_Based_Updater:
                 line = log_file.readline()
                 self.headers_list = line.strip().split(self.column_separator)[self.col_start_idx:]
                 self.values_list = [""] * len(self.headers_list)
-                schedule_time = self.start_time
+                schedule_time = int((self.skip_rate_in_log / self.sampling_rate) * 1000)
                 # this can surely be made nicer...
                 for i in range(self.row_start_idx):
-                    line = log_file.readline()
-                # schedule first event
-                self.pass_new_data_to_actr_env(line.strip().split(self.column_separator)[self.col_start_idx:],
-                                                 schedule_time)
+                    log_file.readline()
+                time_sample = self.row_start_idx
                 for line in islice(log_file, self.row_start_idx, None, self.skip_rate_in_log):
                     # float('{:.{prec}f}'.format(float(idx/sampling_rate), prec=3))
-                    schedule_time = None if not self.sampling_rate else schedule_time+int((1 / self.sampling_rate) * 1000)        ##########################################
+                    schedule_time = None if not self.sampling_rate \
+                        else schedule_time + int((time_sample / self.sampling_rate) * 1000)
                     self.pass_new_data_to_actr_env(line.strip().split(self.column_separator)[self.col_start_idx:],
                                                    schedule_time)
-                    self.row_start_idx += self.skip_rate_in_log
         except IOError:
             print('IOError: %s' % sys.exc_info()[0])
             log_file.close()

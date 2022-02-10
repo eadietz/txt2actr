@@ -161,14 +161,11 @@ class Controller:
         else:
             p2 = Thread(target=self.watch_log_file_and_pass_values, args=(env_simulator, log_file_name))
 
-        p3 = Thread(target=self.connect_to_server, args=())
-
         try:
             print(
                 f"{log_file_name} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ started")
             p1.start()
             p2.start()
-            p3.start()
             while actr_interface.actr_running():
                 time.sleep(5)
             print(f" {log_file_name} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done")
@@ -178,10 +175,6 @@ class Controller:
             # sys.exit(0)
         except Exception as e:
             print(e)
-
-    @staticmethod
-    def connect_to_server():
-        print("needs to be fixed")
 
     @staticmethod
     def watch_log_file_and_pass_values(env_simulator, log_file_name):  # Observes changes and passes them to ACTR
