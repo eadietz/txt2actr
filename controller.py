@@ -33,7 +33,7 @@ class Controller:
 
     def __init__(self, absolute_path_uc=os.path.dirname(os.path.abspath(__file__)),
                  absolute_path_mc=os.path.dirname(os.path.abspath(__file__)),
-                 config_specs=None, json_bool=True, actr_env=None, dummy_run=None, load_cog_model=None):
+                 config_specs=None, json_bool=True, actr_external=None, dummy_run=None, load_cog_model=None):
 
         self.absolute_path_uc = absolute_path_uc
         self.absolute_path_mc = absolute_path_mc
@@ -42,7 +42,7 @@ class Controller:
         self.load_cog_model = load_cog_model
 
         self.default_values = Default_Values_Specifier(absolute_path_uc, config_specs, json_bool)
-        self.set_file_names(actr_env)
+        self.set_file_names(actr_external)
 
         self.log = File_Logger(self.output_file) if self.suppress_console_output else Console_and_File_Logger(
             self.output_file)
@@ -73,7 +73,7 @@ class Controller:
 
     def do_run(self):
 
-        ACTR_app_starter(self.actr_env)
+        ACTR_app_starter(self.actr_external)
 
         cognitive_model_file_transformed = self.cognitive_model_file
         # get rid of any non-alphanumeric characters at the beginning of path to file string
@@ -88,7 +88,7 @@ class Controller:
         else:
             print("No data_analysis_folder specified. No analysis will be done.")
 
-        actr_interface = ACTR_interface(self.actr_env, cognitive_model_file_transformed,
+        actr_interface = ACTR_interface(self.actr_external, cognitive_model_file_transformed,
                                         self.objs_inst.windows_dict,
                                         self.objs_inst.sounds_dict,
                                         self.nr_of_decimals_in_values, self.show_display_labels,
@@ -105,8 +105,8 @@ class Controller:
                                               self.start_time_of_first_event)
         elif self.ACTR_updates == 'task':
             env_simulator = self.get_module(f'{self.log_file_folder}',
-                                                 'task_based_updater', 'Task_Based_Updater', analysis_class,
-                                                 self.absolute_path_uc, actr_interface, self.column_separator,
+                                                'task_based_updater', 'Task_Based_Updater', analysis_class,
+                                                self.absolute_path_uc, actr_interface, self.column_separator,
                                                 self.sampling_rate,
                                                 self.skip_rate_in_log, self.row_start_idx_in_dataset,
                                                 self.col_start_idx_in_dataset, self.start_time_of_first_event,
@@ -222,7 +222,7 @@ class Controller:
             lines = len(f.readlines())
         return int(lines / 100)
 
-    def set_file_names(self, actr_env):
+    def set_file_names(self, actr_external):
 
         self.ACTR_updates = self.default_values.ACTR_updates
         if not (self.ACTR_updates == 'log' or self.ACTR_updates == 'task'or self.ACTR_updates == 'server'):
@@ -233,7 +233,7 @@ class Controller:
             self.hostname = self.default_values.hostname
             self.port = self.default_values.port
 
-        self.actr_env = self.default_values.actr_env if not actr_env else actr_env
+        self.actr_external = self.default_values.actr_external if actr_external == None else actr_external
 
         self.log_file_folder = self.default_values.log_file_folder
         self.absolute_path_da = self.default_values.absolute_path_da
@@ -292,7 +292,7 @@ class Default_Values_Specifier:
         # specify default values
         self.cognitive_model_specifications_file = None
         self.cognitive_model_config_df = None
-        self.actr_env = 'e'
+        self.actr_external = True
         self.column_separator = ";"
         self.start_time_of_first_event = False
         self.sampling_rate = False
@@ -337,7 +337,7 @@ class Default_Values_Specifier:
             self.hostname = json_data["hostname"]
             self.port = json_data["port"]
 
-        self.actr_env = json_data["startACTR"]
+        self.actr_external = json_data["startACTR"]
         json_paths_obj = json_data["paths"]
         self.use_case_folder = json_paths_obj["use_case_folder"]
 
@@ -434,7 +434,7 @@ class Default_Values_Specifier:
             if not (self.ACTR_updates == 'log' or self.ACTR_updates == 'task' or self.ACTR_updates == 'server'):
                 sys.exit("You need to specify whether the simulation is log_based (log) or task_based (task)")
 
-            self.actr_env = file_open.readline().split(";")[1]
+            self.actr_external = file_open.readline().split(";")[1]
 
             self.log_file_folder = self.set_os_path_sep(path + file_open.readline().split(";")[1])
             self.cognitive_model_specifications_file = self.set_os_path_sep(path + file_open.readline().split(";")[1])

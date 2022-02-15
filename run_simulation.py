@@ -3,6 +3,7 @@ import os
 from sys import platform as _platform
 import sys
 import json
+import argparse
 
 
 class Simulation():
@@ -19,10 +20,18 @@ class Simulation():
         self.config_file = 'meta_info.csv'
 
         if json_bool:
-            config_file = str(sys.argv[1]) if len(sys.argv) > 1 else "config-flight-sim.json" #test_by_event.json"
-            actr_env = str(sys.argv[2]) if len(sys.argv) > 2 else None
-            dummy_run = True if len(sys.argv) > 3 else None
-            load_cog_model = True if len(sys.argv) > 4 else None
+            parser = argparse.ArgumentParser(description = "Description for my parser")
+            parser.add_argument("-c", "--Config", required = False, default = "")
+            parser.add_argument("-e", "--External" , required = False, default = "")
+            parser.add_argument("-d", "--Dummy", required = False, default = "")
+            parser.add_argument("-m", "--Model", required = False, default = "")
+
+            args = parser.parse_args()
+
+            config_file = args.Config if args.Config else "config-bst.json"
+            actr_external = True if args.External else False
+            dummy_run = True if args.Dummy else False
+            load_model = True if args.Model else False
 
             uc_path = f'{self.abs_path}benchmarks{self.path_sep}use-cases{self.path_sep}'
 
@@ -32,8 +41,8 @@ class Simulation():
                     c = Controller(absolute_path_uc=uc_path,
                                    absolute_path_mc=self.model_components_path,
                                    config_specs=use_case, json_bool=json,
-                                   actr_env=actr_env,
-                                   dummy_run=dummy_run, load_cog_model=load_cog_model)
+                                   actr_external=actr_external,
+                                   dummy_run=dummy_run, load_cog_model=load_model)
                     c.instantiate_default_obj()
                     c.construct_cognitive_model()
                     c.do_run()

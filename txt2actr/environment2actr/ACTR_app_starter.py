@@ -15,36 +15,33 @@ class ACTR_app_starter:
     docker_win = "docker run -i -v %homedrive%%homepath%\act-r-tutorial:/home/actr/actr7.x/tutorial db30/act-r-container"
     docker_win_web = f"docker run -i {p_flags} -v %homedrive%%homepath%\act-r-tutorial:/home/actr/actr7.x/tutorial db30/act-r-container"
 
-    def __init__(self, how_to_start_actr, actr_lnk="actr_script.sh", actr_cmd=None):
+    def __init__(self, actr_external, actr_lnk="actr_script.sh", actr_cmd=None):
 
         # self.actr_lnk =  run-act-r.bat.lnk
         self.actr_lnk = actr_lnk
 
-        self.how_to_start_actr = how_to_start_actr
-
         if actr_cmd:
             self.actr_cmd = actr_cmd
-        elif how_to_start_actr == 'e':
+        elif actr_external:
                 print("Make sure that you started the ACT-R connection externally ... ")
-        else:
-            if how_to_start_actr == 'i':
+        elif not actr_external:
                 if _platform.startswith('darwin'):
                     self.actr_cmd = "open /Applications/ACT-R/run-act-r.command"
                 elif _platform.startswith('linux'):
                     self.actr_cmd = "run-act-r.command"
                 elif _platform.startswith('win'):
                     self.actr_cmd = "run-act-r.cmd"
-            elif how_to_start_actr == 'dw':
-                if _platform.startswith('darwin') or _platform.startswith('linux'):
-                    self.actr_cmd = self.docker_lnx_web
-                elif _platform.startswith('win'):
-                    self.actr_cmd = self.docker_win_web
-            elif how_to_start_actr == 'd':
-                if _platform.startswith('darwin') or _platform.startswith('linux'):
-                    self.actr_cmd = self.docker_lnx
-                elif _platform.startswith('win'):
-                    self.actr_cmd = self.docker_win
-            self.execute_actr_app()
+               # elif how_to_start_actr == 'dw':
+               #     if _platform.startswith('darwin') or _platform.startswith('linux'):
+               #         self.actr_cmd = self.docker_lnx_web
+               #     elif _platform.startswith('win'):
+               #         self.actr_cmd = self.docker_win_web
+               # elif how_to_start_actr == 'd':
+               #     if _platform.startswith('darwin') or _platform.startswith('linux'):
+               #         self.actr_cmd = self.docker_lnx
+               #     elif _platform.startswith('win'):
+               #         self.actr_cmd = self.docker_win
+        self.execute_actr_app()
 
     def execute_actr_app(self):
         if not actr.current_connection:

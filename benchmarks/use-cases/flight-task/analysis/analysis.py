@@ -12,10 +12,11 @@ import numpy as np
 # from sklearn.metrics import mean_squared_error
 # from math import sqrt
 import asyncio
-import websockets
-from websockets import client
+import _thread
+import websocket
 import json
 import sys
+import time
 import random
 
 
@@ -31,9 +32,27 @@ class Analysis:
         self.compared_df = pd.DataFrame()
         self.idx = 0
 
-        self.server_url = f"ws://127.0.0.1:2048/fsuipc/"
-        self.websocket = client.connect(self.server_url, subprotocols=['fsuipc'])
-        self.counter = 0
+        self.ws = websocket.WebSocket()
+        #_thread.start_new_thread(self.connect, ())
+        time.sleep(3)
+
+    def connect(self):
+        return False
+
+        self.ws.connect("ws://localhost:2048/fsuipc/", subprotocols=["fsuipc"])
+        print(*"Websocket Connected")
+        offsets_declare = {
+                    "command": 'offsets.declare',
+                    "name": 'OffsetsWrite',
+                    "offsets": [
+                        { "name": 'write', "address": 0x66D0, "type": 'int', "size": 4 },
+                    ]
+                    }
+        self.ws.send(json.dumps(offsets_declare))
+        primary_response_data= self.ws.recv()
+        print(json.loads(primary_response_data))
+        while True:
+            time.sleep(1)
 
     # called by the cognitive model in act-r to compute similarity between two numbers
     def numberSimilarities(self, a, b):
@@ -52,44 +71,18 @@ class Analysis:
     def pass_data_to_sim(self, label_and_value):
 
         print("send data to fs", label_and_value[1], isinstance(label_and_value[1], (int, float)))
-        try:
-            print('* run write')
-            asyncio.run(self.write(label_and_value))
-            print('* close write')
-        except Exception as e:
-            print(e)
-            print('* The Connection could not be established')
 
-    async def write(self, new_val):
-
-        global counter
-        n = random.randint(0, 365)
+        n = random.randint(0,365)
         offsets_write_dict = {
             "command": 'offsets.write',
             "name": 'OffsetsWrite',
             "offsets": [
-                {"name": 'write', "value": n}
-            ]
-        }
-
-        print("start await websocket", self.websocket)
-        await self.websocket.send(json.dumps(offsets_write_dict))
-        primary_response_data2 = await self.websocket.recv()
-        print(primary_response_data2)
-        primary_response_data2_json = json.loads(primary_response_data2)
-        primary_response_data2_data = primary_response_data2_json.get("data")
-
-        if primary_response_data2_data == None:
-            counter = counter + 1
-
-            print("* ERROR: NO DATA RETURNED")
-            if counter == 3:
-                print(*"NO DATA HAS BEEN RETURED AFTER WRITING OFFSET")
-
-        else:
-            primary_response_data2_value = primary_response_data2_data.get("write")
-            counter = 0
-            print(f"Offset written with value {primary_response_data2_value}")
+                { "name": 'write', "value": n}
+                ]
+                }
+        self.ws.send(json.dumps(offsets_write_dict))
+        primary_response_data= self.ws.recv()
+        print(json.loads(primary_response_data))
 
     # write results into file
     def reset(self, log_file=None):

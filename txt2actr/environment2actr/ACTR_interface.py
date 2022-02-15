@@ -25,12 +25,12 @@ class ACTR_interface:
     global clear_windows
 
     # nr_of_frac is the number of digits after comma
-    def __init__(self, actr_env, cognitive_model_file, windows_dict, sounds_dict, nr_of_frac,
+    def __init__(self, actr_external, cognitive_model_file, windows_dict, sounds_dict, nr_of_frac,
                  show_display_labels, time_interval_to_new_val_in_msc=1,
                  human_interaction=False, show_env_windows=False, analysis_module=None,
                  py_functions_in_cm={}, load_cog_model=None):
 
-        self.actr_env = actr_env
+        self.actr_env = actr_external
         self.cognitive_model_file = cognitive_model_file
         self.windows_dict = windows_dict
         self.clear_windows = False
@@ -61,19 +61,18 @@ class ACTR_interface:
         #actr.start("act-r.vlab.eu.airbus.corp", 2650)
         # get rid of any non-alphanumeric characters at the beginning of path to file string
         start_idx = re.search("[^\W\d]", self.cognitive_model_file).start()
-        # if the actr_env started from a docker, we need to load the model from the tutorial path
-        if self.actr_env.startswith('d'):
-            rel_path_to_file = self.cognitive_model_file.partition('use-cases')[2]
-            #print("rel_path_to_file", rel_path_to_file)
-            actr.load_act_r_code(f'/home/actr/actr7.x/tutorial{rel_path_to_file}')
-        else:
-            # for local act-r it seems that ';' is necessary as path seperator
-            self.cognitive_model_file = self.cognitive_model_file[start_idx:].replace("/",";").replace("\\", ";")
-            print("cognitive model file", self.cognitive_model_file)
-            if self.human_interaction:
-                actr.load_act_r_code("dummy_model.lisp")
-            elif not self.load_cog_model:
-                actr.load_act_r_code(self.cognitive_model_file)
+        # if the actr_external started from a docker, we need to load the model from the tutorial path
+        #if self.actr_env.startswith('d'):
+        #    rel_path_to_file = self.cognitive_model_file.partition('use-cases')[2]
+        #    #print("rel_path_to_file", rel_path_to_file)
+        #    actr.load_act_r_code(f'/home/actr/actr7.x/tutorial{rel_path_to_file}')
+        # for local act-r it seems that ';' is necessary as path seperator
+        self.cognitive_model_file = self.cognitive_model_file[start_idx:].replace("/",";").replace("\\", ";")
+        print("cognitive model file", self.cognitive_model_file)
+        if self.human_interaction:
+            actr.load_act_r_code("dummy_model.lisp")
+        elif not self.load_cog_model:
+            actr.load_act_r_code(self.cognitive_model_file)
 
         actr.add_word_characters(".")
         actr.add_word_characters("_")

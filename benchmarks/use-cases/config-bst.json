@@ -1,0 +1,145 @@
+[
+  {
+	"simulationType": "task",
+	"startACTR": false,
+	"paths": {
+        "use_case_folder": "suppression-task",
+		"data_analysis_folder": "analysis",
+		"simulationSpecifications": "task/task_based_updater.py",
+		"cognitiveModelSpecifications": "cognitive-model-specification/suppression-task-model.lisp",
+		"cognitiveModel": "cognitive-model-specification/model.lisp",
+		"windowsSpecification": "",
+		"buttonsSpecification": "",
+		"imagesSpecification": "",
+		"windowsLabelMapping": "",
+		"soundsLabelMapping": "",
+		"resultsFolder": "results",
+		"consoleOutputACTR": "console_output.txt"
+	},
+	"pyFunctionsInCognitiveModel" : {
+		"add_content" : "collects applied production rules"
+		},
+	 "cognitive_model_config": {
+		 "cognitive_model_name": "suppression-task",
+		 "model_params_dict": {},
+		 "default_val_dict": {},
+		 "include_chunk_types": true,
+		 "include_chunks": true,
+		 "include_instantiated_chunks": true,
+		 "to_be_attended_names": [],
+		 "default_goal_slots_and_values": "state idle",
+		 "uc_specific_list_of_files": ["cognitive-model-specification/visual.lisp", "cognitive-model-specification/argue.lisp","cognitive-model-specification/manual-motor.lisp"],
+		 "gdr_file": "",
+		 "ddr_file": ""
+	 },
+	  "params": {
+		"windows_specification": [
+			{
+				"vision": "task_environment",
+				"description": "shows sentences",
+				"y_position": 20,
+				"x_position": 510,
+				"width": 720,
+				"length": 500,
+				"fontsize": 15,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "s-sentence,f-sentence"
+			},
+			{
+				"vision": "task_response_options",
+				"description": "shows response options",
+				"y_position": 600,
+				"x_position": 510,
+				"width": 720,
+				"length": 260,
+				"fontsize": 15,
+				"x_text_position": 18,
+				"y_text_position": 0,
+				"header_labels": "fact"
+			}
+		],
+		"buttons_specification": [
+			{
+				"button": "yes",
+				"y_position": 50,
+				"x_position": 400,
+				"height": 30,
+				"width": 230,
+				"window": "task_response_options",
+				"label": "yes",
+				"action": ["library-button","yes"]
+			},
+			{
+				"button": "no",
+				"y_position": 100,
+				"x_position": 400,
+				"height": 30,
+				"width": 230,
+				"window": "task_response_options",
+				"label": "no",
+				"action": ["library-button","no"]
+			},
+			{
+				"button": "unknown",
+				"y_position": 150,
+				"x_position": 400,
+				"height": 30,
+				"width": 230,
+				"window": "task_response_options",
+				"label": "unknown",
+				"action": ["library-button","unknown"]
+			}
+		],
+		"images_specification": [
+			{
+				"image": "Image One",
+				"description": "Test Image",
+				"x_start": 0,
+				"y_start": 0,
+				"x_end": 0,
+				"y_end": 0,
+				"color": "",
+				"window": "MFD",
+				"label": "none",
+				"appearance": true
+			}
+		],
+		"windows_labels_mapping": [
+			{
+				"key": "s-sentence",
+				"value": ""
+			},
+			{
+				"key": "f-sentence",
+				"value": ""
+			},
+			{
+				"key": "what_follows",
+				"value": ""
+			},
+			{
+				"key": "fact",
+				"value": ""
+			}
+		],
+		"sounds_and_speech_labels_mapping": [
+        ]
+	},
+	"columnSeparator": "",
+	"startTimeFirstEvent": 0,
+	"samplingRateHz": 100,
+	"skipRateInLog": 2,
+	"columnStartIndex": 0,
+	"rowStartIndex": 5,
+	"simulationTimeSeconds": 10000,
+	"decimalNumbers": 2,
+	"timeIntervalMilliseconds": 1,
+	"displayLabels": false,
+	"humanInteraction": false,
+	"environmentWindows": true,
+	"fulltimeACTR": true,
+	"realtimeACTR": true,
+	"consoleOutput": false
+  }
+]

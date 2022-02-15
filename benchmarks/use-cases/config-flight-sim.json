@@ -4,7 +4,7 @@
 	"hostname": "127.0.0.1",
 	"port": "2048",
 	"valuesList": ["altitude"],
-	"startACTR": "i",
+	"startACTR": false,
 	"paths": {
         "use_case_folder": "flight-task",
 		"data_analysis_folder": "analysis",
