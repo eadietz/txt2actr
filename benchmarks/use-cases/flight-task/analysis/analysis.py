@@ -18,8 +18,8 @@ class Analysis:
         self.compared_df = pd.DataFrame()
         self.idx = 0
 
-        # self.ws = websocket.WebSocket()
-        #_thread.start_new_thread(self.connect, ())
+        self.ws = websocket.WebSocket()
+        _thread.start_new_thread(self.connect, ())
         time.sleep(3)
 
     def connect(self):
@@ -55,19 +55,19 @@ class Analysis:
 
     def pass_data_to_sim(self, label_and_value):
 
-        print("send data to fs", label_and_value[1], isinstance(label_and_value[1], (int, float)))
+        print("send data to fs", label_and_value) #, isinstance(label_and_value[1], (int, float)))
 
-        # n = random.randint(0,365)
-        # offsets_write_dict = {
-        #     "command": 'offsets.write',
-        #     "name": 'OffsetsWrite',
-        #     "offsets": [
-        #         { "name": 'write', "value": n}
-        #         ]
-        #         }
-        # self.ws.send(json.dumps(offsets_write_dict))
-        # primary_response_data= self.ws.recv()
-        # print(json.loads(primary_response_data))
+
+        offsets_write_dict = {
+            "command": 'offsets.write',
+            "name": 'OffsetsWrite',
+            "offsets": [
+                { "name": 'write', "value": label_and_value[1]}
+                ]
+                }
+        self.ws.send(json.dumps(offsets_write_dict))
+        primary_response_data= self.ws.recv()
+        print(json.loads(primary_response_data))
 
     # write results into file
     def reset(self, log_file=None):

@@ -1,7 +1,7 @@
 [
   {
 	"simulationType": "server",
-	"hostname": "127.0.0.1",
+	"hostname": "localhost",
 	"port": "2048",
 	"valuesList": ["altitude"],
 	"startACTR": false,
