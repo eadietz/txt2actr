@@ -1,0 +1,29 @@
+results with argue-activation.lisp
+
+
+essay                 counts  percentage
+Context     Response
+alternative yes           94        94.0
+            unknown        6         6.0
+
+not_essay              counts  percentage
+Context     Response
+alternative unknown       91        91.0
+            no             9         9.0
+
+library                 counts  percentage
+Context     Response
+alternative unknown       89        89.0
+            yes           11        11.0
+
+not_library             counts  percentage
+Context     Response
+alternative no            91        91.0
+            unknown        9         9.0
+
+Comment: 100 simulations of each of the groups. The simulations
+need to run separately otherwise, each groups' activation will
+influence the outcome of the other.
+
+I did not find an elegant way yet how to reset activation of
+all chunks while ACT-R is running.

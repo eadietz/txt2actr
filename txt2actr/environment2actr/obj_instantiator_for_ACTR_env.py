@@ -6,11 +6,10 @@ Created on Wed Nov  18
 """
 import pandas as pd
 
-from txt2actr.environment2actr.env_obj.window import Window
 from txt2actr.environment2actr.env_obj.button import Button
-from txt2actr.environment2actr.env_obj.sound import Sound
 from txt2actr.environment2actr.env_obj.image import Image
-import ast
+from txt2actr.environment2actr.env_obj.sound import Sound
+from txt2actr.environment2actr.env_obj.window import Window
 
 
 class Obj_Instantiator_For_ACTR_Env:

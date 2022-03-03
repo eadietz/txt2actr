@@ -3,10 +3,10 @@
 
 @author: thd7as
 """
-from sys import platform as _platform
-import math
 import ast
+import math
 import os
+from sys import platform as _platform
 
 chunk_type_display = {'chunk-type': 'display-info', 'slots': ['name', 'screen-x', 'screen-y']}
 chunk_type_button = {'chunk-type': 'button-info', 'slots': ['name', 'screen-x', 'screen-y']}

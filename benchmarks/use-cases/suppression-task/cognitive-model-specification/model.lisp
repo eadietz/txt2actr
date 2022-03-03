@@ -1,23 +1,23 @@
 (clear-all)
 (define-model suppression-task
  (sgp
-   :v t ;; -model-output
+   :v nil ;; -model-output
    :esc t ; enables subsymbolic computations
    :rt -2.5  ; minimum activation threshold
-   ; :ol t    ; optimized learning parameter that approximates learning rule
+   :ol t    ; optimized learning parameter that approximates learning rule
    :act nil   ; prints out activation trace
-   :ans 0.1 ; instantaneous/ transient noise for each retrieval request
+   :ans 0.2 ; instantaneous/ transient noise for each retrieval request, recommended range [0.2,0.8]
    :pas nil ; permanent noise associated with each chunk when entered in dm
    :mas 5 ; spreading activation
    :nsji nil ; allows negative sji values from the strength of association calculation
-   ;:bll 0.5
+   :bll nil ; base-level learning enabled, also sets decay d
    ;:retrieval-activation 5.0
    ;:imaginal-activation 0
    :show-focus t
    ;:time-master-start-increment 1.0
    ;:trace-detail low
    ;:ul t
-   ; :egs 0.95 ; noise in utility based  choosing production rules
+   ; :egs 0.95 ; noise in utility based choosing production rules
    ;:unstuff-aural-location t
    ;:visual-activation 10
    ;:tone-detect-delay 1.0
@@ -28,7 +28,7 @@
 
 
 (add-word-characters ".")
-; (add-word-characters "_")
+(add-word-characters "_")
 (set-visloc-default)
 
 ;; ---> insert additional model modules after here
@@ -171,19 +171,26 @@
 
 
 
+ ; declarative memory
+ 
+ ; arg-1 used to store position of (first) argument in imaginal
+ ; arg-2 used to store position of (second; counter of first) argument in imaginal
  (define-chunks
- (ARG-1)
- (ARG-2)
+ (arg-1)
+ (arg-2)
+ (SUFFICIENT)
+ (NECESSARY)
  )
+ ; 'conversion' from string (word, e.g. "essay") to chunk (context, can be either SUFFICIENT or NECESSARY)
  (chunk-type meaning word context)
  (chunk-type argument fact position context neg-position)
  (chunk-type interpretation word)
  
  (add-dm
- (SUFFICIENT isa interpretation word "SUFFICIENT")
- (NECESSARY isa interpretation word "NECESSARY")
- 
+ ; if "essay" is given as a fact (together with "if essay then library", then "essay" will
+ ; always be understood as SUFFICIENT, i.e. everyone recognizes modus ponens)
  (ESSAY isa meaning word "essay" context SUFFICIENT)
+ 
  (NOT-ESSAY-NEC isa meaning word "not_essay" context NECESSARY)
  (NOT-ESSAY-SUF isa meaning word "not_essay" context SUFFICIENT)
  
@@ -193,9 +200,12 @@
  
  (SIMPLE-NEC isa meaning word "----------" context NECESSARY)
  (SIMPLE-SUF isa meaning word "----------" context SUFFICIENT)
+ 
  (OPEN-NEC isa meaning word "If_open_then_library" context NECESSARY)
+ (OPEN-SUF isa meaning word "If_open_then_library" context SUFFICIENT)
  
  (TEXTBOOK-SUF isa meaning word "If_textbook_then_library" context SUFFICIENT)
+ (TEXTBOOK-NEC isa meaning word "If_textbook_then_library" context NECESSARY)
  
  (arg-e-suf isa argument fact "ESSAY" position "YES" context SUFFICIENT neg-position "UNKNOWN")
  (arg-e-nec isa argument fact "ESSAY" position "UNKNOWN" context NECESSARY neg-position "YES")
@@ -361,10 +371,12 @@
  )
  
  
- (set-base-levels (NOT-ESSAY-NEC 1.05))
- (set-base-levels (NOT-ESSAY-SUF 1))
+ ; sets the base level activation for OPEN and TEXTBOOK as understood
+ ; as necessary higher (1.5) then as understood as sufficient (1)
  (set-base-levels (OPEN-NEC 2.1))
  (set-base-levels (OPEN-SUF 1))
+ (set-base-levels (TEXTBOOK-SUF 1.9))
+ (set-base-levels (TEXTBOOK-NEC 0))
 
 
  (p prepare-mouse

@@ -5,11 +5,11 @@
 # =============================================================================
 
 import json
-import threading
-import socket
-import time
 import os
+import socket
 import sys
+import threading
+import time
 
 current_connection = None
 

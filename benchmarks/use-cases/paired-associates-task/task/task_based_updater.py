@@ -4,10 +4,6 @@
 # that can be downloaded here http://act-r.psy.cmu.edu/software/
 # =============================================================================
 
-import sys
-import itertools
-import time
-
 class Task_Based_Updater:
 
     headers_list = values_list = None

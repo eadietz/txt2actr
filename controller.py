@@ -5,16 +5,16 @@ Created on Tue Jul  7 09:24:08 2020
 @author: thd7as
 """
 
-from sys import platform as _platform
 import importlib.util
-
+from sys import platform as _platform
 from threading import *
-from txt2actr.model2actr.cognitive_model_assembler import *
-from txt2actr.environment2actr.obj_instantiator_for_ACTR_env import *
+
 from txt2actr.environment2actr.ACTR_app_starter import *
 from txt2actr.environment2actr.ACTR_interface import *
 from txt2actr.environment2actr.log_based_updater import *
+from txt2actr.environment2actr.obj_instantiator_for_ACTR_env import *
 from txt2actr.environment2actr.server_based_updater import *
+from txt2actr.model2actr.cognitive_model_assembler import *
 
 
 # =============================================================================
@@ -169,7 +169,7 @@ class Controller:
             p1.start()
             p2.start()
             while actr_interface.actr_running():
-                time.sleep(5)
+                time.sleep(20)
             print(f" {log_file_name} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ done")
         except KeyboardInterrupt:
             del actr_interface

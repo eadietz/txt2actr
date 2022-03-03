@@ -11,7 +11,6 @@ Created on Tue Jul 14 09:36:48 2020
 
 import sys
 from itertools import islice
-import time
 
 
 class Log_Based_Updater:

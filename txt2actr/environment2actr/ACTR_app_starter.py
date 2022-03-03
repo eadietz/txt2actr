@@ -1,9 +1,9 @@
 import subprocess
-import os
-from sys import platform as _platform
-from txt2actr.environment2actr import actr
-import time
 import sys
+import time
+from sys import platform as _platform
+
+from txt2actr.environment2actr import actr
 
 
 class ACTR_app_starter:

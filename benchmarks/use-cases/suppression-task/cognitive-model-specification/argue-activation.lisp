@@ -1,17 +1,24 @@
 
+; declarative memory
+
+; arg-1 used to store position of (first) argument in imaginal
+; arg-2 used to store position of (second; counter of first) argument in imaginal
 (define-chunks
-(ARG-1)
-(ARG-2)
+(arg-1)
+(arg-2)
+(SUFFICIENT)
+(NECESSARY)
 )
+; 'conversion' from string (word, e.g. "essay") to chunk (context, can be either SUFFICIENT or NECESSARY)
 (chunk-type meaning word context)
 (chunk-type argument fact position context neg-position)
 (chunk-type interpretation word)
 
 (add-dm
-(SUFFICIENT isa interpretation word "SUFFICIENT")
-(NECESSARY isa interpretation word "NECESSARY")
-
+; if "essay" is given as a fact (together with "if essay then library", then "essay" will
+; always be understood as SUFFICIENT, i.e. everyone recognizes modus ponens)
 (ESSAY isa meaning word "essay" context SUFFICIENT)
+
 (NOT-ESSAY-NEC isa meaning word "not_essay" context NECESSARY)
 (NOT-ESSAY-SUF isa meaning word "not_essay" context SUFFICIENT)
 
@@ -21,9 +28,12 @@
 
 (SIMPLE-NEC isa meaning word "----------" context NECESSARY)
 (SIMPLE-SUF isa meaning word "----------" context SUFFICIENT)
+
 (OPEN-NEC isa meaning word "If_open_then_library" context NECESSARY)
+(OPEN-SUF isa meaning word "If_open_then_library" context SUFFICIENT)
 
 (TEXTBOOK-SUF isa meaning word "If_textbook_then_library" context SUFFICIENT)
+(TEXTBOOK-NEC isa meaning word "If_textbook_then_library" context NECESSARY)
 
 (arg-e-suf isa argument fact "ESSAY" position "YES" context SUFFICIENT neg-position "UNKNOWN")
 (arg-e-nec isa argument fact "ESSAY" position "UNKNOWN" context NECESSARY neg-position "YES")
@@ -189,7 +199,11 @@
 )
 
 
-(set-base-levels (NOT-ESSAY-NEC 1.05))
-(set-base-levels (NOT-ESSAY-SUF 1))
+; sets the base level activation for library as understood
+; as necessary higher (1.5) then as understood
+; as sufficient (1)
 (set-base-levels (OPEN-NEC 2.1))
 (set-base-levels (OPEN-SUF 1))
+(set-base-levels (TEXTBOOK-SUF 1.9))
+(set-base-levels (TEXTBOOK-NEC 0))
+

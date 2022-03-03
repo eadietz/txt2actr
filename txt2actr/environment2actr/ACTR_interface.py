@@ -5,14 +5,14 @@ Created on Tue Jul  7 10:24:10 2020
 @author: thd7as
 """
 
-import re
-from txt2actr.environment2actr import actr
 import io
 import math
-import numbers
+import re
 from contextlib import redirect_stdout
-import sys
-import time
+
+from txt2actr.environment2actr import actr
+
+
 # =============================================================================
 # This class is all about setting up the ACT-R Environment, including adding
 # goals to the (cognitive) ACT-R Model

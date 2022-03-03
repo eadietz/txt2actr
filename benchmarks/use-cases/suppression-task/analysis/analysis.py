@@ -1,7 +1,8 @@
 
 import pathlib
+
 import pandas as pd
-import os
+
 
 class Analysis:
 
@@ -20,7 +21,7 @@ class Analysis:
         self.write_new_data_to_df(self.content_df, content)
 
     def write_new_data_to_df(self, df, content):
-        new_row = {'Fact': content[0], 'Context': content[1], "Argument": content[2],
+        new_row = {'Fact': content[0], 'Interpretation': content[1], "Position": content[2],
                    "Counter": content[3], "Strongest": content[4]}
         self.content_df = self.content_df.append(new_row, ignore_index=True)
 
@@ -35,4 +36,7 @@ class Analysis:
 
             content_cols = ["Fact", "Context", "Argument", "Counter", "Strongest"]
             self.content_df = pd.DataFrame(columns=content_cols)
-            self.content_file = self.log_file[:-4] + "_content.csv"
+            self.content_file = "detailed_results.csv"
+
+    def add_result(self, content):
+        print(content)

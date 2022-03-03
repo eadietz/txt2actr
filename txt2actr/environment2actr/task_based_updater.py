@@ -9,9 +9,6 @@ Created on Tue Jul 14 09:36:48 2020
 # log_file_name is the name of the file that contains the (dynamic) flight log information
 # =============================================================================
 
-import sys
-import itertools
-
 
 class Task_Based_Updater:
 

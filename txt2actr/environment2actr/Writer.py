@@ -1,8 +1,7 @@
-import websocket #https://websoc    ket-client.readthedocs.io/en/latest/faq.html?highlight=subprotocol#using-subprotocols
-import _thread
 import time
-import json
 import random
+import time
+
 
 class Writer:
     def __init__(self, ws):

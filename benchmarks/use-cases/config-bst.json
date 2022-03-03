@@ -17,7 +17,8 @@
 		"consoleOutputACTR": "console_output.txt"
 	},
 	"pyFunctionsInCognitiveModel" : {
-		"add_content" : "collects applied production rules"
+		"add_content" : "called in argue.lisp",
+		"add_result" : "called in reasoning.lisp"
 		},
 	 "cognitive_model_config": {
 		 "cognitive_model_name": "suppression-task",
@@ -28,7 +29,7 @@
 		 "include_instantiated_chunks": true,
 		 "to_be_attended_names": [],
 		 "default_goal_slots_and_values": "state idle",
-		 "uc_specific_list_of_files": ["cognitive-model-specification/visual.lisp", "cognitive-model-specification/argue.lisp","cognitive-model-specification/manual-motor.lisp"],
+		 "uc_specific_list_of_files": ["cognitive-model-specification/visual.lisp", "cognitive-model-specification/argue-activation.lisp","cognitive-model-specification/manual-motor.lisp"],
 		 "gdr_file": "",
 		 "ddr_file": ""
 	 },
@@ -132,7 +133,7 @@
 	"skipRateInLog": 2,
 	"columnStartIndex": 0,
 	"rowStartIndex": 5,
-	"simulationTimeSeconds": 10000,
+	"simulationTimeSeconds": 100000,
 	"decimalNumbers": 2,
 	"timeIntervalMilliseconds": 1,
 	"displayLabels": false,

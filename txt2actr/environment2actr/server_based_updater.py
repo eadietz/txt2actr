@@ -1,11 +1,9 @@
-from asyncio import events
-import json
 import asyncio
-import websockets
+import json
 import time
-from websockets.typing import Subprotocol
+
 from websockets import client
-from argparse import ArgumentParser  # Direkt aus terminal Arguments übergeben
+from websockets.typing import Subprotocol
 
 fsuipc_protocol = Subprotocol("fsuipc")  # as stated in documentation
 

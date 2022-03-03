@@ -1,9 +1,9 @@
 import json
-import threading
-import socket
-import time
 import os
+import socket
 import sys
+import threading
+import time
 
 current_connection = None
 
@@ -24,8 +24,7 @@ class request():
 locals = threading.local()
 
 class actr():
-    
-    
+
     def __init__(self,host,port):
         self.interface = interface(host, port)
         if self.interface.connected :
@@ -877,3 +876,9 @@ def add_word_characters(word_char=None):
 
 def mp_queue_count():
     return current_connection.evaluate_single("mp-queue-count")
+
+def set_base_levels(*features):
+    return current_connection.evaluate_single("set-base-levels", *features)
+
+def get_base_level(*features):
+    return current_connection.evaluate_single("get-base-level", *features)
