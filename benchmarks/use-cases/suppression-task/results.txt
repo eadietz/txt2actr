@@ -1,25 +1,52 @@
 results with argue-activation.lisp
-
-
-essay                 counts  percentage
-Context     Response
-alternative yes           94        94.0
-            unknown        6         6.0
-
-not_essay              counts  percentage
-Context     Response
-alternative unknown       91        91.0
-            no             9         9.0
-
-library                 counts  percentage
-Context     Response
-alternative unknown       89        89.0
-            yes           11        11.0
-
-not_library             counts  percentage
-Context     Response
-alternative no            91        91.0
-            unknown        9         9.0
+***************************************
+Given fact: essay
+***************************************
+	             counts  percentage
+Context    Response
+simple     yes           95        95.0
+           unknown        5         5.0
+alternative yes          94        94.0
+            unknown       6         6.0
+additional unknown       54        54.0
+           yes           46        46.0
+***************************************
+***************************************
+Given fact: not_essay
+***************************************
+                     counts  percentage
+Context    Response
+simple     unknown       51        51.0
+           no            49        49.0
+alternative unknown      91        91.0
+            no            9         9.0
+additional no            70        70.0
+           unknown       30        30.0
+***************************************
+***************************************
+Given fact: library
+***************************************
+	             counts  percentage
+Context    Response
+simple     yes           55        55.0
+           unknown       45        45.0
+alternative unknown      89        89.0
+            yes          11        11.0
+additional yes           76        76.0
+           unknown       24        24.0
+***************************************
+***************************************
+Given fact: not_library
+***************************************
+                     counts  percentage
+Context    Response
+simple     no            91        91.0
+           unknown        9         9.0
+alternative no           91        91.0
+            unknown       9         9.0
+additional unknown       56        56.0
+           no            44        44.0
+***************************************
 
 Comment: 100 simulations of each of the groups. The simulations
 need to run separately otherwise, each groups' activation will

@@ -371,12 +371,15 @@
  )
  
  
- ; sets the base level activation for OPEN and TEXTBOOK as understood
- ; as necessary higher (1.5) then as understood as sufficient (1)
+ ; sets the base level activation for library as understood
+ ; as necessary higher (1.5) then as understood
+ ; as sufficient (1)
  (set-base-levels (OPEN-NEC 2.1))
  (set-base-levels (OPEN-SUF 1))
  (set-base-levels (TEXTBOOK-SUF 1.9))
  (set-base-levels (TEXTBOOK-NEC 0))
+ 
+
 
 
  (p prepare-mouse
