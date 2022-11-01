@@ -221,8 +221,6 @@
    +retrieval>
       fact =fact
       - position nil
-   =goal>
-       state    choose-strongest
    =imaginal>
   =goal>
      state choose-w-highest-activation

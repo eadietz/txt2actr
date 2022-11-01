@@ -19,4 +19,4 @@ class Button:
         self.width = width
         self.action = action
         
-        self.label = name if pd.isna(label) else label
+        self.label = name if pd.isnull(label) else label

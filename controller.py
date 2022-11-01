@@ -13,7 +13,7 @@ from txt2actr.environment2actr.ACTR_app_starter import *
 from txt2actr.environment2actr.ACTR_interface import *
 from txt2actr.environment2actr.log_based_updater import *
 from txt2actr.environment2actr.obj_instantiator_for_ACTR_env import *
-from txt2actr.environment2actr.server_based_updater import *
+#from txt2actr.environment2actr.server_based_updater import *
 from txt2actr.model2actr.cognitive_model_assembler import *
 
 

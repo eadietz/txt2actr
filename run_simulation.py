@@ -25,9 +25,9 @@ class Simulation():
 
         args = parser.parse_args()
 
-        config_file = args.Config if args.Config else "config-bst.json"
+        config_file = args.Config if args.Config else "config-flight-task.json"
         actr_external = True if args.External else False
-        dummy_run = True if args.Dummy else False
+        dummy_run = False if args.Dummy else False
         load_model = True if args.Model else False
 
         uc_path = f'{self.abs_path}benchmarks{self.path_sep}use-cases{self.path_sep}'

@@ -1,4 +1,6 @@
 (p scan-if-scene-changed
+    =goal>
+      state    idle
     ?imaginal>
       state    free
     ?visual-location>

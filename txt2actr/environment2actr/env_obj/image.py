@@ -20,4 +20,4 @@ class Image():
 
         self.width = x_end
         self.height = y_end
-        self.label = name if pd.isna(label) else label
+        self.label = name if pd.isnull(label) else label

@@ -2,8 +2,8 @@ import asyncio
 import json
 import time
 
-from websockets import client
-from websockets.typing import Subprotocol
+#from websockets import client
+#from websockets.typing import Subprotocol
 
 fsuipc_protocol = Subprotocol("fsuipc")  # as stated in documentation
 

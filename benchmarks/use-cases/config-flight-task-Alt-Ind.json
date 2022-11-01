@@ -251,6 +251,18 @@
 			}
 		],
 		  "images_specification": [
+			{
+			  "image":"Attitude_Indicator",
+			  "description": ["attitude-indicator-v2.gif", "ROLL", "PTCH"],
+			  "x_start": 20,
+			  "y_start": 95,
+			  "x_end": 190,
+			  "y_end": 40,
+			  "color": "black",
+			  "window": "PFD",
+			  "label": "line",
+			  "appearance": true
+			}
 		],
 		"windows_labels_mapping": [
 			{
