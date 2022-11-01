@@ -1,4 +1,4 @@
-import subprocess
+#import subprocess
 import sys
 import time
 from sys import platform as _platform
@@ -60,8 +60,8 @@ class ACTR_app_starter:
             else:
                 sys.exit('Could not identify operating system. Exit.')
 
-            self.actr_script_running = subprocess.Popen(execute, stdout=subprocess.PIPE,
-                                                        stderr=subprocess.PIPE)
+            #self.actr_script_running = subprocess.Popen(execute, stdout=subprocess.PIPE,
+            #                                            stderr=subprocess.PIPE)
 
             print("A connection to ACT-R will be established now... "
                   "waiting for 15 seconds until ACT-R is ready ...")
