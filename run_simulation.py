@@ -25,7 +25,7 @@ class Simulation():
 
         args = parser.parse_args()
 
-        config_file = args.Config if args.Config else "config-flight-task.json"
+        config_file = args.Config if args.Config else "config-flight-task-Alt-Ind.json"
         actr_external = True if args.External else False
         dummy_run = False if args.Dummy else False
         load_model = True if args.Model else False

@@ -147,18 +147,17 @@ class ACTR_interface:
                                             params=[window.actr_window, i.name,
                                                     i.description[0], 0, 0, 200, 200],
                                             time_in_ms = True)
-                        try:
-                            roll = float(window_labels_dict[i.description[1]][1])
-                            pitch = float(window_labels_dict[i.description[2]][1])
-                        except Exception as e:
-                            print("EXCEPTION", e)
-                            print("dict", list(window_labels_dict.items()))
-                        # x_start, y_shift, x_end
-                        x_start, y_start, x_end, y_end = self.horizon(roll, pitch, i.x_loc, i.y_loc, i.x_end)
-                        actr.add_line_to_exp_window(window.actr_window, [x_start, y_start], [x_end, y_end], i.color)
-                        self.schedule_event(schedule_time, "update_line",
-                                            params=[window.actr_window,
-                                        [x_start, y_start], [x_end, y_end], i.color], time_in_ms=True)
+                        roll = window_labels_dict[i.description[1]][1]
+                        pitch = window_labels_dict[i.description[2]][1]
+                        if roll.isnumeric() and pitch.isnumeric():
+                            roll = float(roll)
+                            pitch = float(pitch)
+                            # x_start, y_shift, x_end
+                            x_start, y_start, x_end, y_end = self.horizon(roll, pitch, i.x_loc, i.y_loc, i.x_end)
+                            actr.add_line_to_exp_window(window.actr_window, [x_start, y_start], [x_end, y_end], i.color)
+                            self.schedule_event(schedule_time, "update_line",
+                                                params=[window.actr_window,
+                                            [x_start, y_start], [x_end, y_end], i.color], time_in_ms=True)
                     if i.label == "pic":
                         self.schedule_event(schedule_time, "update_image",
                                             params=[window.actr_window, i.name, i.color, i.x_loc,
