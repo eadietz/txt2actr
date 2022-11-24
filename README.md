@@ -7,16 +7,16 @@ provide an interface to the cognitive architecture ACT-R.
 
 txt2actr folder structure is as follows:
 * txt2actr
-** environment2actr
-** external-connections
-** model2actr
+ * environment2actr
+ * external-connections
+ * model2actr
 * benchmarks
-** model-components
-** use-cases
-*** driving-task
-*** flight-task
-*** paired-associates-task
-*** suppression task
+ * model-components
+ * use-cases
+  * driving-task
+  * flight-task
+  * paired-associates-task
+ * suppression task
 
 txt2actr provides the interface to ACT-R.
 There are three different types of environment manipulations through ACT-R:
@@ -38,4 +38,3 @@ and suppression task) and log-based updates (driving-task and flight-task).
 -m (optional, if added it will not load the model in ACT-R, and you will have to load the model in ACT-R before starting the simulation)
 
 
-The folder structure
