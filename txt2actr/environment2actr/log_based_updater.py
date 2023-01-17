@@ -62,7 +62,8 @@ class Log_Based_Updater:
     def pass_new_data_to_actr_env(self, new_values_list, schedule_time):
 
         dict_of_changes = {self.headers_list[idx]: value for idx, value in
-                           enumerate(new_values_list) if self.values_list[idx] != value}
+                           enumerate(new_values_list) if len(self.values_list) < idx or
+                           (len(self.values_list) > idx and self.values_list[idx] != value)}
 
         self.values_list = new_values_list
 

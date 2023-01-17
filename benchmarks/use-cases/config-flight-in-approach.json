@@ -1,0 +1,137 @@
+[
+  {
+	"simulationType": "log",
+	"startACTR": false,
+	"paths": {
+        "use_case_folder": "flight-in-approach-task",
+		"data_analysis_folder": "analysis",
+		"simulationSpecifications": "datasets/dummy_file.csv",
+		"cognitiveModel": "cognitive-model-specification/model.lisp",
+		"resultsFolder": "sessions",
+		"consoleOutputACTR": "console_output.txt"
+	},
+	"pyFunctionsInCognitiveModel" : {
+		"print_read_data": "print data that has been read by the cognitive model"
+	},
+	 "cognitive_model_config": {
+		 "cognitive_model_name": "flight-task-in-spptosvh",
+		 "model_params_dict": {"key": "val"},
+		 "default_val_dict": {},
+		 "include_chunk_types": true,
+		 "include_chunks": true,
+		 "include_instantiated_chunks": true,
+		 "to_be_attended_names": [],
+		 "default_goal_slots_and_values": "state idle",
+		 "uc_specific_list_of_files": ["cognitive-model-specification/control-aircraft-ddr.lisp"],
+		 "gdr_file": "",
+		 "ddr_file": ""
+	 },
+	  "params": {
+		"windows_specification": [
+			{
+				"vision": "FCU",
+				"description": "Flight Unit Control with EFIS (Electronic Flight Instrument System) Control Panels (CP), used to select the display on the onside PFD and ND and to change the barometer setting, AFS (Auto Flight System) CP, which is the main interface with the Flight Guidance (FG) system",
+				"y_position": 220,
+				"x_position": 510,
+				"width": 760,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": ""
+			},
+			{
+				"vision": "PFD",
+				"description": "Primary Flight Display for short-term flight information",
+				"y_position": 410,
+				"x_position": 310,
+				"width": 190,
+				"length": 300,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 230,
+				"header_labels": "time"
+			},
+			{
+				"vision": "Pilot",
+				"description": "pilot",
+				"y_position": 850,
+				"x_position": 140,
+				"width": 150,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": ""
+			}
+		],
+		"buttons_specification": [
+			{
+				"button": "button_1",
+				"y_position": 10,
+				"x_position": 400,
+				"height": 30,
+				"width": 40,
+				"window": "FCU",
+				"label": "FD",
+				"action": ""
+			},
+			{
+				"button": "button_2",
+				"y_position": 60,
+				"x_position": 350,
+				"height": 30,
+				"width": 40,
+				"window": "FCU",
+				"label": "AP1",
+				"action": ""
+			},
+			{
+				"button": "button_3",
+				"y_position": 60,
+				"x_position": 450,
+				"height": 30,
+				"width": 40,
+				"window": "FCU",
+				"label": "AP2",
+				"action": ""
+			},
+			{
+				"button": "button_4",
+				"y_position": 110,
+				"x_position": 400,
+				"height": 30,
+				"width": 40,
+				"window": "FCU",
+				"label": "A_THR",
+				"action": ""
+			}
+		],
+		  "images_specification": [
+		],
+		"windows_labels_mapping": [
+			{
+				"key": "time",
+				"value": ""
+			}
+		],
+		"sounds_and_speech_labels_mapping": [
+        ]
+	},
+	"columnSeparator": ",",
+	"startTimeFirstEvent": 0,
+	"samplingRateHz": 500,
+	"skipRateInLog": 1,
+	"columnStartIndex": 1,
+	"rowStartIndex": 1,
+	"simulationTimeSeconds": 100000,
+	"decimalNumbers": 2,
+	"timeIntervalMilliseconds": 1,
+	"displayLabels": true,
+	"humanInteraction": false,
+	"environmentWindows": true,
+	"fulltimeACTR": true,
+	"realtimeACTR": true,
+	"consoleOutput": false
+  }
+]
