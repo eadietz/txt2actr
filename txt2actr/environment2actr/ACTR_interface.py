@@ -236,7 +236,6 @@ class ACTR_interface:
 
     @staticmethod
     def update_window(actr_window, display_label, new_value, x_text, y_text, font_size):
-        print("update", actr_window, new_value)
         actr.add_text_to_exp_window(actr_window,
                                     text=new_value,
                                     color=display_label, x=x_text,
@@ -255,7 +254,6 @@ class ACTR_interface:
 
     @staticmethod
     def clear_window(actr_window):
-        print("clear", actr_window)
         actr.clear_exp_window(actr_window)
         # actr.remove_items_from_exp_window(actr_window, item)
 
