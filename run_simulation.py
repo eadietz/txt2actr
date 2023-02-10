@@ -41,7 +41,7 @@ class Simulation():
                                actr_external=actr_external,
                                dummy_run=dummy_run, load_cog_model=load_model)
                 c.instantiate_default_obj()
-                c.construct_cognitive_model()
+               #c.construct_cognitive_model()
                 c.do_run()
 
 

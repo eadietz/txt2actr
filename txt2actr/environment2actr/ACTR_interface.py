@@ -186,14 +186,14 @@ class ACTR_interface:
         self.clear_windows = True
 
     def schedule_event(self, schedule_time, function, params, time_in_ms=True):
-        if schedule_time == None and actr.mp_queue_count() < 50:
+        if schedule_time == None and actr.mp_queue_count() < 20:
             #actr.schedule_event_now("clear_window", params=[params[0]])
             #time.sleep(0.1)
             actr.schedule_event_now(function, params)
         elif schedule_time is not None:
-            if function == "clear_window":
+            if function == "clear_window" and actr.mp_queue_count() < 20:
                 actr.schedule_event_relative(schedule_time, function, params, time_in_ms=time_in_ms)
-            elif actr.mp_queue_count() < 50:
+            elif actr.mp_queue_count() < 20:
                 actr.schedule_event_relative(schedule_time, function, params, time_in_ms=time_in_ms)
 
     def horizon(self, roll, pitch, x_start=10, y_shift=50, x_end=200):
@@ -236,6 +236,7 @@ class ACTR_interface:
 
     @staticmethod
     def update_window(actr_window, display_label, new_value, x_text, y_text, font_size):
+        print("update", actr_window, new_value)
         actr.add_text_to_exp_window(actr_window,
                                     text=new_value,
                                     color=display_label, x=x_text,
@@ -254,6 +255,7 @@ class ACTR_interface:
 
     @staticmethod
     def clear_window(actr_window):
+        print("clear", actr_window)
         actr.clear_exp_window(actr_window)
         # actr.remove_items_from_exp_window(actr_window, item)
 

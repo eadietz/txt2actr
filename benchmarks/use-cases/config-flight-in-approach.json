@@ -5,7 +5,7 @@
 	"paths": {
         "use_case_folder": "flight-in-approach-task",
 		"data_analysis_folder": "analysis",
-		"simulationSpecifications": "datasets/dummy_file.csv",
+		"simulationSpecifications": "datasets/Dataset_draft_superslim.csv",
 		"cognitiveModel": "cognitive-model-specification/model.lisp",
 		"resultsFolder": "sessions",
 		"consoleOutputACTR": "console_output.txt"
@@ -22,97 +22,210 @@
 		 "include_instantiated_chunks": true,
 		 "to_be_attended_names": [],
 		 "default_goal_slots_and_values": "state idle",
-		 "uc_specific_list_of_files": ["cognitive-model-specification/control-aircraft-ddr.lisp"],
+		 "uc_specific_list_of_files": ["cognitive-model-specification/exercise_2-model_test.lisp"],
 		 "gdr_file": "",
 		 "ddr_file": ""
 	 },
 	  "params": {
 		"windows_specification": [
 			{
-				"vision": "FCU",
-				"description": "Flight Unit Control with EFIS (Electronic Flight Instrument System) Control Panels (CP), used to select the display on the onside PFD and ND and to change the barometer setting, AFS (Auto Flight System) CP, which is the main interface with the Flight Guidance (FG) system",
-				"y_position": 220,
+				"vision": "row",
+				"description": "",
+				"y_position": 0,
 				"x_position": 510,
-				"width": 760,
+				"width": 190,
 				"length": 150,
 				"fontsize": 12,
 				"x_text_position": 50,
 				"y_text_position": 50,
-				"header_labels": ""
+				"header_labels": "row"
+			},
+			{
+				"vision": "FCU",
+				"description": "Flight Unit Control with EFIS (Electronic Flight Instrument System) Control Panels (CP), used to select the display on the onside PFD and ND and to change the barometer setting, AFS (Auto Flight System) CP, which is the main interface with the Flight Guidance (FG) system",
+				"y_position": 220,
+				"x_position": 510,
+				"width": 190,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "VAL_SPD"
 			},
 			{
 				"vision": "PFD",
 				"description": "Primary Flight Display for short-term flight information",
 				"y_position": 410,
-				"x_position": 310,
+				"x_position": 260,
 				"width": 190,
-				"length": 300,
-				"fontsize": 12,
-				"x_text_position": 50,
-				"y_text_position": 230,
-				"header_labels": "time"
-			},
-			{
-				"vision": "Pilot",
-				"description": "pilot",
-				"y_position": 850,
-				"x_position": 140,
-				"width": 150,
 				"length": 150,
 				"fontsize": 12,
 				"x_text_position": 50,
 				"y_text_position": 50,
-				"header_labels": ""
+				"header_labels": "ias"
+			},
+			{
+				"vision": "ATC",
+				"description": "Air Traffic Control",
+				"y_position": 410,
+				"x_position": 50,
+				"width": 200,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "target_speed"
+			},
+			{
+				"vision": "Timer",
+				"description": "Timebar for ATC-SPD message",
+				"y_position": 410,
+				"x_position": 470,
+				"width": 200,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "timebar"
+			},
+			{
+				"vision": "Predicted Speed",
+				"description": "Predicted Speed in t=3s",
+				"y_position": 410,
+				"x_position": 690,
+				"width": 200,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "speed_pred"
+			},
+			{
+				"vision": "Speed trend evaluation",
+				"description": "Evaluation of speed trend based on matrix",
+				"y_position": 410,
+				"x_position": 910,
+				"width": 200,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "speed_trend_eval"
+			},
+			{
+				"vision": "Rest time evaluation",
+				"description": "Evaluation of time left to reach ATC SPD",
+				"y_position": 220,
+				"x_position": 910,
+				"width": 200,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "time_eval"
+			},
+			{
+				"vision": "Landing Gear",
+				"description": "Current configuration of landing gear",
+				"y_position": 220,
+				"x_position": 50,
+				"width": 200,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "gear_value"
+			},
+			{
+				"vision": "Spoiler",
+				"description": "Current configuration value of spoiler",
+				"y_position": 220,
+				"x_position": 260,
+				"width": 200,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "spoiler_value"
+			},
+			{
+				"vision": "Flaps",
+				"description": "Current configuration of flaps",
+				"y_position": 220,
+				"x_position": 470,
+				"width": 200,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "flaps_value"
+			},
+			{
+				"vision": "Vertical Speed",
+				"description": "Current value of vertical speed",
+				"y_position": 220,
+				"x_position": 690,
+				"width": 200,
+				"length": 150,
+				"fontsize": 12,
+				"x_text_position": 50,
+				"y_text_position": 50,
+				"header_labels": "vs"
 			}
 		],
 		"buttons_specification": [
-			{
-				"button": "button_1",
-				"y_position": 10,
-				"x_position": 400,
-				"height": 30,
-				"width": 40,
-				"window": "FCU",
-				"label": "FD",
-				"action": ""
-			},
-			{
-				"button": "button_2",
-				"y_position": 60,
-				"x_position": 350,
-				"height": 30,
-				"width": 40,
-				"window": "FCU",
-				"label": "AP1",
-				"action": ""
-			},
-			{
-				"button": "button_3",
-				"y_position": 60,
-				"x_position": 450,
-				"height": 30,
-				"width": 40,
-				"window": "FCU",
-				"label": "AP2",
-				"action": ""
-			},
-			{
-				"button": "button_4",
-				"y_position": 110,
-				"x_position": 400,
-				"height": 30,
-				"width": 40,
-				"window": "FCU",
-				"label": "A_THR",
-				"action": ""
-			}
+			{}
 		],
 		  "images_specification": [
 		],
 		"windows_labels_mapping": [
 			{
-				"key": "time",
+				"key": "row",
 				"value": ""
+			},
+			{
+				"key": "ias",
+				"value": "ias"
+			},
+			{
+				"key": "VAL_SPD",
+				"value": "FCU-SPD"
+			},
+			{
+				"key": "target_speed",
+				"value": "ATC-SPD"
+			},
+			{
+				"key": "timebar",
+				"value": "Timer"
+			},
+			{
+				"key": "speed_pred",
+				"value": "IAS-PRED"
+			},
+			{
+				"key": "speed_trend_eval",
+				"value": "SPD-eval"
+			},
+			{
+				"key": "time_eval",
+				"value": "time-eval"
+			},
+			{
+				"key": "gear_value",
+				"value": "LDG-POS"
+			},
+			{
+				"key": "spoiler_value",
+				"value": "Spoiler"
+			},
+			{
+				"key": "flaps_value",
+				"value": "Flaps"
+			},
+			{
+				"key": "vs",
+				"value": "V-SPD"
 			}
 		],
 		"sounds_and_speech_labels_mapping": [
@@ -120,17 +233,17 @@
 	},
 	"columnSeparator": ",",
 	"startTimeFirstEvent": 0,
-	"samplingRateHz": 500,
+	"samplingRateHz": 100,
 	"skipRateInLog": 1,
-	"columnStartIndex": 1,
-	"rowStartIndex": 1,
-	"simulationTimeSeconds": 100000,
-	"decimalNumbers": 2,
+	"columnStartIndex": 0,
+	"rowStartIndex": 0,
+	"simulationTimeSeconds": 30,
+	"decimalNumbers": 0,
 	"timeIntervalMilliseconds": 1,
-	"displayLabels": true,
+	"displayLabels": false,
 	"humanInteraction": false,
 	"environmentWindows": true,
-	"fulltimeACTR": true,
+	"fulltimeACTR": false,
 	"realtimeACTR": true,
 	"consoleOutput": false
   }
