@@ -8,6 +8,7 @@ Created on Tue Jul  7 10:24:10 2020
 import io
 import math
 import re
+import time
 from contextlib import redirect_stdout
 
 from txt2actr.environment2actr import actr
@@ -185,16 +186,28 @@ class ACTR_interface:
                 #                    params=[sound_type, freq, duration, schedule_time, word, True])
         self.clear_windows = True
 
+    def schedule_event(self, schedule_time, function, params, time_in_ms=True, clear_window=False):
+        actr.schedule_event_relative(schedule_time, function, params, time_in_ms=time_in_ms)
+
     def schedule_event(self, schedule_time, function, params, time_in_ms=True):
-        if schedule_time == None and actr.mp_queue_count() < 20:
-            #actr.schedule_event_now("clear_window", params=[params[0]])
-            #time.sleep(0.1)
+        while actr.mp_queue_count() > 10:
+            time.sleep(0.01)
+        if schedule_time == None:
             actr.schedule_event_now(function, params)
         elif schedule_time is not None:
-            if function == "clear_window" and actr.mp_queue_count() < 20:
-                actr.schedule_event_relative(schedule_time, function, params, time_in_ms=time_in_ms)
-            elif actr.mp_queue_count() < 20:
-                actr.schedule_event_relative(schedule_time, function, params, time_in_ms=time_in_ms)
+            actr.schedule_event_relative(schedule_time, function, params, time_in_ms=time_in_ms)
+
+    # old version
+    #def schedule_event(self, schedule_time, function, params, time_in_ms=True):
+    #    if schedule_time == None and actr.mp_queue_count() < 20:
+    #        #actr.schedule_event_now("clear_window", params=[params[0]])
+    #        #time.sleep(0.1)
+    #        actr.schedule_event_now(function, params)
+    #    elif schedule_time is not None:
+    #        if function == "clear_window" and actr.mp_queue_count() < 20:
+    #            actr.schedule_event_relative(schedule_time, function, params, time_in_ms=time_in_ms)
+    #        elif actr.mp_queue_count() < 20:
+    #            actr.schedule_event_relative(schedule_time, function, params, time_in_ms=time_in_ms)
 
     def horizon(self, roll, pitch, x_start=10, y_shift=50, x_end=200):
 
