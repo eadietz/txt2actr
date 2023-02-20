@@ -295,6 +295,14 @@ class ACTR_interface:
     def run_actr(n=100000, real_time=False, run_full_time=False):
         actr.run_full_time(n, real_time) if run_full_time else actr.run(n, real_time)
 
+    def record_history(self):
+        actr.record_history("buffer-trace", "goal", "imaginal", "visual", "temporal")
+
+    def save_history(self, abs_path_location):
+        with open(f'{abs_path_location}.txt', 'w+') as file:
+            file.write(actr.get_history_data("module-demand-times"))
+
+
     def get_dm(self, ):
 
         f = io.StringIO()
@@ -310,7 +318,6 @@ class ACTR_interface:
     @staticmethod
     def stop_actr():
         actr.stop()
-
 
     @staticmethod
     # model parameter needed for act-r to understand

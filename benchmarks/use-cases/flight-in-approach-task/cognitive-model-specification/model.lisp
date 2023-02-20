@@ -845,5 +845,4 @@
 (goal-focus starting-goal)
 	)
 
-
-(record-history "buffer-trace" "goal" "visual")
+;(record-history "buffer-trace" "goal")

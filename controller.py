@@ -155,6 +155,7 @@ class Controller:
 
         actr_interface.set_actr_windows()
         actr_interface.log_file_name = log_file_name
+        actr_interface.record_history()
         p1 = Thread(target=self.run_actr_model, args=(actr_interface, sim_run_time,
                                                       self.run_real_time, self.run_full_time,
                                                       log_file_name, abs_path_analysis_results))
@@ -207,7 +208,7 @@ class Controller:
 
             #with open(f'{abs_path_analysis_results}DM_test_{file_name}.txt', 'w+') as output_file:
             #    output_file.write(actr_interface.get_dm())
-
+        actr_interface.save_history(abs_path_analysis_results+file_name)
     @staticmethod
     def do_task(task_execution):  # Observes changes and passes them to ACTR
         task_execution.observe_events()
