@@ -39,15 +39,16 @@ class Log_Based_Updater:
                 line = log_file.readline()
                 self.headers_list = line.strip().split(self.column_separator)[self.col_start_idx:]
                 self.values_list = [""] * len(self.headers_list)
-                schedule_time = int((self.skip_rate_in_log / self.sampling_rate) * 1000)
+                schedule_time = 1
+                #schedule_time = int(self.skip_rate_in_log * (self.sampling_rate/ 1000))
                 # this can surely be made nicer...
                 for i in range(self.row_start_idx):
                     log_file.readline()
-                time_sample = self.row_start_idx
+                time_sample = self.row_start_idx + self.skip_rate_in_log
                 for line in islice(log_file, self.row_start_idx, None, self.skip_rate_in_log):
                     # float('{:.{prec}f}'.format(float(idx/sampling_rate), prec=3))
-                    schedule_time = None if not self.sampling_rate \
-                        else schedule_time + int((time_sample / self.sampling_rate) * 1000)
+                    old_schedule_time = schedule_time
+                    schedule_time = old_schedule_time + (1000/self.sampling_rate) * self.skip_rate_in_log #(self.skip_rate_in_log * (self.sampling_rate/1000))
                     self.pass_new_data_to_actr_env(line.strip().split(self.column_separator)[self.col_start_idx:],
                                                    schedule_time)
         except IOError:
@@ -67,6 +68,7 @@ class Log_Based_Updater:
 
         self.values_list = new_values_list
 
+        print(schedule_time, dict_of_changes)
         if dict_of_changes:
             try:
                 self.actr_interface.update_actr_env(dict_of_changes, schedule_time)

@@ -706,8 +706,16 @@
 	=imaginal>
 ;	[Define action to be peformed: Speed brakes | spoiler | LDG]
 	=goal>
-		state	theend
+		state	theend]
+		!eval!
 )
+
+compare
+    history (input values)
+    ... -> !output! (cognitive models action) and
+    history (input values)
+    ... -> actual participant action in the next x seconds
+
 
 
 (p action-needed-2
